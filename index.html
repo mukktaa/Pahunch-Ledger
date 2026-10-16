@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#174d3a">
+<title>Pahunch Ledger</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:Arial,sans-serif;margin:0;background:#f2f6f3;color:#18332b}
+header{background:#174d3a;color:white;padding:25px 18px}
+header p{line-height:1.5}
+main{max-width:720px;margin:auto;padding:16px}
+.card{background:white;padding:18px;margin:14px 0;border-radius:14px;box-shadow:0 2px 8px #173b3010}
+label{display:block;font-weight:bold;margin-top:14px}
+input,select,textarea,button{width:100%;padding:12px;margin-top:7px;border:1px solid #aabbb2;border-radius:8px;font-size:16px}
+button{background:#176344;color:white;font-weight:bold;border:0;margin-top:16px;cursor:pointer}
+.note{font-size:14px;color:#52665d;line-height:1.6}
+.report{border-left:5px solid #d89a2b;padding:12px;margin:12px 0;background:#f7faf8;border-radius:5px}
+.tag{font-size:12px;background:#e3f0e8;padding:4px 7px;border-radius:5px}
+</style>
+</head>
+<body>
+<header>
+<p>COMMUNITY RESILIENCE · PROTOTYPE</p>
+<h1>Pahunch Ledger</h1>
+<p>Helping communities organise essential needs when mountain roads are disrupted.</p>
+</header>
+<main>
+<div class="card">
+<h2>Record an affected need</h2>
+<p class="note">Demonstration only. This prototype does not contact emergency services or verify road conditions. For emergencies, contact official services.</p>
+<form id="reportForm">
+<label for="place">Village or area</label>
+<input id="place" maxlength="80" required placeholder="Example: Sample Village">
+<label for="service">Affected essential service</label>
+<select id="service" required>
+<option value="">Choose a service</option>
+<option>Medicine access</option>
+<option>Healthcare access</option>
+<option>School transport</option>
+<option>Water supply</option>
+<option>Essential supplies</option>
+</select>
+<label for="urgency">Urgency</label>
+<select id="urgency" required>
+<option value="3">High</option>
+<option value="2">Medium</option>
+<option value="1">Low</option>
+</select>
+<label for="people">Estimated people affected</label>
+<input id="people" type="number" min="1" max="1000000" required placeholder="Enter an estimate">
+<label for="details">Additional details (optional)</label>
+<textarea id="details" maxlength="300" placeholder="Describe the service disruption"></textarea>
+<button type="submit">Add to priority list</button>
+</form>
+</div>
+<div class="card">
+<h2>Priority list</h2>
+<p class="note">Transparent demonstration rule: score = urgency × 2 + impact points. Impact points: 3 for 100+ people, 2 for 20–99 people, and 1 for fewer than 20. This is not an official emergency assessment.</p>
+<div id="reports"><p class="note">Your sample reports will appear here.</p></div>
+</div>
+<div class="card">
+<h3>What this prototype can and cannot do</h3>
+<p class="note">It organises sample reports in this open page. Reports are not sent to authorities and are not saved permanently. Offline storage, verified information and real-world deployment require further development and testing.</p>
+</div>
+</main>
+<script>
+const form=document.getElementById("reportForm");
+const list=document.getElementById("reports");
+let reports=[];
+form.addEventListener("submit",function(event){
+event.preventDefault();
+const place=document.getElementById("place").value.trim();
+const service=document.getElementById("service").value;
+const urgency=Number(document.getElementById("urgency").value);
+const people=Number(document.getElementById("people").value);
+const details=document.getElementById("details").value.trim();
+if(!place||!service||!Number.isFinite(people)||people<1){
+alert("Please complete the required fields.");
+return;
+}
+const impact=people>=100?3:people>=20?2:1;
+reports.push({place,service,people,details,score:urgency*2+impact});
+reports.sort((a,b)=>b.score-a.score);
+list.replaceChildren();
+reports.forEach((r,i)=>{
+const card=document.createElement("div");
+card.className="report";
+const title=document.createElement("strong");
+title.textContent=(i+1)+". "+r.place+" — "+r.service;
+const tag=document.createElement("p");
+tag.innerHTML='<span class="tag">Priority score: '+r.score+"</span>";
+const info=document.createElement("p");
+info.textContent="Estimated people affected: "+r.people;
+const detail=document.createElement("p");
+detail.textContent=r.details||"No additional details supplied.";
+card.append(title,tag,info,detail);
+list.appendChild(card);
+});
+form.reset();
+});
+</script>
+</body>
+</html>
