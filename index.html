@@ -154,7 +154,8 @@ service:service,
 people:people,
 details:details,
 score:urgency*2+impact,
-createdAt:new Date().toISOString()
+createdAt:new Date().toISOString(),
+reviewStatus:"Pending review"
 });
 saveReports();
 renderReports();
