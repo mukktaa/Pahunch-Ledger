@@ -46,6 +46,7 @@ button.secondary{background:#e7eee9;color:#18332b;border:1px solid #aabbb2}
 </select>
 <label for="urgency">Urgency</label>
 <select id="urgency" required>
+<option value="">Choose urgency</option>
 <option value="3">High</option>
 <option value="2">Medium</option>
 <option value="1">Low</option>
@@ -139,7 +140,7 @@ const service=document.getElementById("service").value;
 const urgency=Number(document.getElementById("urgency").value);
 const people=Number(document.getElementById("people").value);
 const details=document.getElementById("details").value.trim();
-if(!place||!service||!Number.isFinite(people)||people<1){
+if(!place||!service||!urgency||!Number.isFinite(people)||people<1){
 alert("Please complete the required fields with a valid estimate.");
 return;
 }
