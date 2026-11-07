@@ -121,6 +121,9 @@ const badge=document.createElement("span");
 badge.className="tag";
 badge.textContent="Priority score: "+report.score;
 tag.appendChild(badge);
+const time=document.createElement("p");
+time.className="note";
+time.textContent="Reported on: "+(report.createdAt?new Date(report.createdAt).toLocaleString():"Date unavailable");
 const people=document.createElement("p");
 people.textContent="Estimated people affected: "+report.people;
 const details=document.createElement("p");
@@ -128,7 +131,7 @@ details.textContent=report.details||"No additional details supplied.";
 const demo=document.createElement("p");
 demo.className="note";
 demo.textContent="Locally saved demo report — not submitted to authorities.";
-card.append(title,tag,people,details,demo);
+card.append(title,tag,time,people,details,demo);
 list.appendChild(card);
 });
 }
@@ -150,7 +153,8 @@ place:place,
 service:service,
 people:people,
 details:details,
-score:urgency*2+impact
+score:urgency*2+impact,
+createdAt:new Date().toISOString()
 });
 saveReports();
 renderReports();
