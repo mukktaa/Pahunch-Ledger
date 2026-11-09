@@ -121,9 +121,27 @@ const badge=document.createElement("span");
 badge.className="tag";
 badge.textContent="Priority score: "+report.score;
 tag.appendChild(badge);
-const review=document.createElement("p");
-review.className="note";
-review.textContent="Review status: "+(report.reviewStatus||"Pending review");
+const reviewLabel=document.createElement("label");
+reviewLabel.textContent="Review status:";
+
+const reviewSelect=document.createElement("select");
+
+["Pending review","Reviewed — details recorded","Unable to verify"].forEach(status=>{
+const option=document.createElement("option");
+option.value=status;
+option.textContent=status;
+
+if((report.reviewStatus||"Pending review")===status){
+option.selected=true;
+}
+
+reviewSelect.appendChild(option);
+});
+
+reviewSelect.addEventListener("change",function(){
+report.reviewStatus=reviewSelect.value;
+saveReports();
+});
 const time=document.createElement("p");
 time.className="note";
 time.textContent="Reported on: "+(report.createdAt?new Date(report.createdAt).toLocaleString():"Date unavailable");
@@ -134,7 +152,7 @@ details.textContent=report.details||"No additional details supplied.";
 const demo=document.createElement("p");
 demo.className="note";
 demo.textContent="Locally saved demo report — not submitted to authorities.";
-card.append(title,tag,review,time,people,details,demo);
+card.append(title,tag,reviewLabel,reviewSelect,time,people,details,demo);
 list.appendChild(card);
 });
 }
