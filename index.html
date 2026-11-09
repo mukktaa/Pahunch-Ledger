@@ -59,6 +59,25 @@ button.secondary{background:#e7eee9;color:#18332b;border:1px solid #aabbb2}
 </form>
 </div>
 <div class="card">
+<h2>Dashboard summary</h2>
+
+<div class="summary">
+  <div class="summary-card">
+    <h3>Total reports</h3>
+    <p id="totalReports">0</p>
+  </div>
+
+  <div class="summary-card">
+    <h3>Pending review</h3>
+    <p id="pendingReports">0</p>
+  </div>
+
+  <div class="summary-card">
+    <h3>Reviewed</h3>
+    <p id="reviewedReports">0</p>
+  </div>
+</div>
+
 <h2>Priority list</h2>
 <p class="note">Demo rule: score = urgency × 2 + impact points. Impact points are 3 for 100+ people, 2 for 20–99, and 1 for fewer than 20. This is an experimental rule, not an official emergency assessment.</p>
 <p id="saveStatus" class="note" role="status">Checking local storage…</p>
