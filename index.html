@@ -3,116 +3,454 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#174d3a">
-<title>Pahunch Ledger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Pahunch Ledger is a prototype for recording and prioritising essential needs during mountain road disruptions.">
+<title>Pahunch Ledger | Community Resilience</title>
 
 <style>
-*{box-sizing:border-box}
-
-body{
-  font-family:Arial,sans-serif;
-  margin:0;
-  background:#f2f6f3;
-  color:#18332b;
+:root {
+  --green: #176b4d;
+  --green-dark: #104c38;
+  --green-light: #eaf5ef;
+  --background: #f4f7f5;
+  --white: #ffffff;
+  --text: #20332a;
+  --muted: #66766d;
+  --border: #dce6df;
+  --orange: #a85a13;
+  --red: #a33131;
+  --shadow: 0 5px 20px rgba(24, 67, 46, 0.07);
 }
 
-header{
-  background:#174d3a;
-  color:white;
-  padding:24px 18px;
+* {
+  box-sizing: border-box;
 }
 
-header p{line-height:1.5}
-
-main{
-  max-width:720px;
-  margin:auto;
-  padding:16px;
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--background);
+  color: var(--text);
+  line-height: 1.6;
 }
 
-.card{
-  background:white;
-  padding:18px;
-  margin:14px 0;
-  border-radius:14px;
-  box-shadow:0 2px 8px #173b3010;
+header {
+  background: linear-gradient(135deg, var(--green-dark), var(--green));
+  color: white;
+  padding: 38px 20px;
 }
 
-label{
-  display:block;
-  font-weight:bold;
-  margin-top:14px;
+.header-content {
+  max-width: 1050px;
+  margin: auto;
 }
 
-input,select,textarea,button{
-  width:100%;
-  padding:12px;
-  margin-top:7px;
-  border:1px solid #aabbb2;
-  border-radius:8px;
-  font-size:16px;
+.eyebrow {
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  opacity: 0.85;
 }
 
-button{
-  background:#176344;
-  color:white;
-  font-weight:bold;
-  border:0;
-  margin-top:16px;
-  cursor:pointer;
+header h1 {
+  margin: 9px 0;
+  font-size: clamp(30px, 5vw, 43px);
 }
 
-button.secondary{
-  background:#e7eee9;
-  color:#18332b;
-  border:1px solid #aabbb2;
+header p {
+  max-width: 680px;
+  margin: 8px 0 0;
+  color: #e5f2e9;
 }
 
-.note{
-  font-size:14px;
-  color:#52665d;
-  line-height:1.6;
+.prototype-label {
+  display: inline-block;
+  margin-top: 18px;
+  padding: 5px 11px;
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 20px;
+  font-size: 12px;
 }
 
-.report{
-  border-left:5px solid #d89a2b;
-  padding:12px;
-  margin:12px 0;
-  background:#f7faf8;
-  border-radius:5px;
+main {
+  max-width: 1050px;
+  margin: 28px auto;
+  padding: 0 18px 40px;
 }
 
-.tag{
-  font-size:12px;
-  background:#e3f0e8;
-  padding:4px 7px;
-  border-radius:5px;
+section {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 23px;
+  margin-bottom: 22px;
+  box-shadow: var(--shadow);
 }
 
-.summary{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:12px;
-  margin:16px 0 24px;
+h2 {
+  color: var(--green-dark);
+  margin: 0 0 7px;
+  font-size: 21px;
 }
 
-.summary-card{
-  background:#eaf4ee;
-  padding:14px;
-  border-radius:12px;
-  text-align:center;
+.section-description {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0 0 19px;
 }
 
-.summary-card h3{
-  font-size:14px;
-  margin:0 0 8px;
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
 }
 
-.summary-card p{
-  font-size:24px;
-  font-weight:bold;
-  margin:0;
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field.full {
+  grid-column: 1 / -1;
+}
+
+label {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #cbd8cf;
+  border-radius: 8px;
+  background: white;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid #8bc5a5;
+  border-color: var(--green);
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.help {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 11px 16px;
+  background: var(--green);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: var(--green-dark);
+}
+
+button:focus-visible {
+  outline: 3px solid #91c8a7;
+  outline-offset: 2px;
+}
+
+button.secondary {
+  background: #edf3ef;
+  color: var(--green-dark);
+  border: 1px solid var(--border);
+}
+
+button.secondary:hover {
+  background: #dfece3;
+}
+
+button.danger {
+  background: #fff0f0;
+  color: var(--red);
+  border: 1px solid #efd0d0;
+}
+
+button.danger:hover {
+  background: #fbe1e1;
+}
+
+.form-actions {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.message {
+  display: none;
+  padding: 10px 12px;
+  margin-top: 14px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.message.success {
+  display: block;
+  background: #eaf5ef;
+  color: var(--green-dark);
+}
+
+.message.error {
+  display: block;
+  background: #fff0f0;
+  color: var(--red);
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.summary-card {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fbfdfb;
+}
+
+.summary-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.summary-card strong {
+  display: block;
+  margin-top: 5px;
+  color: var(--green-dark);
+  font-size: 27px;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 12px;
+  margin: 17px 0;
+}
+
+.report-list {
+  display: grid;
+  gap: 13px;
+}
+
+.report-card {
+  padding: 17px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: #fff;
+}
+
+.report-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.report-heading h3 {
+  margin: 0;
+  color: var(--green-dark);
+  font-size: 17px;
+}
+
+.score {
+  background: var(--green-light);
+  color: var(--green-dark);
+  border-radius: 7px;
+  padding: 5px 9px;
+  font-size: 13px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.report-meta {
+  margin: 12px 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px 15px;
+  font-size: 13px;
+}
+
+.report-meta p {
+  margin: 0;
+}
+
+.report-details {
+  margin: 12px 0 0;
+  padding: 10px;
+  background: #f7faf8;
+  border-radius: 7px;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 13px;
+}
+
+.status-row label {
+  font-size: 13px;
+}
+
+.status-row select {
+  width: auto;
+  min-width: 210px;
+  padding: 8px;
+  font-size: 13px;
+}
+
+.local-note {
+  margin-top: 12px;
+  padding: 10px;
+  border-left: 3px solid #c18a42;
+  background: #fff9ee;
+  color: #77501d;
+  font-size: 12px;
+}
+
+.empty-state {
+  padding: 25px;
+  border: 1px dashed #cbd8cf;
+  border-radius: 10px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 14px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.info-card {
+  background: #f7faf8;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.info-card h3 {
+  margin: 0 0 7px;
+  color: var(--green-dark);
+  font-size: 15px;
+}
+
+.info-card p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+ul {
+  padding-left: 20px;
+}
+
+li {
+  margin: 7px 0;
+}
+
+.small-note {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+footer {
+  text-align: center;
+  padding: 22px;
+  background: #eaf1ec;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media (max-width: 650px) {
+  main {
+    margin-top: 18px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  section {
+    padding: 17px;
+  }
+
+  .form-grid,
+  .info-grid,
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .report-meta {
+    grid-template-columns: 1fr;
+  }
+
+  header {
+    padding: 30px 17px;
+  }
+}
+
+@media print {
+  body {
+    background: white;
+  }
+
+  header {
+    background: white;
+    color: black;
+    padding: 15px 0;
+  }
+
+  header p, .prototype-label {
+    color: black;
+  }
+
+  main {
+    margin: 10px auto;
+  }
+
+  section {
+    box-shadow: none;
+    break-inside: avoid;
+  }
+
+  #reportFormSection,
+  .toolbar,
+  .form-actions,
+  .status-row,
+  #clearButton,
+  #exportButton,
+  footer {
+    display: none !important;
+  }
 }
 </style>
 </head>
@@ -120,307 +458,685 @@ button.secondary{
 <body>
 
 <header>
-<p>COMMUNITY RESILIENCE · PROTOTYPE</p>
-<h1>Pahunch Ledger</h1>
-<p>Helping communities organise essential needs when mountain roads are disrupted.</p>
+  <div class="header-content">
+    <div class="eyebrow">COMMUNITY RESILIENCE · ESSENTIAL NEEDS</div>
+    <h1>Pahunch Ledger</h1>
+    <p>
+      A community-centred prototype for recording and prioritising
+      essential needs during mountain road disruptions.
+    </p>
+    <span class="prototype-label">Prototype · Demonstration only</span>
+  </div>
 </header>
 
 <main>
 
-<div class="card">
-<h2>Record an affected need</h2>
+  <section id="reportFormSection">
+    <h2>Record an essential need</h2>
+    <p class="section-description">
+      Enter a sample or demonstration report about an affected location
+      and the essential service that needs attention.
+    </p>
 
-<p class="note">
-Demo prototype only. Reports are stored in this browser on this device.
-They are not sent to authorities or shared with other users.
-Do not enter personal or sensitive information.
-For emergencies, contact official services.
-</p>
+    <form id="reportForm">
+      <div class="form-grid">
 
-<form id="reportForm">
+        <div class="field">
+          <label for="place">Village / affected area *</label>
+          <input
+            id="place"
+            type="text"
+            maxlength="80"
+            placeholder="Example: Sample Village"
+            required
+          >
+        </div>
 
-<label for="place">Village or area</label>
-<input id="place" maxlength="80" required placeholder="Example: Sample Village">
+        <div class="field">
+          <label for="service">Essential service *</label>
+          <select id="service" required>
+            <option value="">Choose a service</option>
+            <option value="Medicine access">Medicine access</option>
+            <option value="Healthcare access">Healthcare access</option>
+            <option value="School transport">School transport</option>
+            <option value="Water supply">Water supply</option>
+            <option value="Essential supplies">Essential supplies</option>
+          </select>
+        </div>
 
-<label for="service">Affected essential service</label>
-<select id="service" required>
-<option value="">Choose a service</option>
-<option>Medicine access</option>
-<option>Healthcare access</option>
-<option>School transport</option>
-<option>Water supply</option>
-<option>Essential supplies</option>
-</select>
+        <div class="field">
+          <label for="urgency">Urgency level *</label>
+          <select id="urgency" required>
+            <option value="">Choose urgency</option>
+            <option value="3">High</option>
+            <option value="2">Medium</option>
+            <option value="1">Low</option>
+          </select>
+        </div>
 
-<label for="urgency">Urgency</label>
-<select id="urgency" required>
-<option value="">Choose urgency</option>
-<option value="3">High</option>
-<option value="2">Medium</option>
-<option value="1">Low</option>
-</select>
+        <div class="field">
+          <label for="people">Estimated people affected *</label>
+          <input
+            id="people"
+            type="number"
+            min="1"
+            max="1000000"
+            step="1"
+            placeholder="Example: 120"
+            required
+          >
+          <span class="help">Enter an estimate, not a verified count.</span>
+        </div>
 
-<label for="people">Estimated people affected</label>
-<input id="people" type="number" min="1" max="1000000" required placeholder="Enter an estimate">
+        <div class="field full">
+          <label for="details">Additional details (optional)</label>
+          <textarea
+            id="details"
+            maxlength="300"
+            placeholder="Briefly describe the disruption or essential need."
+          ></textarea>
+          <span class="help">Maximum 300 characters.</span>
+        </div>
 
-<label for="details">Additional details (optional)</label>
-<textarea id="details" maxlength="300" placeholder="Describe the service disruption"></textarea>
+      </div>
 
-<button type="submit">Save report to priority list</button>
+      <div class="form-actions">
+        <button type="submit">Save report</button>
+        <button type="reset" class="secondary">Reset form</button>
+      </div>
 
-</form>
-</div>
+      <div id="formMessage" class="message" role="status" aria-live="polite"></div>
+    </form>
+  </section>
 
-<div class="card">
+  <section>
+    <h2>Dashboard summary</h2>
+    <p class="section-description">
+      A summary of reports saved in this browser.
+    </p>
 
-<h2>Dashboard summary</h2>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <span>Total reports</span>
+        <strong id="totalCount">0</strong>
+      </div>
 
-<div class="summary">
+      <div class="summary-card">
+        <span>Pending review</span>
+        <strong id="pendingCount">0</strong>
+      </div>
 
-<div class="summary-card">
-<h3>Total reports</h3>
-<p id="totalReports">0</p>
-</div>
+      <div class="summary-card">
+        <span>Reviewed</span>
+        <strong id="reviewedCount">0</strong>
+      </div>
 
-<div class="summary-card">
-<h3>Pending review</h3>
-<p id="pendingReports">0</p>
-</div>
+      <div class="summary-card">
+        <span>Unable to verify</span>
+        <strong id="unableCount">0</strong>
+      </div>
+    </div>
+  </section>
 
-<div class="summary-card">
-<h3>Reviewed</h3>
-<p id="reviewedReports">0</p>
-</div>
+  <section>
+    <h2>Priority list</h2>
+    <p class="section-description">
+      Reports are sorted by their calculated priority score, with the
+      highest score displayed first.
+    </p>
 
-<div class="summary-card">
-<h3>Unable to verify</h3>
-<p id="unverifiedReports">0</p>
-</div>
+    <div class="toolbar">
+      <input
+        id="searchInput"
+        type="search"
+        placeholder="Search by village, service or details"
+        aria-label="Search reports"
+      >
 
-</div>
+      <select id="filterStatus" aria-label="Filter reports by review status">
+        <option value="All">All reports</option>
+        <option value="Pending review">Pending review</option>
+        <option value="Reviewed — details recorded">Reviewed</option>
+        <option value="Unable to verify">Unable to verify</option>
+      </select>
+    </div>
 
-<h2>Priority list</h2>
+    <div class="form-actions">
+      <button type="button" id="exportButton" class="secondary">
+        Download CSV report
+      </button>
+      <button type="button" id="printButton" class="secondary">
+        Print summary
+      </button>
+      <button type="button" id="clearButton" class="danger">
+        Clear all reports
+      </button>
+    </div>
 
-<p class="note">
-Demo rule: score = urgency × 2 + impact points.
-Impact points are 3 for 100+ people, 2 for 20–99,
-and 1 for fewer than 20.
-This is an experimental rule, not an official emergency assessment.
-</p>
+    <p class="small-note">
+      CSV export includes all reports saved in this browser, regardless
+      of the active search or filter.
+    </p>
 
-<p id="saveStatus" class="note" role="status">
-Checking local storage…
-</p>
+    <div id="reportList" class="report-list" aria-live="polite"></div>
+  </section>
 
-<div id="reports"></div>
+  <section>
+    <h2>How prioritisation works</h2>
+    <p class="section-description">
+      The prototype uses a simple experimental rule to organise
+      demonstration reports.
+    </p>
 
-<button id="clearButton" type="button" class="secondary">
-Clear all saved demo reports
-</button>
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>Urgency points</h3>
+        <p>
+          High = 3, Medium = 2 and Low = 1.
+          Urgency points are multiplied by 2.
+        </p>
+      </div>
 
-</div>
+      <div class="info-card">
+        <h3>Impact points</h3>
+        <p>
+          Fewer than 20 people = 1 point;
+          20–99 people = 2 points;
+          100 or more people = 3 points.
+        </p>
+      </div>
+    </div>
 
-<div class="card">
-<h3>Limitations</h3>
-<p class="note">
-This prototype does not verify incidents, provide live road conditions,
-contact authorities or synchronise reports.
-Browser storage can be cleared by the user or browser.
-Do not rely on this tool for emergency decisions.
-</p>
-</div>
+    <p style="margin-bottom:0;">
+      <strong>Priority score = (Urgency × 2) + Impact points</strong>
+    </p>
+    <p class="small-note">
+      This experimental scoring method is for demonstration and does
+      not represent an official emergency assessment or government
+      prioritisation standard.
+    </p>
+  </section>
+
+  <section>
+    <h2>Review workflow</h2>
+    <p class="section-description">
+      The prototype allows a user to label the review stage of each
+      locally saved report.
+    </p>
+
+    <ul>
+      <li><strong>Pending review:</strong> The report has not yet been marked as reviewed.</li>
+      <li><strong>Reviewed — details recorded:</strong> A user has marked the details as reviewed.</li>
+      <li><strong>Unable to verify:</strong> The details could not be verified by the reviewer.</li>
+    </ul>
+
+    <p class="small-note">
+      Changing a status is a manual action. It does not independently
+      verify a report or confirm that an authority has reviewed it.
+    </p>
+  </section>
+
+  <section>
+    <h2>Prototype scope and limitations</h2>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>What it demonstrates</h3>
+        <p>
+          Recording essential needs, estimating impact, calculating
+          priority scores, organising reports and tracking manual
+          review labels.
+        </p>
+      </div>
+
+      <div class="info-card">
+        <h3>What it does not yet provide</h3>
+        <p>
+          Shared reporting between users, live road-condition data,
+          independent verification, official authority contact or
+          real-time synchronisation.
+        </p>
+      </div>
+    </div>
+
+    <p class="small-note" style="margin-top:15px;">
+      Reports are stored locally in the browser used to enter them.
+      Clearing browser data may remove saved reports. This prototype
+      has not been validated through real-world deployment and must
+      not be used as a substitute for official emergency services
+      or emergency decision-making.
+    </p>
+  </section>
 
 </main>
 
+<footer>
+  Pahunch Ledger · Community Resilience Prototype · VBYLD 2027
+</footer>
+
 <script>
-const STORAGE_KEY="pahunchLedgerDemoReportsV1";
+"use strict";
 
-const form=document.getElementById("reportForm");
-const list=document.getElementById("reports");
-const statusText=document.getElementById("saveStatus");
-const clearButton=document.getElementById("clearButton");
+const STORAGE_KEY = "pahunchLedgerDemoReportsV1";
 
-let reports=[];
-let storageAvailable=true;
+const form = document.getElementById("reportForm");
+const reportList = document.getElementById("reportList");
+const formMessage = document.getElementById("formMessage");
+const searchInput = document.getElementById("searchInput");
+const filterStatus = document.getElementById("filterStatus");
 
-function loadReports(){
-try{
-const saved=localStorage.getItem(STORAGE_KEY);
-reports=saved?JSON.parse(saved):[];
+const STATUS_OPTIONS = [
+  "Pending review",
+  "Reviewed — details recorded",
+  "Unable to verify"
+];
 
-if(!Array.isArray(reports)){
-reports=[];
+let reports = loadReports();
+
+function loadReports() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+
+    if (!stored) return [];
+
+    const parsed = JSON.parse(stored);
+
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.filter(report =>
+      report &&
+      typeof report === "object" &&
+      typeof report.place === "string" &&
+      typeof report.service === "string" &&
+      Number.isFinite(Number(report.people)) &&
+      Number.isFinite(Number(report.urgency))
+    ).map(report => ({
+      ...report,
+      people: Number(report.people),
+      urgency: Number(report.urgency),
+      reviewStatus: STATUS_OPTIONS.includes(report.reviewStatus)
+        ? report.reviewStatus
+        : "Pending review"
+    }));
+
+  } catch (error) {
+    console.error("Could not load saved reports:", error);
+    return [];
+  }
 }
 
-}catch(error){
-reports=[];
-storageAvailable=false;
-}
-}
-
-function saveReports(){
-try{
-localStorage.setItem(STORAGE_KEY,JSON.stringify(reports));
-storageAvailable=true;
-statusText.textContent="Saved in this browser on this device.";
-
-}catch(error){
-storageAvailable=false;
-statusText.textContent="Browser storage unavailable. Reports may not persist.";
-}
+function saveReports() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(reports));
+    return true;
+  } catch (error) {
+    console.error("Could not save reports:", error);
+    return false;
+  }
 }
 
-function renderReports(){
-
-document.getElementById("totalReports").textContent=reports.length;
-
-document.getElementById("pendingReports").textContent=
-reports.filter(report=>
-(report.reviewStatus||"Pending review")==="Pending review"
-).length;
-
-document.getElementById("reviewedReports").textContent=
-reports.filter(report=>
-report.reviewStatus==="Reviewed — details recorded"
-).length;
-
-document.getElementById("unverifiedReports").textContent=
-reports.filter(report=>
-report.reviewStatus==="Unable to verify"
-).length;
-
-list.replaceChildren();
-
-if(reports.length===0){
-const empty=document.createElement("p");
-empty.className="note";
-empty.textContent="No saved demo reports yet.";
-list.appendChild(empty);
-return;
+function getImpactPoints(people) {
+  if (people >= 100) return 3;
+  if (people >= 20) return 2;
+  return 1;
 }
 
-reports.sort((a,b)=>b.score-a.score);
-
-reports.forEach((report,index)=>{
-
-const card=document.createElement("div");
-card.className="report";
-
-const title=document.createElement("strong");
-title.textContent=(index+1)+". "+report.place+" — "+report.service;
-
-const tag=document.createElement("p");
-const badge=document.createElement("span");
-
-badge.className="tag";
-badge.textContent="Priority score: "+report.score;
-tag.appendChild(badge);
-
-const reviewLabel=document.createElement("label");
-reviewLabel.textContent="Review status:";
-
-const reviewSelect=document.createElement("select");
-reviewSelect.setAttribute("aria-label","Review status for "+report.place);
-
-["Pending review","Reviewed — details recorded","Unable to verify"].forEach(status=>{
-
-const option=document.createElement("option");
-option.value=status;
-option.textContent=status;
-
-if((report.reviewStatus||"Pending review")===status){
-option.selected=true;
+function getPriorityScore(report) {
+  return (Number(report.urgency) * 2) +
+    getImpactPoints(Number(report.people));
 }
 
-reviewSelect.appendChild(option);
+function updateSummary() {
+  document.getElementById("totalCount").textContent = reports.length;
 
+  document.getElementById("pendingCount").textContent =
+    reports.filter(r => r.reviewStatus === "Pending review").length;
+
+  document.getElementById("reviewedCount").textContent =
+    reports.filter(r => r.reviewStatus === "Reviewed — details recorded").length;
+
+  document.getElementById("unableCount").textContent =
+    reports.filter(r => r.reviewStatus === "Unable to verify").length;
+}
+
+function showMessage(message, type) {
+  formMessage.textContent = message;
+  formMessage.className = "message " + type;
+}
+
+function createTextElement(tag, className, content) {
+  const element = document.createElement(tag);
+
+  if (className) {
+    element.className = className;
+  }
+
+  element.textContent = content;
+
+  return element;
+}
+
+function formatDate(value) {
+  if (!value) return "Date unavailable";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Date unavailable";
+  }
+
+  return date.toLocaleString();
+}
+
+function renderReports() {
+  updateSummary();
+  reportList.replaceChildren();
+
+  const searchTerm = searchInput.value.trim().toLowerCase();
+  const selectedStatus = filterStatus.value;
+
+  const filteredReports = reports
+    .map((report, index) => ({ report, index }))
+    .filter(({ report }) => {
+      const matchesStatus =
+        selectedStatus === "All" ||
+        report.reviewStatus === selectedStatus;
+
+      const searchableText = [
+        report.place,
+        report.service,
+        report.details || ""
+      ].join(" ").toLowerCase();
+
+      const matchesSearch = searchableText.includes(searchTerm);
+
+      return matchesStatus && matchesSearch;
+    })
+    .sort((a, b) => {
+      const scoreDifference =
+        getPriorityScore(b.report) - getPriorityScore(a.report);
+
+      if (scoreDifference !== 0) return scoreDifference;
+
+      return new Date(b.report.createdAt || 0) -
+        new Date(a.report.createdAt || 0);
+    });
+
+  if (filteredReports.length === 0) {
+    const empty = createTextElement(
+      "div",
+      "empty-state",
+      reports.length === 0
+        ? "No reports have been saved yet. Add a demonstration report using the form above."
+        : "No reports match your current search or filter."
+    );
+
+    reportList.appendChild(empty);
+    return;
+  }
+
+  filteredReports.forEach(({ report, index }) => {
+    const card = document.createElement("article");
+    card.className = "report-card";
+
+    const heading = document.createElement("div");
+    heading.className = "report-heading";
+
+    const title = createTextElement(
+      "h3",
+      "",
+      (index + 1) + ". " + report.place + " — " + report.service
+    );
+
+    const score = createTextElement(
+      "span",
+      "score",
+      "Priority score: " + getPriorityScore(report)
+    );
+
+    heading.append(title, score);
+
+    const meta = document.createElement("div");
+    meta.className = "report-meta";
+
+    const statusText = createTextElement(
+      "p",
+      "",
+      "Review status: " + report.reviewStatus
+    );
+
+    const dateText = createTextElement(
+      "p",
+      "",
+      "Reported on: " + formatDate(report.createdAt)
+    );
+
+    const peopleText = createTextElement(
+      "p",
+      "",
+      "Estimated people affected: " + report.people
+    );
+
+    const urgencyNames = {
+      3: "High",
+      2: "Medium",
+      1: "Low"
+    };
+
+    const urgencyText = createTextElement(
+      "p",
+      "",
+      "Urgency: " + (urgencyNames[report.urgency] || "Not available")
+    );
+
+    meta.append(statusText, dateText, peopleText, urgencyText);
+
+    const statusRow = document.createElement("div");
+    statusRow.className = "status-row";
+
+    const statusLabel = document.createElement("label");
+    statusLabel.textContent = "Update review status:";
+    statusLabel.htmlFor = "status-" + index;
+
+    const statusSelect = document.createElement("select");
+    statusSelect.id = "status-" + index;
+
+    STATUS_OPTIONS.forEach(optionText => {
+      const option = document.createElement("option");
+      option.value = optionText;
+      option.textContent = optionText;
+      statusSelect.appendChild(option);
+    });
+
+    statusSelect.value = report.reviewStatus;
+
+    statusSelect.addEventListener("change", () => {
+      reports[index].reviewStatus = statusSelect.value;
+
+      if (!saveReports()) {
+        showMessage(
+          "The status could not be saved. Browser storage may be full or unavailable.",
+          "error"
+        );
+        reports[index].reviewStatus = "Pending review";
+      }
+
+      renderReports();
+    });
+
+    statusRow.append(statusLabel, statusSelect);
+
+    card.append(heading, meta, statusRow);
+
+    if (report.details) {
+      card.appendChild(
+        createTextElement("p", "report-details", report.details)
+      );
+    }
+
+    card.appendChild(
+      createTextElement(
+        "p",
+        "local-note",
+        "Locally saved demonstration report — not submitted to authorities."
+      )
+    );
+
+    reportList.appendChild(card);
+  });
+}
+
+form.addEventListener("submit", event => {
+  event.preventDefault();
+
+  const place = document.getElementById("place").value.trim();
+  const service = document.getElementById("service").value;
+  const urgency = Number(document.getElementById("urgency").value);
+  const people = Number(document.getElementById("people").value);
+  const details = document.getElementById("details").value.trim();
+
+  if (!place || !service || ![1, 2, 3].includes(urgency)) {
+    showMessage("Please complete all required fields.", "error");
+    return;
+  }
+
+  if (
+    !Number.isSafeInteger(people) ||
+    people < 1 ||
+    people > 1000000
+  ) {
+    showMessage(
+      "Enter a whole-number estimate between 1 and 1,000,000.",
+      "error"
+    );
+    return;
+  }
+
+  const newReport = {
+    id: (window.crypto && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : String(Date.now()) + "-" + Math.random().toString(16).slice(2),
+    place,
+    service,
+    urgency,
+    people,
+    details,
+    createdAt: new Date().toISOString(),
+    reviewStatus: "Pending review"
+  };
+
+  reports.push(newReport);
+
+  if (!saveReports()) {
+    reports.pop();
+
+    showMessage(
+      "The report could not be saved. Check your browser storage settings.",
+      "error"
+    );
+    return;
+  }
+
+  form.reset();
+  showMessage("Report saved successfully in this browser.", "success");
+  renderReports();
 });
 
-reviewSelect.addEventListener("change",function(){
+searchInput.addEventListener("input", renderReports);
+filterStatus.addEventListener("change", renderReports);
 
-report.reviewStatus=reviewSelect.value;
-saveReports();
+document.getElementById("clearButton").addEventListener("click", () => {
+  if (reports.length === 0) {
+    showMessage("There are no reports to clear.", "error");
+    return;
+  }
+
+  const confirmed = window.confirm(
+    "Are you sure you want to permanently clear all reports saved in this browser?"
+  );
+
+  if (!confirmed) return;
+
+  const previousReports = reports;
+  reports = [];
+
+  if (!saveReports()) {
+    reports = previousReports;
+
+    showMessage(
+      "Reports could not be cleared. Please try again.",
+      "error"
+    );
+    return;
+  }
+
+  showMessage("All locally saved reports have been cleared.", "success");
+  renderReports();
+});
+
+function csvEscape(value) {
+  const text = String(value ?? "");
+  return '"' + text.replace(/"/g, '""') + '"';
+}
+
+document.getElementById("exportButton").addEventListener("click", () => {
+  if (reports.length === 0) {
+    showMessage("There are no reports to export.", "error");
+    return;
+  }
+
+  const headings = [
+    "Village or area",
+    "Essential service",
+    "Urgency",
+    "Estimated people affected",
+    "Priority score",
+    "Review status",
+    "Reported on",
+    "Additional details"
+  ];
+
+  const rows = reports.map(report => [
+    report.place,
+    report.service,
+    report.urgency === 3 ? "High" :
+      report.urgency === 2 ? "Medium" : "Low",
+    report.people,
+    getPriorityScore(report),
+    report.reviewStatus,
+    formatDate(report.createdAt),
+    report.details || ""
+  ]);
+
+  const csvContent = [
+    headings.map(csvEscape).join(","),
+    ...rows.map(row => row.map(csvEscape).join(","))
+  ].join("\r\n");
+
+  const blob = new Blob(
+    ["\uFEFF" + csvContent],
+    { type: "text/csv;charset=utf-8;" }
+  );
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "pahunch-ledger-reports.csv";
+
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  URL.revokeObjectURL(url);
+  showMessage("CSV report prepared for download.", "success");
+});
+
+document.getElementById("printButton").addEventListener("click", () => {
+  window.print();
+});
+
 renderReports();
-
-});
-
-const time=document.createElement("p");
-time.className="note";
-time.textContent="Reported on: "+
-(report.createdAt?new Date(report.createdAt).toLocaleString():"Date unavailable");
-
-const people=document.createElement("p");
-people.textContent="Estimated people affected: "+report.people;
-
-const details=document.createElement("p");
-details.textContent=report.details||"No additional details supplied.";
-
-const demo=document.createElement("p");
-demo.className="note";
-demo.textContent="Locally saved demo report — not submitted to authorities.";
-
-card.append(title,tag,reviewLabel,reviewSelect,time,people,details,demo);
-
-list.appendChild(card);
-
-});
-
-}
-
-form.addEventListener("submit",function(event){
-
-event.preventDefault();
-
-const place=document.getElementById("place").value.trim();
-const service=document.getElementById("service").value;
-const urgency=Number(document.getElementById("urgency").value);
-const people=Number(document.getElementById("people").value);
-const details=document.getElementById("details").value.trim();
-
-if(!place||!service||!urgency||!Number.isFinite(people)||people<1||people>1000000){
-alert("Please complete the required fields with a valid estimate.");
-return;
-}
-
-const impact=people>=100?3:people>=20?2:1;
-
-reports.push({
-place:place,
-service:service,
-people:people,
-details:details,
-score:urgency*2+impact,
-createdAt:new Date().toISOString(),
-reviewStatus:"Pending review"
-});
-
-saveReports();
-renderReports();
-form.reset();
-
-});
-
-clearButton.addEventListener("click",function(){
-
-if(!confirm("Delete all locally saved demo reports from this browser?")){
-return;
-}
-
-reports=[];
-saveReports();
-renderReports();
-
-});
-
-loadReports();
-renderReports();
-
-if(storageAvailable){
-statusText.textContent="Local browser storage is ready.";
-}else{
-statusText.textContent="Could not read browser storage. Saving may not work.";
-}
-
 </script>
 
 </body>
