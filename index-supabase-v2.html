@@ -1,0 +1,830 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#174b37">
+<title>Pahunch Ledger | V2</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+ --green:#17583e;--dark:#123d2d;--light:#edf5ef;
+ --border:#dce8df;--text:#20352a;--muted:#687a6d;
+ --white:#fff;--red:#a33c32;--amber:#a36a13;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#f3f7f4;color:var(--text);font-family:Arial,sans-serif}
+header{background:linear-gradient(120deg,#123d2d,#23714d);color:white;padding:23px 18px}
+header h1{margin:0;font-size:27px}
+header p{margin:7px 0 0;color:#d9e9de;font-size:14px}
+main{max-width:1120px;margin:22px auto;padding:0 14px}
+.card{background:white;border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:16px}
+h2{font-size:19px;margin:0 0 14px}
+h3{font-size:15px;margin:16px 0 9px}
+p{line-height:1.5}
+label{display:block;font-size:13px;font-weight:bold;margin:12px 0 5px}
+input,select,textarea{
+ width:100%;padding:11px;border:1px solid #cbd8ce;border-radius:8px;
+ font-size:14px;background:white;color:var(--text)
+}
+textarea{min-height:75px;resize:vertical}
+button{
+ border:0;border-radius:8px;padding:10px 14px;background:var(--green);
+ color:white;font-weight:bold;font-size:13px;margin-top:10px;cursor:pointer
+}
+button.secondary{background:#e7f0e9;color:var(--dark)}
+button.danger{background:#a33c32}
+button:disabled{opacity:.5;cursor:not-allowed}
+.hidden{display:none!important}
+.muted{color:var(--muted);font-size:13px}
+#message{padding:11px;border-radius:9px;margin-bottom:14px;white-space:pre-wrap;font-size:14px}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.tag{display:inline-block;background:#e7f0e9;color:#174b37;padding:4px 9px;border-radius:20px;font-size:12px}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.metric{padding:14px;border:1px solid var(--border);border-radius:11px;background:#fbfdfb}
+.metric strong{display:block;font-size:25px;color:var(--green);margin-top:7px;overflow-wrap:anywhere}
+.metric span{font-size:12px;color:var(--muted)}
+.filters{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}
+.report{border:1px solid var(--border);border-radius:11px;padding:14px;margin:12px 0}
+.report p{margin:6px 0;font-size:13px;overflow-wrap:anywhere}
+.history{background:#f7faf7;border-radius:8px;padding:11px;margin-top:10px}
+.history p{font-size:12px}
+.grid-two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.bar-row{display:grid;grid-template-columns:110px 1fr 35px;gap:9px;align-items:center;margin:10px 0;font-size:13px}
+.bar{height:12px;border-radius:20px;background:#e8efe9;overflow:hidden}
+.bar span{display:block;height:100%;background:#34815c;border-radius:20px}
+.empty{padding:18px;text-align:center;color:var(--muted);font-size:13px}
+.actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.actions button{margin-top:5px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:24px}
+@media(max-width:650px){
+ .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .filters,.grid-two{grid-template-columns:1fr}
+ .bar-row{grid-template-columns:85px 1fr 25px}
+ header h1{font-size:24px}
+ .card{padding:15px}
+}
+</style>
+</head>
+<body>
+
+<header>
+ <h1>Pahunch Ledger</h1>
+ <p>Tracking essential needs during mountain road disruptions</p>
+</header>
+
+<main>
+ <div id="message" class="hidden" role="status" aria-live="polite"></div>
+
+ <section id="loginCard" class="card">
+  <h2>Welcome back</h2>
+  <p class="muted">Sign in to access your role-based dashboard.</p>
+  <form id="loginForm">
+   <label for="email">Email</label>
+   <input id="email" type="email" required autocomplete="username">
+   <label for="password">Password</label>
+   <input id="password" type="password" required autocomplete="current-password">
+   <button id="loginBtn" type="submit">Log in</button>
+  </form>
+ </section>
+
+ <section id="app" class="hidden">
+
+  <section class="card">
+   <div class="topline">
+    <div>
+     <h2 id="welcome">Dashboard</h2>
+     <span id="roleTag" class="tag"></span>
+    </div>
+    <div class="actions">
+     <button id="refreshBtn" class="secondary">Refresh</button>
+     <button id="logoutBtn" class="secondary">Log out</button>
+    </div>
+   </div>
+   <p class="muted">Prototype using synthetic demonstration data. Not a live emergency response service.</p>
+  </section>
+
+  <section class="card">
+   <h2>Dashboard overview</h2>
+   <div class="metrics">
+    <div class="metric"><span>Reports visible</span><strong id="totalReports">0</strong></div>
+    <div class="metric"><span>Pending review</span><strong id="pendingReports">0</strong></div>
+    <div class="metric"><span>Verified</span><strong id="verifiedReports">0</strong></div>
+    <div class="metric"><span>Rejected</span><strong id="rejectedReports">0</strong></div>
+    <div class="metric"><span>People affected*</span><strong id="affectedPeople">0</strong></div>
+    <div class="metric"><span>High urgency</span><strong id="highReports">0</strong></div>
+    <div class="metric"><span>People assisted*</span><strong id="assistedPeople">—</strong></div>
+    <div class="metric"><span>Completed assistance</span><strong id="completedAssistance">—</strong></div>
+   </div>
+   <p class="muted">*Figures reflect records your account is permitted to access. People affected and people assisted are different measures.</p>
+  </section>
+
+  <section class="card">
+   <h2>Report analytics</h2>
+   <div class="grid-two">
+    <div>
+     <h3>Verification status</h3>
+     <div id="statusChart"></div>
+    </div>
+    <div>
+     <h3>Urgency distribution</h3>
+     <div id="urgencyChart"></div>
+    </div>
+   </div>
+   <h3>Reports by service</h3>
+   <div id="serviceChart"></div>
+  </section>
+
+  <section id="reporterSection" class="card hidden">
+   <h2>Submit a community needs report</h2>
+   <form id="reportForm">
+    <label for="village">Village / area</label>
+    <input id="village" maxlength="100" required>
+    <label for="district">District</label>
+    <input id="district" maxlength="100" required>
+    <label for="state">State</label>
+    <input id="state" value="Himachal Pradesh" maxlength="100" required>
+
+    <label for="service">Service needed</label>
+    <select id="service" required>
+     <option value="">Choose a service</option>
+     <option>Medicine access</option>
+     <option>Water supply</option>
+     <option>Food and essential supplies</option>
+     <option>Road access</option>
+     <option>Electricity</option>
+     <option>Communication</option>
+     <option>Other essential need</option>
+    </select>
+
+    <label for="urgency">Urgency</label>
+    <select id="urgency" required>
+     <option>High</option>
+     <option selected>Medium</option>
+     <option>Low</option>
+    </select>
+
+    <label for="people">Estimated people affected</label>
+    <input id="people" type="number" min="1" max="100000" required>
+
+    <label for="details">Additional details (optional)</label>
+    <textarea id="details" maxlength="1000" placeholder="Describe the reported need. Do not enter names or sensitive personal information."></textarea>
+
+    <button id="submitReportBtn" type="submit">Submit report</button>
+   </form>
+  </section>
+
+  <section class="card">
+   <div class="topline">
+    <h2>Community reports</h2>
+    <button id="exportBtn" class="secondary">Export CSV</button>
+   </div>
+
+   <div class="filters">
+    <input id="searchInput" placeholder="Search village or service…" aria-label="Search reports">
+    <select id="statusFilter" aria-label="Filter by status">
+     <option value="">All statuses</option>
+     <option>Pending</option>
+     <option>Verified</option>
+     <option>Rejected</option>
+     <option>Unable to verify</option>
+    </select>
+    <select id="urgencyFilter" aria-label="Filter by urgency">
+     <option value="">All urgency levels</option>
+     <option>High</option>
+     <option>Medium</option>
+     <option>Low</option>
+    </select>
+   </div>
+   <div id="reportList"><div class="empty">Reports will appear here.</div></div>
+  </section>
+
+  <section id="assistanceSection" class="card hidden">
+   <h2>Assistance coordination</h2>
+   <p class="muted">Create and update assistance records linked to community reports.</p>
+
+   <form id="assistanceForm">
+    <label for="assistanceReport">Related report</label>
+    <select id="assistanceReport" required></select>
+
+    <label for="assistanceType">Type of assistance</label>
+    <input id="assistanceType" maxlength="150" required placeholder="e.g. Water supply coordination">
+
+    <label for="peopleAssisted">People assisted (aggregate number)</label>
+    <input id="peopleAssisted" type="number" min="0" value="0" required>
+
+    <label for="assistanceStatus">Status</label>
+    <select id="assistanceStatus">
+     <option>Pending</option>
+     <option>Assigned</option>
+     <option>In progress</option>
+     <option>Completed</option>
+    </select>
+
+    <button id="createAssistanceBtn" type="submit">Create assistance record</button>
+   </form>
+
+   <h3>Existing assistance records</h3>
+   <div id="assistanceList"><div class="empty">No records loaded.</div></div>
+  </section>
+
+ </section>
+</main>
+
+<footer>
+ Pahunch Ledger V2 · Prototype only · Synthetic demonstration data
+</footer>
+
+<script>
+"use strict";
+
+const SUPABASE_URL = "https://umewjdoawwdldgenagvp.supabase.co";
+const SUPABASE_KEY = "sb_publishable_GX_I8Y-H4W_q9BxE50mjuW";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+let currentProfile = null;
+let reports = [];
+let villages = [];
+let reviews = [];
+let assistance = [];
+let filteredReports = [];
+let busy = false;
+
+const $ = id => document.getElementById(id);
+
+function showMessage(text, error=false) {
+ const box=$("message");
+ box.textContent=text;
+ box.classList.remove("hidden");
+ box.style.background=error?"#fce9e7":"#e7f3e9";
+ box.style.color=error?"#8b2820":"#174b37";
+}
+
+function clearMessage() {
+ $("message").classList.add("hidden");
+}
+
+function safe(value) {
+ return String(value ?? "").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ })[c]);
+}
+
+function dateLabel(value) {
+ if(!value) return "Not recorded";
+ const d=new Date(value);
+ return Number.isNaN(d.getTime())?"Not recorded":d.toLocaleString();
+}
+
+function score(report) {
+ const points={High:6,Medium:4,Low:2};
+ const n=Number(report.people_affected||0);
+ const impact=n>=100?3:n>=20?2:1;
+ return (points[report.urgency]||0)+impact;
+}
+
+function villageLabel(id) {
+ const v=villages.find(item=>item.id===id);
+ return v?`${v.village_name}, ${v.district}`:"Area unavailable";
+}
+
+function canReview() {
+ return currentProfile && ["Reviewer","Coordinator"].includes(currentProfile.role);
+}
+
+function setBusy(button, state, label) {
+ if(!button) return;
+ button.disabled=state;
+ if(state) {
+  button.dataset.originalText=button.textContent;
+  button.textContent=label||"Please wait…";
+ } else {
+  button.textContent=button.dataset.originalText||button.textContent;
+ }
+}
+
+function drawBars(targetId,entries) {
+ const target=$(targetId);
+ const max=Math.max(1,...entries.map(item=>item.count));
+
+ if(!entries.length) {
+  target.innerHTML='<p class="muted">No data available.</p>';
+  return;
+ }
+
+ target.innerHTML=entries.map(item=>`
+  <div class="bar-row">
+   <span>${safe(item.label)}</span>
+   <div class="bar"><span style="width:${item.count/max*100}%"></span></div>
+   <strong>${item.count}</strong>
+  </div>
+ `).join("");
+}
+
+function renderAnalytics() {
+ const count=status=>reports.filter(r=>r.verification_status===status).length;
+
+ $("totalReports").textContent=reports.length;
+ $("pendingReports").textContent=count("Pending");
+ $("verifiedReports").textContent=count("Verified");
+ $("rejectedReports").textContent=count("Rejected");
+ $("affectedPeople").textContent=reports.reduce((sum,r)=>sum+Number(r.people_affected||0),0);
+ $("highReports").textContent=reports.filter(r=>r.urgency==="High").length;
+
+ const coordinator=currentProfile.role==="Coordinator";
+ $("assistedPeople").textContent=coordinator
+  ? assistance.reduce((sum,a)=>sum+Number(a.people_assisted||0),0)
+  : "—";
+ $("completedAssistance").textContent=coordinator
+  ? assistance.filter(a=>a.status==="Completed").length
+  : "—";
+
+ drawBars("statusChart",[
+  {label:"Pending",count:count("Pending")},
+  {label:"Verified",count:count("Verified")},
+  {label:"Rejected",count:count("Rejected")},
+  {label:"Unable to verify",count:count("Unable to verify")}
+ ]);
+
+ drawBars("urgencyChart",["High","Medium","Low"].map(label=>({
+  label,count:reports.filter(r=>r.urgency===label).length
+ })));
+
+ const services={};
+ reports.forEach(r=>{
+  const name=r.service_type||"Other";
+  services[name]=(services[name]||0)+1;
+ });
+
+ drawBars("serviceChart",Object.entries(services).map(([label,count])=>({label,count})));
+}
+
+async function loadProfile(session) {
+ currentUser=session.user;
+
+ const {data,error}=await db.from("profiles")
+  .select("full_name,role")
+  .eq("id",currentUser.id)
+  .single();
+
+ if(error||!data) {
+  showMessage("Profile could not be loaded: "+(error?.message||"No profile found."),true);
+  return;
+ }
+
+ currentProfile=data;
+ $("loginCard").classList.add("hidden");
+ $("app").classList.remove("hidden");
+ $("welcome").textContent="Welcome, "+(data.full_name||"User");
+ $("roleTag").textContent=data.role;
+
+ $("reporterSection").classList.toggle("hidden",data.role!=="Reporter");
+ $("assistanceSection").classList.toggle("hidden",data.role!=="Coordinator");
+
+ await refreshAll();
+}
+
+async function refreshAll() {
+ if(busy) return;
+ busy=true;
+ clearMessage();
+ $("refreshBtn").disabled=true;
+ $("reportList").innerHTML='<div class="empty">Loading reports…</div>';
+
+ try {
+  const reportResult=await db.from("reports")
+   .select("*").order("created_at",{ascending:false});
+
+  if(reportResult.error) throw new Error("Reports: "+reportResult.error.message);
+  reports=reportResult.data||[];
+
+  const villageResult=await db.from("villages")
+   .select("id,village_name,district");
+
+  if(villageResult.error) throw new Error("Villages: "+villageResult.error.message);
+  villages=villageResult.data||[];
+
+  const reviewResult=await db.from("report_reviews")
+   .select("*").order("reviewed_at",{ascending:false});
+
+  if(reviewResult.error) throw new Error("Review history: "+reviewResult.error.message);
+  reviews=reviewResult.data||[];
+
+  assistance=[];
+
+  if(currentProfile.role==="Coordinator") {
+   const assistanceResult=await db.from("assistance_records")
+    .select("*").order("updated_at",{ascending:false});
+
+   if(assistanceResult.error) throw new Error("Assistance: "+assistanceResult.error.message);
+   assistance=assistanceResult.data||[];
+   renderAssistance();
+  }
+
+  renderAnalytics();
+  renderReports();
+  populateAssistanceOptions();
+
+ } catch(error) {
+  showMessage("Could not refresh the dashboard. "+error.message,true);
+ } finally {
+  busy=false;
+  $("refreshBtn").disabled=false;
+ }
+}
+
+function renderReports() {
+ const search=$("searchInput").value.trim().toLowerCase();
+ const status=$("statusFilter").value;
+ const urgency=$("urgencyFilter").value;
+
+ filteredReports=reports.filter(r=>{
+  const area=villageLabel(r.village_id).toLowerCase();
+  const service=String(r.service_type||"").toLowerCase();
+  return (!search||area.includes(search)||service.includes(search))
+   &&(!status||r.verification_status===status)
+   &&(!urgency||r.urgency===urgency);
+ });
+
+ const list=$("reportList");
+
+ if(!filteredReports.length) {
+  list.innerHTML='<div class="empty">No reports match these filters.</div>';
+  return;
+ }
+
+ list.innerHTML=filteredReports.map(r=>{
+  const history=reviews.filter(item=>item.report_id===r.id);
+
+  const historyHTML=history.length
+   ?history.map(item=>`
+     <div class="history">
+      <p><strong>${safe(item.decision)}</strong> · ${safe(dateLabel(item.reviewed_at))}</p>
+      <p>${safe(item.notes||"No review note")}</p>
+      <p class="muted">Reviewer account: ${safe(String(item.reviewer_id||"").slice(0,8))}…</p>
+     </div>
+    `).join("")
+   :'<p class="muted">No review history available.</p>';
+
+  const controls=canReview()?`
+   <div class="history">
+    <strong>Review report</strong>
+    <label>Decision</label>
+    <select id="decision-${safe(r.id)}">
+     <option value="">Choose decision</option>
+     <option>Verified</option>
+     <option>Rejected</option>
+     <option>Unable to verify</option>
+    </select>
+    <label>Review notes</label>
+    <textarea id="notes-${safe(r.id)}" maxlength="500" placeholder="Short review note"></textarea>
+    <button data-review="${safe(r.id)}">Save review</button>
+   </div>`:"";
+
+  return `
+   <article class="report">
+    <div class="topline">
+     <strong>${safe(r.service_type)}</strong>
+     <span class="tag">${safe(r.verification_status)}</span>
+    </div>
+    <p><strong>Area:</strong> ${safe(villageLabel(r.village_id))}</p>
+    <p><strong>Urgency:</strong> ${safe(r.urgency)} ·
+     <strong>People affected:</strong> ${safe(r.people_affected)}</p>
+    <p><strong>Priority indicator:</strong> ${score(r)} / 9</p>
+    <p><strong>Details:</strong> ${safe(r.details||"None provided")}</p>
+    <p class="muted">Submitted: ${safe(dateLabel(r.created_at))}</p>
+    <div class="history">
+     <strong>Verification history</strong>
+     ${historyHTML}
+    </div>
+    ${controls}
+   </article>`;
+ }).join("");
+}
+
+async function saveReview(reportId,button) {
+ const decision=$("decision-"+reportId).value;
+ const notes=$("notes-"+reportId).value.trim();
+
+ if(!decision) {
+  showMessage("Please choose a review decision first.",true);
+  return;
+ }
+
+ if(!canReview()) {
+  showMessage("Your account does not have reviewer permissions.",true);
+  return;
+ }
+
+ setBusy(button,true,"Saving…");
+
+ try {
+  const {error:updateError}=await db.from("reports")
+   .update({verification_status:decision})
+   .eq("id",reportId);
+
+  if(updateError) throw new Error("Status update failed: "+updateError.message);
+
+  const {error:historyError}=await db.from("report_reviews").insert({
+   report_id:reportId,
+   reviewer_id:currentUser.id,
+   decision:decision,
+   notes:notes||null
+  });
+
+  if(historyError) {
+   await refreshAll();
+   showMessage("The report status changed, but review history could not be saved. "+historyError.message,true);
+   return;
+  }
+
+  showMessage("Review and history saved successfully.");
+  await refreshAll();
+
+ } catch(error) {
+  showMessage(error.message,true);
+  setBusy(button,false);
+ }
+}
+
+$("reportList").addEventListener("click",async event=>{
+ const button=event.target.closest("[data-review]");
+ if(button) await saveReview(button.dataset.review,button);
+});
+
+async function submitReport(event) {
+ event.preventDefault();
+ clearMessage();
+
+ const button=$("submitReportBtn");
+ setBusy(button,true,"Submitting…");
+
+ try {
+  const name=$("village").value.trim();
+  const district=$("district").value.trim();
+  const state=$("state").value.trim();
+
+  if(!name||!district||!state) throw new Error("Complete the village, district and state fields.");
+
+  let village=villages.find(v=>
+   v.village_name.toLowerCase()===name.toLowerCase()
+   &&v.district.toLowerCase()===district.toLowerCase()
+  );
+
+  if(!village) {
+   const {data,error}=await db.from("villages").insert({
+    village_name:name,district,state
+   }).select().single();
+
+   if(error) throw new Error("Could not save village: "+error.message);
+   village=data;
+  }
+
+  const {error}=await db.from("reports").insert({
+   village_id:village.id,
+   reporter_id:currentUser.id,
+   service_type:$("service").value,
+   urgency:$("urgency").value,
+   people_affected:Number($("people").value),
+   details:$("details").value.trim()||null,
+   priority_score:0,
+   verification_status:"Pending"
+  });
+
+  if(error) throw new Error("Report submission failed: "+error.message);
+
+  $("reportForm").reset();
+  $("state").value="Himachal Pradesh";
+  showMessage("Report submitted successfully. It is now Pending review.");
+  await refreshAll();
+
+ } catch(error) {
+  showMessage(error.message,true);
+ } finally {
+  setBusy(button,false);
+ }
+}
+
+function populateAssistanceOptions() {
+ const select=$("assistanceReport");
+
+ select.innerHTML=reports.map(r=>`
+  <option value="${safe(r.id)}">
+   ${safe(r.service_type)} — ${safe(villageLabel(r.village_id))}
+  </option>
+ `).join("");
+
+ if(!reports.length) select.innerHTML='<option value="">No reports available</option>';
+}
+
+function renderAssistance() {
+ const target=$("assistanceList");
+
+ if(!assistance.length) {
+  target.innerHTML='<div class="empty">No assistance records yet.</div>';
+  return;
+ }
+
+ target.innerHTML=assistance.map(a=>{
+  const report=reports.find(r=>r.id===a.report_id);
+
+  return `
+   <article class="report">
+    <strong>${safe(a.assistance_type)}</strong>
+    <p>Related report: ${safe(report?report.service_type+" — "+villageLabel(report.village_id):"Unavailable")}</p>
+    <p>Last updated: ${safe(dateLabel(a.updated_at))}</p>
+
+    <label>Status</label>
+    <select id="assist-status-${safe(a.id)}">
+     ${["Pending","Assigned","In progress","Completed"].map(s=>
+      `<option ${a.status===s?"selected":""}>${s}</option>`
+     ).join("")}
+    </select>
+
+    <label>People assisted</label>
+    <input id="assist-people-${safe(a.id)}" type="number" min="0" max="100000" value="${safe(a.people_assisted)}">
+
+    <button data-assistance="${safe(a.id)}">Save changes</button>
+   </article>`;
+ }).join("");
+}
+
+async function createAssistance(event) {
+ event.preventDefault();
+ clearMessage();
+
+ const button=$("createAssistanceBtn");
+ setBusy(button,true,"Saving…");
+
+ try {
+  const reportId=$("assistanceReport").value;
+  const people=Number($("peopleAssisted").value);
+
+  if(!reportId) throw new Error("Select a report first.");
+  if(!Number.isInteger(people)||people<0) throw new Error("Enter a valid people-assisted number.");
+
+  const {error}=await db.from("assistance_records").insert({
+   report_id:reportId,
+   assigned_to:currentUser.id,
+   assistance_type:$("assistanceType").value.trim(),
+   people_assisted:people,
+   status:$("assistanceStatus").value
+  });
+
+  if(error) throw new Error("Could not create assistance record: "+error.message);
+
+  $("assistanceForm").reset();
+  $("peopleAssisted").value=0;
+  showMessage("Assistance record created successfully.");
+  await refreshAll();
+
+ } catch(error) {
+  showMessage(error.message,true);
+ } finally {
+  setBusy(button,false);
+ }
+}
+
+async function updateAssistance(id,button) {
+ if(currentProfile.role!=="Coordinator") {
+  showMessage("Only Coordinators can update assistance records.",true);
+  return;
+ }
+
+ const status=$("assist-status-"+id).value;
+ const people=Number($("assist-people-"+id).value);
+
+ if(!Number.isInteger(people)||people<0||people>100000) {
+  showMessage("Enter a valid number between 0 and 100000.",true);
+  return;
+ }
+
+ setBusy(button,true,"Updating…");
+
+ const {error}=await db.from("assistance_records")
+  .update({
+   status:status,
+   people_assisted:people,
+   updated_at:new Date().toISOString()
+  })
+  .eq("id",id);
+
+ if(error) {
+  showMessage("Could not update assistance record: "+error.message,true);
+  setBusy(button,false);
+  return;
+ }
+
+ showMessage("Assistance record updated successfully.");
+ await refreshAll();
+}
+
+$("assistanceList").addEventListener("click",async event=>{
+ const button=event.target.closest("[data-assistance]");
+ if(button) await updateAssistance(button.dataset.assistance,button);
+});
+
+function exportCSV() {
+ if(!filteredReports.length) {
+  showMessage("There are no visible reports to export.",true);
+  return;
+ }
+
+ const rows=[[
+  "Village","District","Service","Urgency","People affected",
+  "Priority indicator","Verification status","Details","Submitted"
+ ]];
+
+ filteredReports.forEach(r=>{
+  const v=villages.find(item=>item.id===r.village_id);
+  rows.push([
+   v?.village_name||"",
+   v?.district||"",
+   r.service_type||"",
+   r.urgency||"",
+   r.people_affected??"",
+   score(r),
+   r.verification_status||"",
+   r.details||"",
+   r.created_at||""
+  ]);
+ });
+
+ const csv=rows.map(row=>row.map(value=>
+  '"'+String(value).replace(/"/g,'""')+'"'
+ ).join(",")).join("\r\n");
+
+ const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});
+ const url=URL.createObjectURL(blob);
+ const link=document.createElement("a");
+ link.href=url;
+ link.download="pahunch-ledger-reports.csv";
+ link.click();
+ URL.revokeObjectURL(url);
+ showMessage("CSV export prepared.");
+}
+
+$("loginForm").addEventListener("submit",async event=>{
+ event.preventDefault();
+ clearMessage();
+
+ const button=$("loginBtn");
+ setBusy(button,true,"Logging in…");
+
+ try {
+  const {data,error}=await db.auth.signInWithPassword({
+   email:$("email").value.trim(),
+   password:$("password").value
+  });
+
+  if(error) throw new Error("Login failed: "+error.message);
+  await loadProfile(data.session);
+
+ } catch(error) {
+  showMessage(error.message,true);
+ } finally {
+  setBusy(button,false);
+ }
+});
+
+$("logoutBtn").addEventListener("click",async()=>{
+ const {error}=await db.auth.signOut();
+
+ if(error) {
+  showMessage("Logout failed: "+error.message,true);
+  return;
+ }
+
+ currentUser=null;
+ currentProfile=null;
+ reports=[];
+ villages=[];
+ reviews=[];
+ assistance=[];
+
+ $("app").classList.add("hidden");
+ $("loginCard").classList.remove("hidden");
+ $("password").value="";
+ showMessage("You have logged out.");
+});
+
+$("refreshBtn").addEventListener("click",refreshAll);
+$("reportForm").addEventListener("submit",submitReport);
+$("assistanceForm").addEventListener("submit",createAssistance);
+$("exportBtn").addEventListener("click",exportCSV);
+$("searchInput").addEventListener("input",renderReports);
+$("statusFilter").addEventListener("change",renderReports);
+$("urgencyFilter").addEventListener("change",renderReports);
+
+db.auth.getSession().then(async({data,error})=>{
+ if(error) {
+  showMessage("Could not check login session: "+error.message,true);
+  return;
+ }
+ if(data.session) await loadProfile(data.session);
+});
+</script>
+</body>
+</html>
