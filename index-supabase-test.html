@@ -1,0 +1,470 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pahunch Ledger — Supabase Test</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f2f7f3;color:#20352a;font-family:Arial,sans-serif}
+header{background:#174b37;color:white;padding:22px 16px}
+header h1{margin:0;font-size:25px}
+header p{margin:7px 0 0;color:#dcebe1}
+main{max-width:850px;margin:22px auto;padding:0 14px}
+.card{background:white;border:1px solid #dce8df;border-radius:14px;padding:18px;margin-bottom:16px}
+h2{font-size:19px;margin:0 0 14px}
+h3{font-size:16px;margin:12px 0}
+label{display:block;font-size:14px;font-weight:bold;margin:12px 0 5px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #cbd8ce;border-radius:8px;font-size:15px;background:white;color:#20352a}
+textarea{min-height:75px;resize:vertical}
+button{border:0;border-radius:8px;padding:11px 16px;background:#176044;color:white;font-weight:bold;font-size:14px;margin-top:12px;cursor:pointer}
+button.secondary{background:#e7f0e9;color:#174b37}
+button:disabled{opacity:.5}
+.hidden{display:none!important}
+.muted{color:#63746a;font-size:13px}
+#message{padding:10px;border-radius:8px;margin-bottom:14px;white-space:pre-wrap}
+.report{border:1px solid #dce8df;border-radius:10px;padding:13px;margin:12px 0}
+.report p{margin:6px 0;font-size:14px;overflow-wrap:anywhere}
+.tag{display:inline-block;background:#e7f0e9;padding:4px 8px;border-radius:20px;font-size:12px}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+footer{text-align:center;color:#68776d;font-size:12px;padding:20px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Pahunch Ledger</h1>
+  <p>Essential-needs coordination during mountain road disruptions</p>
+</header>
+
+<main>
+  <div id="message" class="hidden"></div>
+
+  <section id="loginCard" class="card">
+    <h2>Test account login</h2>
+    <p class="muted">Use one of the three test accounts created in Supabase Authentication.</p>
+    <form id="loginForm">
+      <label>Email</label>
+      <input id="email" type="email" required autocomplete="username">
+      <label>Password</label>
+      <input id="password" type="password" required autocomplete="current-password">
+      <button type="submit">Log in</button>
+    </form>
+  </section>
+
+  <section id="app" class="hidden">
+    <div class="card">
+      <div class="topline">
+        <div>
+          <h2 id="welcome">Dashboard</h2>
+          <span id="roleTag" class="tag"></span>
+        </div>
+        <button id="logoutBtn" class="secondary">Log out</button>
+      </div>
+      <p class="muted">Prototype using synthetic test data. This is not a live emergency reporting service.</p>
+    </div>
+
+    <section id="reporterSection" class="card hidden">
+      <h2>Submit a community needs report</h2>
+      <form id="reportForm">
+        <label>Village / area</label>
+        <input id="village" required maxlength="100" placeholder="e.g. Sample Village">
+        <label>District</label>
+        <input id="district" required maxlength="100" placeholder="e.g. Mandi">
+        <label>State</label>
+        <input id="state" value="Himachal Pradesh" required maxlength="100">
+        <label>Service needed</label>
+        <select id="service" required>
+          <option value="">Choose a service</option>
+          <option>Medicine access</option>
+          <option>Water supply</option>
+          <option>Food and essential supplies</option>
+          <option>Road access</option>
+          <option>Electricity</option>
+          <option>Communication</option>
+          <option>Other essential need</option>
+        </select>
+        <label>Urgency</label>
+        <select id="urgency" required>
+          <option value="High">High</option>
+          <option value="Medium" selected>Medium</option>
+          <option value="Low">Low</option>
+        </select>
+        <label>Estimated people affected</label>
+        <input id="people" type="number" min="1" max="100000" required>
+        <label>Additional details (optional)</label>
+        <textarea id="details" maxlength="1000" placeholder="Describe the reported need. Do not include personal or sensitive medical details."></textarea>
+        <button type="submit">Submit report</button>
+      </form>
+      <p class="muted">New reports enter the system as Pending. A reviewer must assess them.</p>
+    </section>
+
+    <section class="card">
+      <div class="topline">
+        <h2>Reports dashboard</h2>
+        <button id="refreshBtn" class="secondary">Refresh reports</button>
+      </div>
+      <div id="reportList"><p class="muted">Loading reports…</p></div>
+    </section>
+
+    <section id="assistanceSection" class="card hidden">
+      <h2>Record assistance (Coordinator)</h2>
+      <form id="assistanceForm">
+        <label>Report</label>
+        <select id="assistanceReport" required></select>
+        <label>Type of assistance</label>
+        <input id="assistanceType" required maxlength="150" placeholder="e.g. Water supply coordination">
+        <label>People assisted (aggregate number)</label>
+        <input id="peopleAssisted" type="number" min="0" value="0" required>
+        <label>Status</label>
+        <select id="assistanceStatus">
+          <option>Pending</option>
+          <option>Assigned</option>
+          <option>In progress</option>
+          <option>Completed</option>
+        </select>
+        <button type="submit">Save assistance record</button>
+      </form>
+      <h3>Assistance records</h3>
+      <div id="assistanceList"><p class="muted">Loading assistance records…</p></div>
+    </section>
+  </section>
+
+  <footer>Prototype only · Synthetic data · Not for real emergency use</footer>
+</main>
+
+<script>
+const SUPABASE_URL = "https://umewjdoawwdldgenagvp.supabase.co";
+const SUPABASE_KEY = "sb_publishable_GX_I8Y-H4W_q9BxE50mjuA_6N7v3vuW";
+
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+let currentProfile = null;
+let cachedReports = [];
+let cachedVillages = [];
+
+const $ = id => document.getElementById(id);
+
+function message(text, isError=false) {
+  const box = $("message");
+  box.textContent = text;
+  box.classList.remove("hidden");
+  box.style.background = isError ? "#fce9e7" : "#e7f3e9";
+  box.style.color = isError ? "#8b2820" : "#174b37";
+}
+
+function clearMessage() {
+  $("message").classList.add("hidden");
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  })[char]);
+}
+
+function priorityScore(report) {
+  const urgencyPoints = {High:6, Medium:4, Low:2};
+  const people = Number(report.people_affected || 0);
+  const impactPoints = people >= 100 ? 3 : people >= 20 ? 2 : 1;
+  return (urgencyPoints[report.urgency] || 0) + impactPoints;
+}
+
+function villageName(id) {
+  const village = cachedVillages.find(v => v.id === id);
+  return village ? `${village.village_name}, ${village.district}` : "Village details unavailable";
+}
+
+async function showApp(session) {
+  currentUser = session.user;
+
+  const {data: profile, error} = await db
+    .from("profiles")
+    .select("full_name, role")
+    .eq("id", currentUser.id)
+    .single();
+
+  if (error || !profile) {
+    message("Could not load your profile. Check that this account has a profile and role in Supabase.", true);
+    return;
+  }
+
+  currentProfile = profile;
+  $("loginCard").classList.add("hidden");
+  $("app").classList.remove("hidden");
+  $("welcome").textContent = `Welcome, ${profile.full_name || "User"}`;
+  $("roleTag").textContent = profile.role;
+
+  $("reporterSection").classList.toggle("hidden", profile.role !== "Reporter");
+  $("assistanceSection").classList.toggle("hidden", profile.role !== "Coordinator");
+
+  await loadReports();
+
+  if (profile.role === "Coordinator") {
+    await loadAssistance();
+  }
+}
+
+async function loadReports() {
+  $("reportList").textContent = "Loading reports…";
+
+  const [reportResult, villageResult] = await Promise.all([
+    db.from("reports").select("*").order("created_at", {ascending:false}),
+    db.from("villages").select("id, village_name, district")
+  ]);
+
+  if (reportResult.error) {
+    $("reportList").textContent = "Could not load reports: " + reportResult.error.message;
+    return;
+  }
+
+  cachedReports = reportResult.data || [];
+  cachedVillages = villageResult.data || [];
+
+  renderReports();
+  populateAssistanceReports();
+}
+
+function renderReports() {
+  const list = $("reportList");
+
+  if (!cachedReports.length) {
+    list.innerHTML = '<p class="muted">No reports available for this account yet.</p>';
+    return;
+  }
+
+  list.innerHTML = cachedReports.map(report => {
+    const canReview = currentProfile.role === "Reviewer" || currentProfile.role === "Coordinator";
+    const date = report.created_at ? new Date(report.created_at).toLocaleString() : "Date unavailable";
+
+    return `
+      <article class="report">
+        <div class="topline">
+          <strong>${escapeHTML(report.service_type)}</strong>
+          <span class="tag">${escapeHTML(report.verification_status)}</span>
+        </div>
+        <p><strong>Area:</strong> ${escapeHTML(villageName(report.village_id))}</p>
+        <p><strong>Urgency:</strong> ${escapeHTML(report.urgency)} ·
+           <strong>People affected:</strong> ${escapeHTML(report.people_affected)}</p>
+        <p><strong>Priority indicator:</strong> ${priorityScore(report)} / 9
+           <span class="muted">(prototype calculation)</span></p>
+        <p><strong>Details:</strong> ${escapeHTML(report.details || "None provided")}</p>
+        <p class="muted">Submitted: ${escapeHTML(date)}</p>
+        ${canReview ? `
+          <label>Review decision</label>
+          <select id="decision-${report.id}">
+            <option>Pending</option>
+            <option>Verified</option>
+            <option>Rejected</option>
+            <option>Unable to verify</option>
+          </select>
+          <label>Review notes</label>
+          <textarea id="notes-${report.id}" maxlength="500" placeholder="Short review note"></textarea>
+          <button onclick="reviewReport('${report.id}')">Save review</button>
+        ` : ""}
+      </article>`;
+  }).join("");
+}
+
+async function reviewReport(reportId) {
+  const decision = $(`decision-${reportId}`).value;
+  const notes = $(`notes-${reportId}`).value.trim();
+
+  if (decision === "Pending") {
+    message("Choose a final review decision first.", true);
+    return;
+  }
+
+  const {error: updateError} = await db
+    .from("reports")
+    .update({verification_status: decision})
+    .eq("id", reportId);
+
+  if (updateError) {
+    message("Could not update report status: " + updateError.message, true);
+    return;
+  }
+
+  const {error: reviewError} = await db
+    .from("report_reviews")
+    .insert({
+      report_id: reportId,
+      reviewer_id: currentUser.id,
+      decision: decision,
+      notes: notes || null
+    });
+
+  if (reviewError) {
+    message("Status changed, but the review note could not be saved: " + reviewError.message, true);
+    await loadReports();
+    return;
+  }
+
+  message("Review saved.");
+  await loadReports();
+}
+
+$("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  clearMessage();
+
+  const {data, error} = await db.auth.signInWithPassword({
+    email: $("email").value.trim(),
+    password: $("password").value
+  });
+
+  if (error) {
+    message("Login failed: " + error.message, true);
+    return;
+  }
+
+  await showApp(data.session);
+});
+
+$("logoutBtn").addEventListener("click", async () => {
+  await db.auth.signOut();
+  currentUser = null;
+  currentProfile = null;
+  $("app").classList.add("hidden");
+  $("loginCard").classList.remove("hidden");
+  message("You have logged out.");
+});
+
+$("refreshBtn").addEventListener("click", async () => {
+  clearMessage();
+  await loadReports();
+  if (currentProfile.role === "Coordinator") await loadAssistance();
+});
+
+$("reportForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  clearMessage();
+
+  const villageNameInput = $("village").value.trim();
+  const districtInput = $("district").value.trim();
+  const stateInput = $("state").value.trim();
+
+  let village = cachedVillages.find(v =>
+    v.village_name.toLowerCase() === villageNameInput.toLowerCase() &&
+    v.district.toLowerCase() === districtInput.toLowerCase()
+  );
+
+  if (!village) {
+    const {data, error} = await db.from("villages").insert({
+      village_name: villageNameInput,
+      district: districtInput,
+      state: stateInput
+    }).select().single();
+
+    if (error) {
+      message("Could not save village: " + error.message, true);
+      return;
+    }
+    village = data;
+  }
+
+  const {error} = await db.from("reports").insert({
+    village_id: village.id,
+    reporter_id: currentUser.id,
+    service_type: $("service").value,
+    urgency: $("urgency").value,
+    people_affected: Number($("people").value),
+    details: $("details").value.trim() || null,
+    priority_score: 0,
+    verification_status: "Pending"
+  });
+
+  if (error) {
+    message("Report could not be submitted: " + error.message, true);
+    return;
+  }
+
+  $("reportForm").reset();
+  $("state").value = "Himachal Pradesh";
+  message("Report submitted successfully. It is now Pending review.");
+  await loadReports();
+});
+
+function populateAssistanceReports() {
+  const select = $("assistanceReport");
+  if (!select) return;
+
+  select.innerHTML = cachedReports.map(report => `
+    <option value="${report.id}">
+      ${escapeHTML(report.service_type)} — ${escapeHTML(villageName(report.village_id))}
+    </option>
+  `).join("");
+
+  if (!cachedReports.length) {
+    select.innerHTML = '<option value="">No reports available</option>';
+  }
+}
+
+$("assistanceForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  clearMessage();
+
+  const reportId = $("assistanceReport").value;
+  if (!reportId) {
+    message("Submit or select a report first.", true);
+    return;
+  }
+
+  const {error} = await db.from("assistance_records").insert({
+    report_id: reportId,
+    assigned_to: currentUser.id,
+    assistance_type: $("assistanceType").value.trim(),
+    people_assisted: Number($("peopleAssisted").value),
+    status: $("assistanceStatus").value
+  });
+
+  if (error) {
+    message("Could not save assistance record: " + error.message, true);
+    return;
+  }
+
+  $("assistanceForm").reset();
+  $("peopleAssisted").value = 0;
+  message("Assistance record saved.");
+  await loadAssistance();
+});
+
+async function loadAssistance() {
+  const {data, error} = await db
+    .from("assistance_records")
+    .select("*")
+    .order("updated_at", {ascending:false});
+
+  if (error) {
+    $("assistanceList").textContent = "Could not load assistance records: " + error.message;
+    return;
+  }
+
+  if (!data || !data.length) {
+    $("assistanceList").innerHTML = '<p class="muted">No assistance records yet.</p>';
+    return;
+  }
+
+  $("assistanceList").innerHTML = data.map(record => {
+    const report = cachedReports.find(r => r.id === record.report_id);
+    return `<article class="report">
+      <p><strong>${escapeHTML(record.assistance_type)}</strong></p>
+      <p>Report: ${escapeHTML(report ? report.service_type : "Report")}</p>
+      <p>People assisted: ${escapeHTML(record.people_assisted)}</p>
+      <p>Status: ${escapeHTML(record.status)}</p>
+    </article>`;
+  }).join("");
+}
+
+db.auth.getSession().then(async ({data, error}) => {
+  if (error) {
+    message("Could not check login session: " + error.message, true);
+    return;
+  }
+  if (data.session) await showApp(data.session);
+});
+</script>
+</body>
+</html>
