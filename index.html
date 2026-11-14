@@ -3,590 +3,675 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101f35">
-<title>Pahunch Ledger | Himalayan Response Network</title>
-<link rel="preconnect" href="https://unpkg.com">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#102b3f">
+<title>Pahunch Ledger | Community Coordination</title>
 <style>
 :root{
- --navy:#101f35;--navy2:#172b46;--teal:#168b83;--teal2:#e5f5f2;
- --blue:#3979a8;--ink:#26364a;--muted:#758397;--bg:#f4f7fa;
- --line:#e6ebf0;--white:#fff;--amber:#d99a35;--red:#cf5b5b;
- --shadow:0 5px 22px rgba(23,43,70,.055);
+ --navy:#102b3f;--navy2:#183d53;--teal:#168b82;--teal2:#e5f5f2;
+ --bg:#f3f6f8;--white:#fff;--text:#203444;--muted:#71818d;
+ --line:#e4eaee;--orange:#e79a43;--red:#d85d61;--green:#27966d;
+ --shadow:0 8px 28px rgba(20,48,65,.07);--radius:16px
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--ink);font-size:14px}
+body{margin:0;background:var(--bg);font-family:Inter,Arial,sans-serif;color:var(--text)}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
-.app{min-height:100vh;display:flex}
-.sidebar{width:246px;background:var(--navy);color:#dce6f1;position:fixed;inset:0 auto 0 0;z-index:20;display:flex;flex-direction:column;padding:23px 15px;overflow-y:auto}
-.logo{display:flex;align-items:center;gap:11px;padding:0 10px 27px;border-bottom:1px solid #ffffff18}
-.logo-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(140deg,#28a99c,#176f7c);display:grid;place-items:center;color:white;font-size:21px;font-weight:800}
-.logo-name{font-size:16px;font-weight:850;letter-spacing:.8px;color:white}
-.logo-sub{font-size:9px;color:#8ea3b8;letter-spacing:1.7px;margin-top:4px}
-.nav-label{font-size:9px;letter-spacing:1.7px;color:#71869d;font-weight:800;padding:23px 12px 9px}
-.nav-btn{width:100%;display:flex;align-items:center;gap:12px;padding:11px 12px;border:0;border-radius:9px;background:transparent;color:#b8c6d6;text-align:left;font-size:12px;margin:2px 0;transition:.2s}
-.nav-btn:hover{background:#ffffff10;color:white}
-.nav-btn.active{background:#1c3d56;color:white;box-shadow:inset 3px 0 #36b5a4}
+.app{display:flex;min-height:100vh}
+.sidebar{width:250px;background:var(--navy);color:#fff;padding:25px 17px;display:flex;flex-direction:column;position:fixed;inset:0 auto 0 0;z-index:10}
+.brand{display:flex;align-items:center;gap:12px;padding:0 8px 27px;border-bottom:1px solid #ffffff20}
+.logo{width:43px;height:43px;border-radius:13px;background:#1a9c91;display:grid;place-items:center;font-size:22px;font-weight:800}
+.brand h2{font-size:17px;margin:0}.brand small{color:#a9c1cc;font-size:11px}
+.nav-label{font-size:10px;color:#8da9b6;letter-spacing:1.5px;margin:25px 10px 10px}
+.nav button{width:100%;border:0;background:transparent;color:#c4d3da;text-align:left;padding:12px 13px;border-radius:10px;margin:3px 0;font-size:13px;display:flex;gap:12px;align-items:center}
+.nav button:hover,.nav button.active{background:#ffffff17;color:white}
+.nav button.active{box-shadow:inset 3px 0 #43c5b4}
 .nav-icon{width:19px;text-align:center;font-size:16px}
-.nav-count{margin-left:auto;border-radius:20px;background:#ffffff18;padding:3px 7px;font-size:10px}
-.sidebar-bottom{margin-top:auto;padding:15px 9px 0}
-.demo-status{background:#1b354b;border:1px solid #ffffff14;padding:13px;border-radius:10px;font-size:10px;color:#9fb1c4;line-height:1.6}
-.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#49c5a5;margin-right:6px}
-.main{margin-left:246px;width:calc(100% - 246px);min-width:0}
-.topbar{height:70px;background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:15}
-.crumb{font-size:12px;color:var(--muted)}.crumb strong{color:var(--ink)}
-.top-actions{display:flex;align-items:center;gap:9px}
-.icon-btn{width:36px;height:36px;border:1px solid var(--line);background:white;border-radius:9px;color:#53677d;position:relative}
-.icon-btn .dot{position:absolute;width:7px;height:7px;border-radius:50%;background:#e16c63;right:7px;top:6px}
-.avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#dcefeb;color:#14776d;font-weight:800;font-size:12px}
-.page{padding:27px 30px 45px;max-width:1500px;margin:auto}
-.view{display:none}.view.active{display:block}
-.welcome{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:22px;flex-wrap:wrap}
-.eyebrow{color:var(--teal);font-size:10px;font-weight:850;letter-spacing:1.6px;text-transform:uppercase}
-h1{font-size:25px;letter-spacing:-.6px;color:var(--navy);margin:6px 0}
-.subtitle{font-size:12px;color:var(--muted);line-height:1.6;margin:0}
-.btn{border:0;border-radius:8px;padding:10px 14px;font-size:11px;font-weight:750;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:.18s}
-.btn:hover{filter:brightness(.97);transform:translateY(-1px)}
-.btn-primary{background:var(--navy2);color:white}
-.btn-teal{background:var(--teal);color:white}
-.btn-soft{background:#eaf2f6;color:#31546d}
-.btn-white{background:white;border:1px solid var(--line);color:#465c72}
-.btn-red{background:#fff0ef;color:#b64d4d}
-.btn-xs{padding:7px 9px;font-size:10px}
-.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:18px}
-.metric{background:white;border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow);min-width:0}
-.metric-top{display:flex;justify-content:space-between;align-items:center;gap:6px}
-.metric-label{font-size:11px;color:var(--muted);font-weight:650}
-.metric-icon{width:31px;height:31px;border-radius:9px;display:grid;place-items:center;background:#e9f5f3;color:#16877e;font-size:15px}
-.metric-value{font-size:28px;font-weight:800;letter-spacing:-1px;color:var(--navy);margin:11px 0 5px}
-.metric-foot{font-size:10px;color:var(--muted)}
-.metric-foot b{color:var(--teal)}
-.grid-main{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(270px,.85fr);gap:15px;margin-bottom:15px}
-.grid-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-bottom:15px}
-.card{background:white;border:1px solid var(--line);border-radius:12px;padding:17px;box-shadow:var(--shadow);min-width:0}
-.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:14px}
-.card-title{font-size:13px;font-weight:800;color:var(--navy);margin:0}
-.card-sub{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.5}
-.pill{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:20px;font-size:9px;font-weight:800;white-space:nowrap;background:#eef2f6;color:#607184}
-.pill.green{background:#e4f5ee;color:#16805e}.pill.amber{background:#fff3dc;color:#9b6a19}
-.pill.red{background:#ffeded;color:#b94b4b}.pill.blue{background:#e9f1fb;color:#3b6e9d}
-#map{height:310px;border-radius:9px;background:#eaf0f1;z-index:1}
-.map-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:10px;color:var(--muted)}
-.legend-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px}
-.feed{display:flex;flex-direction:column}
-.feed-item{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid #edf0f3}
-.feed-item:last-child{border:0}
-.feed-icon{width:29px;height:29px;flex:0 0 29px;border-radius:9px;background:#edf5f4;display:grid;place-items:center;color:var(--teal)}
-.feed-text{font-size:11px;line-height:1.5;min-width:0}
-.feed-text small{display:block;color:var(--muted);font-size:9px;margin-top:3px}
-.section-title{font-size:17px;font-weight:800;color:var(--navy);margin:0 0 5px}
-.section-sub{font-size:11px;color:var(--muted);margin:0 0 17px;line-height:1.5}
-.table-wrap{overflow:auto}
+.sidebar-bottom{margin-top:auto;padding:15px 9px;color:#a9c1cc;font-size:11px;line-height:1.7}
+.main{margin-left:250px;width:calc(100% - 250px);min-width:0}
+.topbar{height:75px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;z-index:5}
+.top-left{display:flex;align-items:center;gap:12px}
+.topbar h1{font-size:19px;margin:0}
+.topbar p{font-size:11px;color:var(--muted);margin:4px 0 0}
+.top-actions{display:flex;gap:9px;align-items:center}
+.content{padding:27px 32px 50px;max-width:1500px;margin:auto}
+.page{display:none}.page.active{display:block}
+.eyebrow{color:var(--teal);font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
+.page-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:22px}
+.page-heading h2{font-size:23px;margin:7px 0 5px}
+.page-heading p{font-size:13px;color:var(--muted);margin:0;line-height:1.6}
+.btn{border:0;border-radius:9px;padding:10px 14px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:7px;justify-content:center}
+.btn-primary{background:var(--teal);color:white}.btn-primary:hover{background:#10776f}
+.btn-dark{background:var(--navy);color:white}.btn-light{background:#edf2f4;color:var(--text)}
+.btn-outline{background:white;border:1px solid var(--line);color:var(--text)}
+.btn-danger{background:#fff0f0;color:#b84c52}
+.btn-small{padding:7px 10px;font-size:11px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:20px}
+.card,.panel{background:white;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.metric{padding:19px;position:relative;overflow:hidden}
+.metric-top{display:flex;justify-content:space-between;align-items:center}
+.metric-label{font-size:11px;color:var(--muted);font-weight:600}
+.metric-icon{width:34px;height:34px;border-radius:10px;background:var(--teal2);display:grid;place-items:center}
+.metric-value{font-size:29px;font-weight:800;margin:13px 0 4px;letter-spacing:-1px}
+.metric-note{font-size:10px;color:var(--muted)}
+.metric-accent{height:3px;background:var(--teal);position:absolute;bottom:0;left:0;width:100%;opacity:.75}
+.grid-2{display:grid;grid-template-columns:1.35fr 1fr;gap:17px;margin-bottom:18px}
+.grid-equal{display:grid;grid-template-columns:1fr 1fr;gap:17px;margin-bottom:18px}
+.panel{padding:19px;min-width:0}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}
+.panel-head h3{font-size:14px;margin:0}
+.panel-head p{font-size:10px;color:var(--muted);margin:4px 0 0}
+.activity{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.activity:last-child{border:0}
+.activity-dot{width:9px;height:9px;border-radius:50%;background:var(--teal);margin-top:5px;flex-shrink:0}
+.activity strong{font-size:12px}.activity p{font-size:11px;color:var(--muted);margin:4px 0}
+.activity time{font-size:10px;color:#9aa7af}
+.bar-row{display:grid;grid-template-columns:100px 1fr 28px;align-items:center;gap:10px;margin:15px 0}
+.bar-label{font-size:11px;color:#566875}
+.bar-track{height:8px;background:#edf1f3;border-radius:20px;overflow:hidden}
+.bar-fill{height:100%;background:var(--teal);border-radius:20px}
+.bar-num{font-size:11px;font-weight:700;text-align:right}
+.status{display:inline-flex;padding:5px 8px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap}
+.status-pending{background:#fff4df;color:#a56c1e}
+.status-verified{background:#e6f1ff;color:#326baf}
+.status-progress{background:#e8f4ff;color:#3977a5}
+.status-completed{background:#e4f5ed;color:#21815d}
+.status-rejected{background:#ffeded;color:#b94c52}
+.status-planned{background:#f0edff;color:#6957a6}
+.table-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;min-width:650px}
-th{text-align:left;font-size:9px;letter-spacing:.6px;text-transform:uppercase;color:#8390a0;background:#f8fafb;padding:11px 10px;border-bottom:1px solid var(--line)}
-td{padding:12px 10px;font-size:10px;border-bottom:1px solid #edf0f3;vertical-align:middle}
-tbody tr:hover{background:#fbfcfd}
-td strong{color:var(--navy)}
-.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:13px}
-.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;min-width:0}
-.field label{font-size:10px;font-weight:750;color:#53667a}
-input,select,textarea{width:100%;border:1px solid #dce3e9;border-radius:8px;padding:10px 11px;background:#fff;color:var(--ink);font-size:11px;min-width:0}
-textarea{resize:vertical;min-height:90px;line-height:1.5}
-input:focus,select:focus,textarea:focus{outline:2px solid #a5d9d2;border-color:var(--teal)}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 13px}
-.full{grid-column:1/-1}
-.form-note{background:#f0f7f7;border:1px solid #dcefed;padding:11px;border-radius:8px;font-size:10px;color:#55716f;line-height:1.6;margin:12px 0}
-.voice-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.voice-row select{width:auto}
-.voice-status{font-size:10px;color:var(--muted);margin-top:7px}
-.timeline{position:relative;padding-left:20px}
-.timeline:before{content:"";position:absolute;left:6px;top:7px;bottom:8px;width:2px;background:#e5ecef}
-.timeline-item{position:relative;padding:0 0 17px 12px;font-size:11px;line-height:1.5}
-.timeline-item:before{content:"";position:absolute;left:-17px;top:3px;width:9px;height:9px;border-radius:50%;background:var(--teal);border:2px solid white;box-shadow:0 0 0 1px #c6e4df}
-.timeline-item small{display:block;color:var(--muted);font-size:9px;margin-top:3px}
-.priority{font-weight:850;color:#ad7220}
-.progress-track{height:7px;border-radius:20px;background:#edf1f4;overflow:hidden;margin:9px 0}
-.progress-track i{display:block;height:100%;background:var(--teal);border-radius:20px}
-.chart-row{display:grid;grid-template-columns:105px 1fr 22px;gap:8px;align-items:center;margin:12px 0;font-size:10px}
-.chart-bar{height:8px;background:#edf1f4;border-radius:20px;overflow:hidden}
-.chart-bar i{display:block;height:100%;background:linear-gradient(90deg,#178a81,#55b7a6);border-radius:20px}
-.empty{padding:22px 12px;text-align:center;color:var(--muted);font-size:11px}
-.empty b{display:block;font-size:22px;margin-bottom:7px}
-.notice{background:#fff8e9;border:1px solid #f0dfb9;border-radius:9px;padding:11px 13px;font-size:10px;color:#806329;line-height:1.6;margin-bottom:17px}
-.notification-panel{position:fixed;right:22px;top:62px;width:min(340px,calc(100vw - 30px));background:white;border:1px solid var(--line);box-shadow:0 15px 50px #142b4530;border-radius:12px;padding:15px;z-index:50;display:none}
-.notification-panel.show{display:block}
-.notification{padding:10px 0;border-bottom:1px solid var(--line);font-size:10px;line-height:1.5}
-.mobile-menu{display:none}
-footer{text-align:center;color:#98a3b0;font-size:9px;padding:22px}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#142b45;color:white;border-radius:9px;padding:12px 17px;font-size:11px;z-index:1000;display:none;box-shadow:0 8px 25px #0002;max-width:90%;text-align:center}
-@media(max-width:950px){
- .sidebar{width:215px}.main{margin-left:215px;width:calc(100% - 215px)}
- .page{padding:22px 18px}.topbar{padding:0 18px}
- .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+th{text-align:left;font-size:10px;color:#83919a;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:12px 10px;border-bottom:1px solid var(--line)}
+td{padding:13px 10px;border-bottom:1px solid #edf0f2;font-size:11px;vertical-align:middle}
+td strong{font-size:11px}
+.muted{color:var(--muted)}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:15px}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:15px;min-width:0}
+.field label{font-size:11px;font-weight:700;color:#526571}
+.field input,.field select,.field textarea,.toolbar input,.toolbar select{
+ width:100%;border:1px solid #dfe6e9;border-radius:9px;padding:11px 12px;background:#fff;color:var(--text);font-size:12px;outline:none
 }
+.field input:focus,.field select:focus,.field textarea:focus,.toolbar input:focus,.toolbar select:focus{border-color:var(--teal);box-shadow:0 0 0 3px #168b8215}
+.field textarea{min-height:95px;resize:vertical}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 15px}
+.full{grid-column:1/-1}
+.form-note{font-size:10px;color:var(--muted);line-height:1.6}
+.form-card{max-width:850px;margin:auto}
+.form-card .panel{padding:25px}
+.section-title{font-size:13px;font-weight:800;margin:20px 0 13px;padding-bottom:9px;border-bottom:1px solid var(--line)}
+.empty{text-align:center;padding:28px;color:var(--muted);font-size:12px}
+.case-id{font-weight:800;color:var(--teal)}
+.map-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.area-card{background:#f7f9fa;border:1px solid var(--line);border-radius:12px;padding:15px}
+.area-card strong{font-size:13px}.area-card p{font-size:10px;color:var(--muted);margin:6px 0}
+.area-count{font-size:23px;font-weight:800;margin:8px 0}
+.heat{height:7px;border-radius:10px;background:#e7eeee;overflow:hidden}
+.heat span{display:block;height:100%;background:var(--teal)}
+.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:10px;color:var(--muted);margin-top:14px}
+.legend span:before{content:"";display:inline-block;width:8px;height:8px;background:var(--teal);border-radius:50%;margin-right:5px}
+.audit-item{display:grid;grid-template-columns:95px 1fr;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+.audit-item time{font-size:10px;color:var(--muted)}
+.audit-item strong{font-size:11px}.audit-item p{font-size:11px;color:var(--muted);margin:4px 0}
+.modal-backdrop{display:none;position:fixed;inset:0;background:#0b2030a8;z-index:30;align-items:center;justify-content:center;padding:15px}
+.modal-backdrop.show{display:flex}
+.modal{width:min(680px,100%);max-height:90vh;overflow:auto;background:white;border-radius:17px;padding:23px;box-shadow:0 20px 70px #0003}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.modal-head h3{margin:0;font-size:17px}
+.close{border:0;background:#edf1f3;border-radius:8px;width:32px;height:32px;font-size:18px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.detail-box{background:#f6f8f9;padding:12px;border-radius:10px}
+.detail-box small{font-size:9px;color:var(--muted);display:block;margin-bottom:5px}
+.detail-box strong{font-size:12px}
+.toast{position:fixed;bottom:22px;right:22px;background:var(--navy);color:white;padding:13px 18px;border-radius:10px;font-size:12px;z-index:60;box-shadow:var(--shadow);display:none}
+.toast.show{display:block}
+.mobile-menu{display:none}
+.notice{padding:12px 14px;background:#edf7f5;border:1px solid #d6eeea;border-radius:10px;font-size:11px;line-height:1.6;color:#416b68;margin-bottom:16px}
+.pill{border-radius:30px;background:#edf3f4;padding:7px 11px;font-size:10px;color:#536976}
+.role-select{border:1px solid var(--line);border-radius:8px;padding:8px;background:white;font-size:11px}
+.footer-note{text-align:center;color:#9aa6ad;font-size:10px;padding:25px}
+@media(max-width:1050px){.cards{grid-template-columns:repeat(2,1fr)}.grid-2,.grid-equal{grid-template-columns:1fr}}
 @media(max-width:700px){
- .sidebar{transform:translateX(-100%);transition:.25s;width:250px}
- .sidebar.open{transform:translateX(0);box-shadow:10px 0 40px #0004}
- .main{margin-left:0;width:100%}.mobile-menu{display:inline-grid;place-items:center}
- .topbar{height:60px;padding:0 13px}.page{padding:19px 12px 35px}
- .grid-main,.grid-two{grid-template-columns:1fr}
- .metrics{gap:8px}.metric{padding:12px}.metric-value{font-size:24px}
- .welcome{margin-bottom:17px}h1{font-size:22px}
+ .sidebar{width:250px;transform:translateX(-100%);transition:.25s}
+ .sidebar.open{transform:translateX(0)}
+ .main{margin-left:0;width:100%}
+ .topbar{padding:0 15px;height:66px}
+ .content{padding:20px 14px 35px}
+ .mobile-menu{display:inline-flex}
+ .topbar h1{font-size:16px}
+ .topbar p{display:none}
+ .top-actions .btn{padding:8px;font-size:10px}
+ .cards{gap:9px}.metric{padding:14px}.metric-value{font-size:24px}
+ .page-heading{flex-direction:column}.page-heading h2{font-size:21px}
+ .map-grid{grid-template-columns:1fr 1fr}
  .form-grid{grid-template-columns:1fr}.full{grid-column:auto}
- #map{height:260px}
+ .detail-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:390px){.map-grid{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}.metric-note{font-size:9px}}
+@media print{
+ .sidebar,.topbar,.no-print,.btn,.toolbar,.footer-note{display:none!important}
+ .main{margin:0;width:100%}.content{padding:0}
+ body{background:white}.panel,.card{box-shadow:none;break-inside:avoid}
+ .page{display:none!important}.page.active{display:block!important}
 }
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="sidebar" id="sidebar">
- <div class="logo">
-  <div class="logo-mark">P</div>
-  <div><div class="logo-name">PAHUCH LEDGER</div><div class="logo-sub">HIMALAYAN RESPONSE NETWORK</div></div>
+ <div class="brand">
+  <div class="logo">P</div>
+  <div><h2>PAHU NCH LEDGER</h2><small>Community coordination</small></div>
  </div>
- <div class="nav-label">WORKSPACE</div>
- <button class="nav-btn active" data-view="dashboard"><span class="nav-icon">▦</span> Overview</button>
- <button class="nav-btn" data-view="reports"><span class="nav-icon">▤</span> Community reports <span class="nav-count" id="navReportCount">0</span></button>
- <button class="nav-btn" data-view="verification"><span class="nav-icon">✓</span> Verification desk <span class="nav-count" id="navPendingCount">0</span></button>
- <button class="nav-btn" data-view="assistance"><span class="nav-icon">↗</span> Assistance tracking</button>
- <button class="nav-btn" data-view="followup"><span class="nav-icon">◎</span> Follow-up tracker</button>
- <div class="nav-label">INTELLIGENCE</div>
- <button class="nav-btn" data-view="analytics"><span class="nav-icon">▥</span> Impact analytics</button>
- <button class="nav-btn" data-view="mapview"><span class="nav-icon">⌖</span> Geographic overview</button>
- <div class="sidebar-bottom">
-  <div class="demo-status"><span class="status-dot"></span><b>DEMO ENVIRONMENT</b><br>Local sample workspace<br><span style="color:#71869d">Not connected to live response agencies.</span></div>
- </div>
+ <div class="nav-label" data-en="WORKSPACE" data-hi="कार्य क्षेत्र">WORKSPACE</div>
+ <nav class="nav">
+  <button class="active" data-page="dashboard"><span class="nav-icon">▦</span><span data-en="Overview" data-hi="अवलोकन">Overview</span></button>
+  <button data-page="reports"><span class="nav-icon">▤</span><span data-en="Community reports" data-hi="सामुदायिक रिपोर्ट">Community reports</span></button>
+  <button data-page="submit"><span class="nav-icon">＋</span><span data-en="Submit a report" data-hi="रिपोर्ट दर्ज करें">Submit a report</span></button>
+  <button data-page="verification"><span class="nav-icon">✓</span><span data-en="Verification desk" data-hi="सत्यापन डेस्क">Verification desk</span></button>
+  <button data-page="assistance"><span class="nav-icon">♡</span><span data-en="Assistance tracking" data-hi="सहायता ट्रैकिंग">Assistance tracking</span></button>
+  <button data-page="followup"><span class="nav-icon">↻</span><span data-en="Follow-up tracker" data-hi="अनुवर्ती ट्रैकर">Follow-up tracker</span></button>
+  <div class="nav-label" data-en="INSIGHTS & CONTROL" data-hi="जानकारी और नियंत्रण">INSIGHTS & CONTROL</div>
+  <button data-page="analytics"><span class="nav-icon">▥</span><span data-en="Analytics" data-hi="विश्लेषण">Analytics</span></button>
+  <button data-page="map"><span class="nav-icon">⌖</span><span data-en="Area overview" data-hi="क्षेत्र अवलोकन">Area overview</span></button>
+  <button data-page="audit"><span class="nav-icon">◷</span><span data-en="Audit log" data-hi="ऑडिट लॉग">Audit log</span></button>
+ </nav>
+ <div class="sidebar-bottom">PAHUNCH LEDGER<br>Prototype demonstration · 2026<br><span style="color:#65c9bc">● Fictional sample data</span></div>
 </aside>
 
-<div class="main">
- <header class="topbar">
-  <div style="display:flex;align-items:center;gap:11px">
-   <button class="icon-btn mobile-menu" id="menuBtn">☰</button>
-   <div class="crumb">Pahunch Ledger <span style="color:#bdc7d0"> / </span><strong id="crumb">Overview</strong></div>
-  </div>
-  <div class="top-actions">
-   <button class="icon-btn" id="notifyBtn" title="Notifications">♧<span class="dot"></span></button>
-   <button class="icon-btn" id="languageBtn" title="Switch language">अ</button>
-   <div class="avatar">PL</div>
-  </div>
- </header>
-
- <div class="notification-panel" id="notificationPanel">
-  <div class="card-head"><b class="card-title">Notifications</b><button class="btn btn-xs btn-white" id="closeNotify">Close</button></div>
-  <div id="notifications"></div>
+<main class="main">
+<header class="topbar">
+ <div class="top-left">
+  <button class="btn btn-light mobile-menu" onclick="toggleMenu()">☰</button>
+  <div><h1 id="topTitle">Overview</h1><p>Community needs. Coordinated assistance. Transparent follow-up.</p></div>
  </div>
+ <div class="top-actions">
+  <select class="role-select" id="roleSelect" onchange="changeRole()" aria-label="Demo role">
+   <option value="Coordinator">Coordinator view</option>
+   <option value="Verifier">Verifier view</option>
+   <option value="Reporter">Reporter view</option>
+  </select>
+  <button class="btn btn-outline" onclick="toggleLanguage()" id="langBtn">हिंदी</button>
+  <button class="btn btn-primary" onclick="navigate('submit')">＋ <span data-en="New report" data-hi="नई रिपोर्ट">New report</span></button>
+ </div>
+</header>
 
- <main class="page">
+<div class="content">
 
- <!-- DASHBOARD -->
- <section class="view active" id="view-dashboard">
-  <div class="welcome">
-   <div><div class="eyebrow">COMMUNITY RESPONSE INTELLIGENCE</div><h1>Good day. Here's your overview.</h1><p class="subtitle">A clearer picture of reported community needs and coordinated follow-up.</p></div>
-   <button class="btn btn-primary" id="newReportBtn">＋ Create new report</button>
-  </div>
-  <div class="notice"><b>Prototype notice:</b> All preloaded records are fictional. Data is stored in this browser only. This platform is not an emergency service and does not confirm actual aid delivery.</div>
-  <div class="metrics">
-   <div class="metric"><div class="metric-top"><span class="metric-label">Total community reports</span><span class="metric-icon">▤</span></div><div class="metric-value" id="mTotal">0</div><div class="metric-foot">Reports recorded in this workspace</div></div>
-   <div class="metric"><div class="metric-top"><span class="metric-label">Verified reports</span><span class="metric-icon">✓</span></div><div class="metric-value" id="mVerified">0</div><div class="metric-foot"><b id="verifiedRate">0%</b> of submitted reports</div></div>
-   <div class="metric"><div class="metric-top"><span class="metric-label">Awaiting review</span><span class="metric-icon" style="background:#fff4e1;color:#b17a22">◷</span></div><div class="metric-value" id="mPending">0</div><div class="metric-foot">Require human verification</div></div>
-   <div class="metric"><div class="metric-top"><span class="metric-label">People reached (estimated)</span><span class="metric-icon">♡</span></div><div class="metric-value" id="mPeople">0</div><div class="metric-foot">From recorded assistance entries</div></div>
-  </div>
-  <div class="grid-main">
-   <section class="card">
-    <div class="card-head"><div><h3 class="card-title">Geographic situation overview</h3><div class="card-sub">Approximate locations of reports with optional coordinates</div></div><span class="pill green">MAP VIEW</span></div>
-    <div id="map"></div>
-    <div class="map-legend"><span><i class="legend-dot" style="background:#d89a36"></i>Pending review</span><span><i class="legend-dot" style="background:#168b83"></i>Verified</span><span><i class="legend-dot" style="background:#c75b5b"></i>Unable to verify</span></div>
-   </section>
-   <section class="card">
-    <div class="card-head"><div><h3 class="card-title">Recent activity</h3><div class="card-sub">Latest updates in this workspace</div></div><span class="pill">ACTIVITY</span></div>
-    <div class="feed" id="activityFeed"></div>
-   </section>
-  </div>
-  <div class="grid-two">
-   <section class="card">
-    <div class="card-head"><div><h3 class="card-title">Reports by category</h3><div class="card-sub">Distribution of reported needs</div></div></div>
-    <div id="dashCategory"></div>
-   </section>
-   <section class="card">
-    <div class="card-head"><div><h3 class="card-title">Needs requiring follow-up</h3><div class="card-sub">Verified reports without a completed assistance entry</div></div><span class="pill amber" id="gapCount">0 open</span></div>
-    <div id="dashGaps"></div>
-   </section>
-  </div>
- </section>
+<section class="page active" id="page-dashboard">
+ <div class="page-heading">
+  <div><div class="eyebrow">COMMUNITY RESPONSE WORKSPACE</div><h2 data-en="Good evening, coordinator" data-hi="शुभ संध्या, समन्वयक">Good evening, coordinator</h2><p data-en="A clear picture of reported needs and assistance progress." data-hi="रिपोर्ट की गई आवश्यकताओं और सहायता की प्रगति का सारांश।">A clear picture of reported needs and assistance progress.</p></div>
+  <button class="btn btn-outline no-print" onclick="printCurrent()">⇩ Print overview</button>
+ </div>
+ <div class="notice">ⓘ Demonstration environment. All displayed sample cases and activity are fictional. This platform is not an emergency response service.</div>
+ <div class="cards" id="metrics"></div>
+ <div class="grid-2">
+  <div class="panel"><div class="panel-head"><div><h3>Needs by category</h3><p>Distribution of submitted reports</p></div><span class="pill">Sample data</span></div><div id="categoryBars"></div></div>
+  <div class="panel"><div class="panel-head"><div><h3>Recent activity</h3><p>Latest changes in the workspace</p></div><button class="btn btn-light btn-small" onclick="navigate('audit')">View log →</button></div><div id="recentActivity"></div></div>
+ </div>
+ <div class="panel"><div class="panel-head"><div><h3>Recent community reports</h3><p>Latest cases submitted to the platform</p></div><button class="btn btn-light btn-small" onclick="navigate('reports')">All reports →</button></div><div class="table-wrap" id="recentTable"></div></div>
+</section>
 
- <!-- REPORTS -->
- <section class="view" id="view-reports">
-  <div class="welcome"><div><div class="eyebrow">COMMUNITY INTAKE</div><h1>Community reports</h1><p class="subtitle">Collect, organise and review community-reported needs.</p></div><button class="btn btn-primary" id="newReportBtn2">＋ New report</button></div>
-  <section class="card" id="reportFormCard" style="margin-bottom:15px">
-   <div class="card-head"><div><h3 class="card-title">Submit a community report</h3><div class="card-sub">Share a reported need using the form below.</div></div><span class="pill blue">INTAKE FORM</span></div>
+<section class="page" id="page-reports">
+ <div class="page-heading"><div><div class="eyebrow">CASE REGISTER</div><h2>Community reports</h2><p>Search, filter, review and connect related reports.</p></div><button class="btn btn-primary" onclick="navigate('submit')">＋ Add report</button></div>
+ <div class="panel">
+  <div class="toolbar">
+   <input id="reportSearch" placeholder="Search ID, area, category or description..." oninput="renderReports()" style="flex:2;min-width:180px">
+   <select id="reportStatus" onchange="renderReports()" style="flex:1;min-width:130px"><option value="">All statuses</option><option>Pending</option><option>Verified</option><option>Rejected</option></select>
+   <select id="reportCategory" onchange="renderReports()" style="flex:1;min-width:130px"><option value="">All categories</option><option>Food</option><option>Water</option><option>Shelter</option><option>Medical supplies</option><option>Transport</option><option>Other</option></select>
+   <button class="btn btn-outline" onclick="clearFilters()">Clear</button>
+  </div>
+  <div class="table-wrap" id="reportsTable"></div>
+ </div>
+</section>
+
+<section class="page" id="page-submit">
+ <div class="page-heading"><div><div class="eyebrow">COMMUNITY INTAKE</div><h2>Submit a community report</h2><p>Share a general community need for human review.</p></div></div>
+ <div class="form-card">
+  <div class="notice">Please do not enter names, phone numbers, exact home addresses, identity documents, or sensitive personal or medical details. Do not use this form for emergencies.</div>
+  <div class="panel">
    <form id="reportForm">
+    <div class="section-title">Report information</div>
     <div class="form-grid">
-     <div class="field"><label for="village">Village / area *</label><input id="village" required maxlength="70" placeholder="e.g. Devgarh"></div>
-     <div class="field"><label for="district">District *</label><input id="district" required maxlength="70" placeholder="e.g. Shimla"></div>
-     <div class="field"><label for="category">Need category *</label><select id="category" required><option value="">Select category</option><option>Road access</option><option>Food and essentials</option><option>Water supply</option><option>Shelter</option><option>Medical assistance</option><option>Infrastructure damage</option><option>Electricity</option><option>Other</option></select></div>
-     <div class="field"><label for="urgency">Reported urgency *</label><select id="urgency" required><option value="">Select urgency</option><option>High</option><option>Medium</option><option>Low</option></select></div>
-     <div class="field"><label for="affected">Estimated people affected *</label><input id="affected" type="number" min="1" max="100000" required placeholder="e.g. 25"></div>
-     <div class="field"><label for="group">Community group (optional)</label><select id="group"><option value="">Not specified</option><option>Older adults</option><option>Children and families</option><option>People with disabilities</option><option>General community</option></select></div>
-     <div class="field full"><label for="details">Report details *</label><textarea id="details" maxlength="700" required placeholder="Describe the reported community need. Do not include personal names, phone numbers or sensitive information."></textarea></div>
-     <div class="field full">
-      <label>Voice-to-text input</label>
-      <div class="voice-row"><button class="btn btn-teal" type="button" id="micBtn">🎙 Speak report</button><select id="voiceLang"><option value="hi-IN">Hindi</option><option value="en-IN">English (India)</option></select></div>
-      <div class="voice-status" id="voiceStatus">Speak to enter text into the report details field. Review it before submitting.</div>
-     </div>
-     <div class="field full"><label for="evidence">Evidence / source notes (optional)</label><textarea id="evidence" maxlength="350" placeholder="e.g. Community volunteer observation or local notice reference."></textarea></div>
-     <div class="field"><label for="reporter">Reporter label (optional)</label><input id="reporter" maxlength="40" placeholder="e.g. Community volunteer"></div>
-     <div class="field"><label for="locationMode">Location method</label><select id="locationMode"><option value="manual">Manual area entry</option><option value="gps">Optional approximate GPS</option></select></div>
-     <div class="field full">
-      <div class="voice-row"><button class="btn btn-soft" type="button" id="gpsBtn">⌖ Use approximate location</button><button class="btn btn-white" type="button" id="clearGps">Clear GPS</button></div>
-      <div class="voice-status" id="gpsStatus">No coordinates selected. Manual area details will be used.</div>
-      <div class="form-note">GPS is optional. If permitted, coordinates are rounded to approximately 1 km. This prototype does not continuously track your location.</div>
-     </div>
+     <div class="field"><label>Category *</label><select id="fCategory" required><option value="">Select category</option><option>Food</option><option>Water</option><option>Shelter</option><option>Medical supplies</option><option>Transport</option><option>Other</option></select></div>
+     <div class="field"><label>Urgency *</label><select id="fUrgency" required><option value="">Select urgency</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+     <div class="field"><label>District / general area *</label><input id="fArea" required maxlength="70" placeholder="e.g. Solan district"></div>
+     <div class="field"><label>Community group (optional)</label><input id="fGroup" maxlength="60" placeholder="e.g. Local neighbourhood"></div>
+     <div class="field full"><label>Describe the general need *</label><textarea id="fDescription" required maxlength="500" placeholder="Describe the community-level need without identifying individuals."></textarea><div class="form-note">Maximum 500 characters. Avoid personal identifiers and precise locations.</div></div>
+     <div class="field full"><label>Approximate number of people affected (optional)</label><input id="fPeople" type="number" min="0" max="100000" placeholder="Enter an estimate, if known"></div>
     </div>
+    <label style="display:flex;gap:9px;align-items:flex-start;font-size:11px;margin:10px 0 17px"><input type="checkbox" id="fConsent" required style="margin-top:1px"> I confirm this report does not contain personal identifying information and is suitable for a demonstration intake.</label>
     <button class="btn btn-primary" type="submit">Submit report →</button>
    </form>
-  </section>
-  <section class="card">
-   <div class="card-head"><div><h3 class="card-title">Report register</h3><div class="card-sub">Search and filter reports recorded in this demo.</div></div><button class="btn btn-white btn-xs" id="exportReports">↓ Export CSV</button></div>
-   <div class="filters"><input id="reportSearch" placeholder="Search ID, area or category"><select id="filterStatus"><option value="">All statuses</option><option>Pending</option><option>Verified</option><option>Unable to verify</option></select><select id="filterUrgency"><option value="">All urgency levels</option><option>High</option><option>Medium</option><option>Low</option></select></div>
-   <div class="table-wrap"><table><thead><tr><th>Report ID</th><th>Area</th><th>Category</th><th>Urgency</th><th>Affected</th><th>Status</th><th>Action</th></tr></thead><tbody id="reportRows"></tbody></table></div>
-  </section>
- </section>
-
- <!-- VERIFICATION -->
- <section class="view" id="view-verification">
-  <div class="welcome"><div><div class="eyebrow">HUMAN REVIEW WORKSPACE</div><h1>Verification desk</h1><p class="subtitle">Review report information and record a transparent decision.</p></div><span class="pill amber" id="pendingBadge">0 pending</span></div>
-  <div class="notice">Verification is a human decision. This prototype does not independently validate reports or evidence.</div>
-  <div id="verificationQueue"></div>
- </section>
-
- <!-- ASSISTANCE -->
- <section class="view" id="view-assistance">
-  <div class="welcome"><div><div class="eyebrow">RESPONSE COORDINATION</div><h1>Assistance tracking</h1><p class="subtitle">Record assistance plans and monitor their progress.</p></div></div>
-  <div class="grid-two">
-   <section class="card">
-    <div class="card-head"><div><h3 class="card-title">Create assistance record</h3><div class="card-sub">Link a coordination entry to a report.</div></div></div>
-    <form id="assistForm">
-     <div class="field"><label for="assistReport">Related report *</label><select id="assistReport" required></select></div>
-     <div class="field"><label for="assistType">Assistance type *</label><select id="assistType" required><option value="">Select type</option><option>Food and essentials</option><option>Water supply</option><option>Medical assistance</option><option>Transport support</option><option>Shelter support</option><option>Road access support</option><option>Electricity support</option><option>Other</option></select></div>
-     <div class="field"><label for="assistPeople">Estimated people reached *</label><input id="assistPeople" type="number" min="1" required placeholder="e.g. 15"></div>
-     <div class="field"><label for="assistStatus">Status *</label><select id="assistStatus"><option>Planned</option><option>In progress</option><option>Completed</option></select></div>
-     <div class="field"><label for="assistNotes">Coordination notes</label><textarea id="assistNotes" maxlength="350" placeholder="Add a coordination note..."></textarea></div>
-     <button class="btn btn-primary" type="submit">Save assistance record</button>
-    </form>
-   </section>
-   <section class="card">
-    <div class="card-head"><div><h3 class="card-title">Assistance progress</h3><div class="card-sub">Status of recorded assistance entries.</div></div></div>
-    <div id="assistProgress"></div>
-   </section>
   </div>
-  <section class="card"><div class="card-head"><div><h3 class="card-title">Assistance register</h3><div class="card-sub">Update progress as coordination records change.</div></div><button class="btn btn-white btn-xs" id="exportAssist">↓ Export CSV</button></div><div id="assistanceList"></div></section>
- </section>
+ </div>
+</section>
 
- <!-- FOLLOW UP -->
- <section class="view" id="view-followup">
-  <div class="welcome"><div><div class="eyebrow">ACCOUNTABILITY & FOLLOW-UP</div><h1>Follow-up tracker</h1><p class="subtitle">Keep verified community needs visible after assistance is recorded.</p></div></div>
-  <div class="notice">A coordinator marking assistance as completed does not automatically mean the community's need is resolved. Community confirmation is recorded separately in this prototype.</div>
-  <div id="followupList"></div>
- </section>
+<section class="page" id="page-verification">
+ <div class="page-heading"><div><div class="eyebrow">HUMAN REVIEW WORKSPACE</div><h2>Verification desk</h2><p>Review incoming reports and record transparent decisions.</p></div></div>
+ <div class="notice">A report is not verified automatically. Status changes in this prototype are manual demonstration actions.</div>
+ <div class="panel"><div class="toolbar"><select id="verifyFilter" onchange="renderVerification()"><option value="">All review statuses</option><option>Pending</option><option>Verified</option><option>Rejected</option></select></div><div class="table-wrap" id="verificationTable"></div></div>
+</section>
 
- <!-- ANALYTICS -->
- <section class="view" id="view-analytics">
-  <div class="welcome"><div><div class="eyebrow">COMMUNITY IMPACT INTELLIGENCE</div><h1>Impact analytics</h1><p class="subtitle">An overview of reported needs and recorded coordination activity.</p></div><button class="btn btn-white" id="analyticsExport">↓ Export reports</button></div>
-  <div class="metrics">
-   <div class="metric"><div class="metric-label">Reports submitted</div><div class="metric-value" id="aTotal">0</div><div class="metric-foot">All recorded reports</div></div>
-   <div class="metric"><div class="metric-label">Verified</div><div class="metric-value" id="aVerified">0</div><div class="metric-foot">Human-reviewed reports</div></div>
-   <div class="metric"><div class="metric-label">Assistance records</div><div class="metric-value" id="aAssists">0</div><div class="metric-foot">Entries in the register</div></div>
-   <div class="metric"><div class="metric-label">Follow-up needed</div><div class="metric-value" id="aFollow">0</div><div class="metric-foot">Verified reports without completed assistance</div></div>
-  </div>
-  <div class="grid-two">
-   <section class="card"><h3 class="card-title">Category distribution</h3><div class="card-sub">Reports by type of need</div><div id="analyticsCategory"></div></section>
-   <section class="card"><h3 class="card-title">Urgency distribution</h3><div class="card-sub">Reported urgency levels</div><div id="analyticsUrgency"></div></section>
-   <section class="card"><h3 class="card-title">Verification outcomes</h3><div class="card-sub">Current report review status</div><div id="analyticsStatus"></div></section>
-   <section class="card"><h3 class="card-title">Assistance status</h3><div class="card-sub">Progress of recorded entries</div><div id="analyticsAssistance"></div></section>
-  </div>
- </section>
+<section class="page" id="page-assistance">
+ <div class="page-heading"><div><div class="eyebrow">COORDINATION REGISTER</div><h2>Assistance tracking</h2><p>Track planned, ongoing and completed assistance records.</p></div><button class="btn btn-primary" onclick="openAssistanceForm()">＋ Record assistance</button></div>
+ <div class="cards" id="assistMetrics"></div>
+ <div class="panel"><div class="panel-head"><h3>Assistance records</h3><button class="btn btn-outline btn-small" onclick="exportCSV('assistance')">Export CSV</button></div><div class="table-wrap" id="assistanceTable"></div></div>
+</section>
 
- <!-- MAP -->
- <section class="view" id="view-mapview">
-  <div class="welcome"><div><div class="eyebrow">GEOGRAPHIC INTELLIGENCE</div><h1>Geographic overview</h1><p class="subtitle">Explore approximate locations attached to community reports.</p></div></div>
-  <section class="card"><div class="card-head"><div><h3 class="card-title">Himalayan report map</h3><div class="card-sub">Only reports with optional coordinates appear as markers.</div></div><span class="pill green">MAP</span></div><div id="mapLarge" style="height:470px;border-radius:9px;background:#eaf0f1"></div><div class="map-legend"><span><i class="legend-dot" style="background:#d89a36"></i>Pending</span><span><i class="legend-dot" style="background:#168b83"></i>Verified</span><span><i class="legend-dot" style="background:#c75b5b"></i>Unable to verify</span></div></section>
-  <section class="card" style="margin-top:15px"><h3 class="card-title">Location register</h3><div id="locationRegister"></div></section>
- </section>
+<section class="page" id="page-followup">
+ <div class="page-heading"><div><div class="eyebrow">OUTCOME CHECK</div><h2>Follow-up tracker</h2><p>Identify unresolved needs and record community outcome confirmation.</p></div></div>
+ <div class="notice">A completed assistance record does not automatically mean that a community need has been resolved. Follow-up confirmation is recorded separately.</div>
+ <div class="cards" id="followMetrics"></div>
+ <div class="panel"><div class="panel-head"><h3>Cases requiring follow-up</h3></div><div class="table-wrap" id="followTable"></div></div>
+</section>
 
- <footer>PAHUCH LEDGER · HIMALAYAN COMMUNITY RESPONSE NETWORK · PROTOTYPE DEMONSTRATION<br>Fictional sample data · No emergency-service integration · No live authority connection</footer>
- </main>
+<section class="page" id="page-analytics">
+ <div class="page-heading"><div><div class="eyebrow">DATA INSIGHTS</div><h2>Analytics & reports</h2><p>Aggregated overview of the demonstration dataset.</p></div><div class="no-print"><button class="btn btn-outline" onclick="printCurrent()">Print report</button> <button class="btn btn-primary" onclick="exportCSV('reports')">Export CSV</button></div></div>
+ <div class="cards" id="analyticsMetrics"></div>
+ <div class="grid-equal">
+  <div class="panel"><div class="panel-head"><h3>Reports by category</h3></div><div id="analyticsCategories"></div></div>
+  <div class="panel"><div class="panel-head"><h3>Report status breakdown</h3></div><div id="statusBars"></div></div>
+ </div>
+ <div class="panel"><div class="panel-head"><h3>Area-wise report distribution</h3><p>Aggregated area labels only</p></div><div id="areaAnalytics"></div></div>
+</section>
+
+<section class="page" id="page-map">
+ <div class="page-heading"><div><div class="eyebrow">AGGREGATED AREA VIEW</div><h2>Area overview</h2><p>Compare reported needs across general areas, without exposing individual locations.</p></div></div>
+ <div class="notice">This is an illustrative area-level view, not a live geographic map or a representation of verified road or service conditions. Areas are based on fictional sample records.</div>
+ <div class="panel"><div class="panel-head"><h3>Community needs by area</h3><span class="pill">Aggregated only</span></div><div class="map-grid" id="areaGrid"></div><div class="legend"><span>Report volume</span><span style="color:#81919a">No precise locations displayed</span></div></div>
+</section>
+
+<section class="page" id="page-audit">
+ <div class="page-heading"><div><div class="eyebrow">TRANSPARENCY & ACCOUNTABILITY</div><h2>Activity audit log</h2><p>Review recorded changes and actions in this browser's demo workspace.</p></div><button class="btn btn-outline" onclick="exportCSV('audit')">Export log</button></div>
+ <div class="notice">This local demonstration log is editable by anyone using this browser. It is not a secure or tamper-proof audit system.</div>
+ <div class="panel"><div class="toolbar"><input id="auditSearch" placeholder="Search activity..." oninput="renderAudit()"></div><div id="auditList"></div></div>
+</section>
+
+<div class="footer-note">PAHUNCH LEDGER · Prototype for community needs coordination · Fictional demonstration data</div>
 </div>
+</main>
 </div>
+
+<!-- Case detail modal -->
+<div class="modal-backdrop" id="caseModal" onclick="if(event.target===this)closeModal()">
+ <div class="modal"><div class="modal-head"><h3 id="modalTitle">Case details</h3><button class="close" onclick="closeModal()">×</button></div><div id="modalBody"></div></div>
+</div>
+
+<!-- Assistance modal -->
+<div class="modal-backdrop" id="assistModal" onclick="if(event.target===this)closeAssistModal()">
+ <div class="modal"><div class="modal-head"><h3>Record assistance</h3><button class="close" onclick="closeAssistModal()">×</button></div>
+ <form id="assistForm">
+  <div class="field"><label>Related verified report *</label><select id="aReport" required></select></div>
+  <div class="form-grid">
+   <div class="field"><label>Assistance category *</label><select id="aCategory" required><option>Food</option><option>Water</option><option>Shelter</option><option>Medical supplies</option><option>Transport</option><option>Other</option></select></div>
+   <div class="field"><label>Status *</label><select id="aStatus"><option>Planned</option><option>In Progress</option><option>Completed</option></select></div>
+   <div class="field"><label>Quantity / units (optional)</label><input id="aQuantity" maxlength="40" placeholder="e.g. 20 supply kits"></div>
+   <div class="field"><label>Coordinator note</label><input id="aNote" maxlength="150" placeholder="Non-sensitive note"></div>
+  </div>
+  <button class="btn btn-primary" type="submit">Save assistance record</button>
+ </form>
+ </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
-const STORAGE_KEY="pahunch_ledger_professional_v3";
-const seedReports=[
-{id:"PL-001",village:"Devgarh",district:"Shimla",category:"Road access",urgency:"High",affected:45,group:"General community",details:"Sample report of road access disruption after heavy rainfall.",evidence:"Illustrative community observation.",reporter:"Demo volunteer",status:"Verified",reviewNote:"Sample record reviewed for demonstration.",time:"14 Nov 2026, 09:20",lat:31.10,lng:77.17,history:[] ,confirmation:"Awaiting confirmation"},
-{id:"PL-002",village:"Kandaghat",district:"Solan",category:"Water supply",urgency:"Medium",affected:28,group:"Children and families",details:"Sample report of interrupted water supply.",evidence:"Illustrative local notice reference.",reporter:"Demo volunteer",status:"Pending",reviewNote:"",time:"14 Nov 2026, 10:05",lat:30.97,lng:77.10,history:[],confirmation:"Awaiting confirmation"},
-{id:"PL-003",village:"Rohru",district:"Shimla",category:"Infrastructure damage",urgency:"High",affected:60,group:"General community",details:"Sample report of infrastructure damage requiring assessment.",evidence:"Illustrative volunteer observation.",reporter:"Demo volunteer",status:"Verified",reviewNote:"Sample record reviewed for demonstration.",time:"14 Nov 2026, 11:15",lat:31.20,lng:77.75,history:[],confirmation:"Partially addressed"},
-{id:"PL-004",village:"Arki",district:"Solan",category:"Food and essentials",urgency:"Low",affected:18,group:"Older adults",details:"Sample report requesting essential supplies.",evidence:"Illustrative community report.",reporter:"Demo volunteer",status:"Pending",reviewNote:"",time:"14 Nov 2026, 12:30",lat:null,lng:null,history:[],confirmation:"Awaiting confirmation"},
-{id:"PL-005",village:"Theog",district:"Shimla",category:"Shelter",urgency:"Medium",affected:22,group:"General community",details:"Sample report of temporary shelter needs.",evidence:"Illustrative community report.",reporter:"Demo volunteer",status:"Unable to verify",reviewNote:"Insufficient supporting information in this fictional example.",time:"14 Nov 2026, 13:10",lat:null,lng:null,history:[],confirmation:"Awaiting confirmation"}
-];
-const seedAssistance=[
-{id:"AS-001",reportId:"PL-001",type:"Road access support",people:20,status:"In progress",notes:"Illustrative coordination record.",time:"14 Nov 2026, 13:00"},
-{id:"AS-002",reportId:"PL-003",type:"Other",people:30,status:"Completed",notes:"Illustrative assistance record.",time:"14 Nov 2026, 14:00"}
-];
-let reports=[],assistance=[],activity=[],notifications=[],currentView="dashboard";
-let mapDash=null,mapBig=null,markersDash=[],markersBig=[],recognition=null,listening=false,gpsLat=null,gpsLng=null;
+const KEY="pahunch_ledger_v3";
+const now=()=>new Date().toISOString();
+const uid=prefix=>prefix+"-"+Math.random().toString(36).slice(2,7).toUpperCase();
+const safe=(s)=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const dateFmt=d=>{try{return new Date(d).toLocaleString()}catch{return "—"}};
+let language="en",currentPage="dashboard",currentRole="Coordinator";
+let data;
 
-function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function now(){return new Date().toLocaleString();}
-function toast(msg){const el=$("toast");el.textContent=msg;el.style.display="block";clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.style.display="none",2800);}
-function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({reports,assistance,activity,notifications}));}catch(e){toast("Storage is full. Export your data.");}}
-function load(){
+function seedData(){
+ const t=Date.now();
+ const ago=h=>new Date(t-h*3600000).toISOString();
+ return {
+  reports:[
+   {id:"PL-1001",category:"Water",urgency:"High",area:"Solan district",group:"Community cluster A",description:"Fictional sample: community-level drinking water supply requirement.",people:45,status:"Verified",createdAt:ago(30),reviewNote:"Sample record reviewed for demonstration.",linkedTo:[],followed:false},
+   {id:"PL-1002",category:"Food",urgency:"Medium",area:"Shimla district",group:"Local neighbourhood",description:"Fictional sample: request for community food supply coordination.",people:32,status:"Pending",createdAt:ago(22),reviewNote:"",linkedTo:[],followed:false},
+   {id:"PL-1003",category:"Shelter",urgency:"High",area:"Mandi district",group:"Community cluster B",description:"Fictional sample: temporary community shelter requirement.",people:18,status:"Verified",createdAt:ago(15),reviewNote:"Sample record reviewed.",linkedTo:[],followed:false},
+   {id:"PL-1004",category:"Transport",urgency:"Low",area:"Solan district",group:"Local neighbourhood",description:"Fictional sample: general transport coordination request.",people:12,status:"Pending",createdAt:ago(10),reviewNote:"",linkedTo:[],followed:false},
+   {id:"PL-1005",category:"Medical supplies",urgency:"Medium",area:"Kangra district",group:"Community cluster C",description:"Fictional sample: community-level basic supply requirement.",people:24,status:"Verified",createdAt:ago(7),reviewNote:"Sample record reviewed.",linkedTo:[],followed:false},
+   {id:"PL-1006",category:"Food",urgency:"High",area:"Mandi district",group:"Community cluster B",description:"Fictional sample: additional food supply requirement.",people:20,status:"Pending",createdAt:ago(3),reviewNote:"",linkedTo:[],followed:false}
+  ],
+  assistance:[
+   {id:"AS-201",reportId:"PL-1001",category:"Water",status:"In Progress",quantity:"10 supply units",note:"Fictional sample coordination",createdAt:ago(12)},
+   {id:"AS-202",reportId:"PL-1003",category:"Shelter",status:"Completed",quantity:"5 kits",note:"Fictional sample record",createdAt:ago(8)},
+   {id:"AS-203",reportId:"PL-1005",category:"Medical supplies",status:"Planned",quantity:"8 kits",note:"Fictional sample record",createdAt:ago(4)}
+  ],
+  audit:[{id:uid("LOG"),action:"Demo workspace initialized",detail:"Fictional sample records loaded.",actor:"System",createdAt:ago(40)}],
+  version:3
+ };
+}
+function loadData(){
  try{
-  const d=JSON.parse(localStorage.getItem(STORAGE_KEY));
-  if(d&&Array.isArray(d.reports)&&Array.isArray(d.assistance)){reports=d.reports;assistance=d.assistance;activity=d.activity||[];notifications=d.notifications||[];return;}
- }catch(e){}
- reports=JSON.parse(JSON.stringify(seedReports));assistance=JSON.parse(JSON.stringify(seedAssistance));
- activity=[{text:"Demo workspace loaded with fictional sample records.",time:now(),icon:"✦"}];
- notifications=[{text:"Welcome to the Pahunch Ledger demo workspace.",time:now()}];
- persist();
+  const raw=localStorage.getItem(KEY);
+  if(!raw)return seedData();
+  const parsed=JSON.parse(raw);
+  if(!parsed||!Array.isArray(parsed.reports)||!Array.isArray(parsed.assistance)||!Array.isArray(parsed.audit))return seedData();
+  return parsed;
+ }catch(e){return seedData()}
 }
-function addActivity(text,icon="•"){
- activity.unshift({text,time:now(),icon});activity=activity.slice(0,30);
- notifications.unshift({text,time:now()});notifications=notifications.slice(0,12);persist();
+data=loadData();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){toast("Could not save. Browser storage may be full.")}}
+function log(action,detail,actor=currentRole){
+ data.audit.unshift({id:uid("LOG"),action,detail,actor,createdAt:now()});
+ data.audit=data.audit.slice(0,300);save();
 }
-function makeId(prefix){return prefix+"-"+Date.now().toString().slice(-8);}
-function byId(id){return reports.find(r=>r.id===id);}
-function gaps(){return reports.filter(r=>r.status==="Verified"&&!assistance.some(a=>a.reportId===r.id&&a.status==="Completed"));}
-function priority(r){
- let n=0;
- n+=r.urgency==="High"?40:r.urgency==="Medium"?25:10;
- n+=Math.min(25,Math.ceil((Number(r.affected)||0)/10));
- n+=r.status==="Verified"?15:r.status==="Pending"?8:0;
- if(!assistance.some(a=>a.reportId===r.id&&a.status==="Completed"))n+=15;
- const age=(Date.now()-new Date(r.createdAt||Date.now()).getTime())/3600000;
- if(age>24)n+=5;
- return Math.min(100,n);
-}
-function pill(status){
- const cls=status==="Verified"||status==="Completed"||status==="Resolved"?"green":
- status==="Pending"||status==="Planned"||status==="Awaiting confirmation"?"amber":
- status==="Unable to verify"?"red":"blue";
- return `<span class="pill ${cls}">${esc(status)}</span>`;
-}
-function go(view){
- currentView=view;
- document.querySelectorAll(".view").forEach(x=>x.classList.toggle("active",x.id==="view-"+view));
- document.querySelectorAll(".nav-btn").forEach(x=>x.classList.toggle("active",x.dataset.view===view));
- const labels={dashboard:"Overview",reports:"Community reports",verification:"Verification desk",assistance:"Assistance tracking",followup:"Follow-up tracker",analytics:"Impact analytics",mapview:"Geographic overview"};
- $("crumb").textContent=labels[view]||"Overview";
+function toast(msg){const el=$("toast");el.textContent=msg;el.classList.add("show");clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove("show"),2800)}
+function toggleMenu(){$("sidebar").classList.toggle("open")}
+function navigate(page){
+ currentPage=page;
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ $("page-"+page).classList.add("active");
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+ const active=document.querySelector('.nav button[data-page="'+page+'"]');
+ $("topTitle").textContent=active?active.innerText.trim():"Pahunch Ledger";
  $("sidebar").classList.remove("open");
  renderAll();
- if(view==="mapview")setTimeout(()=>{if(mapBig)mapBig.invalidateSize();},150);
- if(view==="dashboard")setTimeout(()=>{if(mapDash)mapDash.invalidateSize();},150);
+ window.scrollTo({top:0,behavior:"smooth"});
 }
-document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>go(b.dataset.view)));
-$("menuBtn").addEventListener("click",()=>$("sidebar").classList.toggle("open"));
-$("newReportBtn").addEventListener("click",()=>{go("reports");$("reportFormCard").scrollIntoView({behavior:"smooth"});});
-$("newReportBtn2").addEventListener("click",()=>$("reportFormCard").scrollIntoView({behavior:"smooth"}));
-
-function renderMetrics(){
- const verified=reports.filter(r=>r.status==="Verified").length;
- const pending=reports.filter(r=>r.status==="Pending").length;
- const people=assistance.reduce((n,a)=>n+(Number(a.people)||0),0);
- $("mTotal").textContent=reports.length;$("mVerified").textContent=verified;$("mPending").textContent=pending;$("mPeople").textContent=people.toLocaleString();
- $("verifiedRate").textContent=reports.length?Math.round(verified/reports.length*100)+"%":"0%";
- $("navReportCount").textContent=reports.length;$("navPendingCount").textContent=pending;
- $("pendingBadge").textContent=pending+" pending";
- $("aTotal").textContent=reports.length;$("aVerified").textContent=verified;$("aAssists").textContent=assistance.length;$("aFollow").textContent=gaps().length;
+document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>navigate(b.dataset.page)));
+function changeRole(){
+ currentRole=$("roleSelect").value;
+ log("Demo role changed","Workspace switched to "+currentRole+" view.",currentRole);
+ toast("Demo role: "+currentRole);
 }
-function chart(id,items){
- const max=Math.max(1,...items.map(x=>x[1]));
- $(id).innerHTML=items.filter(x=>x[1]>0).map(x=>`<div class="chart-row"><span>${esc(x[0])}</span><div class="chart-bar"><i style="width:${x[1]/max*100}%"></i></div><b>${x[1]}</b></div>`).join("")||'<div class="empty">No data available yet.</div>';
+function toggleLanguage(){
+ language=language==="en"?"hi":"en";
+ document.documentElement.lang=language;
+ document.querySelectorAll("[data-en]").forEach(el=>el.textContent=el.dataset[language]);
+ $("langBtn").textContent=language==="en"?"हिंदी":"English";
+ toast(language==="hi"?"भाषा हिंदी में बदली गई":"Language changed to English");
+}
+function statusClass(s){
+ return s==="Pending"?"status-pending":s==="Verified"?"status-verified":s==="Rejected"?"status-rejected":s==="In Progress"?"status-progress":s==="Completed"?"status-completed":"status-planned";
+}
+function badge(s){return '<span class="status '+statusClass(s)+'">'+safe(s)+'</span>'}
+function reportById(id){return data.reports.find(r=>r.id===id)}
+function counts(){
+ const reports=data.reports;
+ return {
+  total:reports.length,
+  pending:reports.filter(r=>r.status==="Pending").length,
+  verified:reports.filter(r=>r.status==="Verified").length,
+  assistance:data.assistance.length,
+  completed:data.assistance.filter(a=>a.status==="Completed").length,
+  gaps:reports.filter(r=>r.status==="Verified"&&!r.followed).length
+ };
+}
+function metric(label,value,note,icon){
+ return '<div class="card metric"><div class="metric-top"><span class="metric-label">'+label+'</span><span class="metric-icon">'+icon+'</span></div><div class="metric-value">'+value+'</div><div class="metric-note">'+note+'</div><div class="metric-accent"></div></div>';
+}
+function categoryCounts(){
+ const out={};
+ data.reports.forEach(r=>out[r.category]=(out[r.category]||0)+1);
+ return out;
+}
+function bars(target,obj){
+ const max=Math.max(1,...Object.values(obj));
+ const entries=Object.entries(obj);
+ $(target).innerHTML=entries.length?entries.map(([name,n])=>'<div class="bar-row"><span class="bar-label">'+safe(name)+'</span><div class="bar-track"><div class="bar-fill" style="width:'+(n/max*100)+'%"></div></div><span class="bar-num">'+n+'</span></div>').join(""):'<div class="empty">No data available</div>';
 }
 function renderDashboard(){
- chart("dashCategory",countBy(reports,"category"));
- $("dashGaps").innerHTML=gaps().slice(0,4).map(r=>`<div class="feed-item"><div class="feed-icon">◎</div><div class="feed-text"><b>${esc(r.village)}, ${esc(r.district)}</b><br>${esc(r.category)} · ${r.affected} estimated people<small>${esc(r.id)} · ${esc(r.urgency)} urgency</small></div></div>`).join("")||'<div class="empty">No verified reports currently require follow-up in this demo.</div>';
- $("gapCount").textContent=gaps().length+" open";
- $("activityFeed").innerHTML=activity.slice(0,7).map(a=>`<div class="feed-item"><div class="feed-icon">${esc(a.icon||"•")}</div><div class="feed-text">${esc(a.text)}<small>${esc(a.time)}</small></div></div>`).join("")||'<div class="empty">No activity yet.</div>';
+ const c=counts();
+ $("metrics").innerHTML=
+ metric("Total reports",c.total,"All submitted reports","▤")+
+ metric("Awaiting review",c.pending,"Pending human verification","◷")+
+ metric("Verified reports",c.verified,"Reviewed and accepted","✓")+
+ metric("Assistance records",c.assistance,"Planned, ongoing or completed","♡");
+ bars("categoryBars",categoryCounts());
+ $("recentActivity").innerHTML=data.audit.slice(0,5).map(a=>'<div class="activity"><span class="activity-dot"></span><div><strong>'+safe(a.action)+'</strong><p>'+safe(a.detail)+'</p><time>'+dateFmt(a.createdAt)+'</time></div></div>').join("")||'<div class="empty">No recent activity</div>';
+ $("recentTable").innerHTML=reportTable(data.reports.slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0,5),false);
 }
-function countBy(arr,key){const o={};arr.forEach(x=>o[x[key]||"Not specified"]=(o[x[key]||"Not specified"]||0)+1);return Object.entries(o);}
+function reportTable(list,actions=true){
+ if(!list.length)return '<div class="empty">No reports match your filters.</div>';
+ return '<table><thead><tr><th>Report ID</th><th>Category</th><th>Area</th><th>Urgency</th><th>Status</th><th>Action</th></tr></thead><tbody>'+
+ list.map(r=>'<tr><td><span class="case-id">'+safe(r.id)+'</span></td><td>'+safe(r.category)+'</td><td>'+safe(r.area)+'</td><td>'+safe(r.urgency)+'</td><td>'+badge(r.status)+'</td><td><button class="btn btn-light btn-small" onclick="openCase(\''+r.id+'\')">View details</button></td></tr>').join("")+
+ '</tbody></table>';
+}
 function renderReports(){
- const q=$("reportSearch").value.toLowerCase(),st=$("filterStatus").value,urg=$("filterUrgency").value;
- const rows=reports.filter(r=>(!q||(r.id+" "+r.village+" "+r.district+" "+r.category).toLowerCase().includes(q))&&(!st||r.status===st)&&(!urg||r.urgency===urg));
- $("reportRows").innerHTML=rows.map(r=>`<tr><td><strong>${esc(r.id)}</strong></td><td>${esc(r.village)}, ${esc(r.district)}</td><td>${esc(r.category)}</td><td>${esc(r.urgency)}</td><td>${Number(r.affected)||0}</td><td>${pill(r.status)}</td><td><button class="btn btn-white btn-xs" data-open="${esc(r.id)}">View case</button></td></tr>`).join("")||'<tr><td colspan="7" class="empty">No matching reports found.</td></tr>';
- $("reportRows").querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",()=>openCase(b.dataset.open)));
+ const q=($("reportSearch").value||"").toLowerCase();
+ const st=$("reportStatus").value,cat=$("reportCategory").value;
+ const list=data.reports.filter(r=>(!q||[r.id,r.category,r.area,r.description].join(" ").toLowerCase().includes(q))&&(!st||r.status===st)&&(!cat||r.category===cat));
+ $("reportsTable").innerHTML=reportTable(list);
 }
-function openCase(id){
- const r=byId(id);if(!r)return;
- const timeline=(r.history||[]).map(h=>`<div class="timeline-item"><b>${esc(h.text)}</b><small>${esc(h.time)}</small></div>`).join("");
- const info=`Report ${r.id}\n${r.village}, ${r.district}\n${r.category} · ${r.urgency}\nEstimated affected: ${r.affected}\nStatus: ${r.status}\nDetails: ${r.details}`;
- alert(info+"\n\nTimeline:\n"+((r.history||[]).map(h=>h.text+" — "+h.time).join("\n")||"No additional history."));
+function clearFilters(){
+ $("reportSearch").value="";$("reportStatus").value="";$("reportCategory").value="";renderReports();
 }
 function renderVerification(){
- const pending=reports.filter(r=>r.status==="Pending");
- $("verificationQueue").innerHTML=pending.map(r=>`
- <section class="card" style="margin-bottom:13px">
-  <div class="card-head"><div><div class="eyebrow">${esc(r.id)} · ${esc(r.time)}</div><h3 class="card-title" style="margin-top:5px">${esc(r.village)}, ${esc(r.district)}</h3><div class="card-sub">${esc(r.category)} · ${esc(r.urgency)} urgency</div></div><span class="pill amber">PENDING REVIEW</span></div>
-  <div class="grid-two" style="margin-bottom:8px"><div><div class="card-sub">REPORTED NEED</div><p style="font-size:11px;line-height:1.6">${esc(r.details)}</p></div><div><div class="card-sub">SOURCE / EVIDENCE NOTES</div><p style="font-size:11px;line-height:1.6">${esc(r.evidence||"No evidence notes supplied.")}</p><div class="card-sub">Estimated affected: <b>${Number(r.affected)||0}</b></div></div></div>
-  <div class="field"><label for="review-${esc(r.id)}">Reviewer notes</label><textarea id="review-${esc(r.id)}" maxlength="300" placeholder="Record the basis of your review decision..."></textarea></div>
-  <div class="voice-row"><button class="btn btn-teal" data-verify="${esc(r.id)}" data-status="Verified">✓ Mark verified</button><button class="btn btn-red" data-verify="${esc(r.id)}" data-status="Unable to verify">Unable to verify</button></div>
- </section>`).join("")||'<div class="card empty"><b>✓</b>No reports are awaiting verification.</div>';
- $("verificationQueue").querySelectorAll("[data-verify]").forEach(b=>b.addEventListener("click",()=>verify(b.dataset.verify,b.dataset.status)));
+ const filter=$("verifyFilter").value;
+ const list=data.reports.filter(r=>!filter||r.status===filter);
+ $("verificationTable").innerHTML=list.length?'<table><thead><tr><th>Report</th><th>Area</th><th>Urgency</th><th>Status</th><th>Review note</th><th>Decision</th></tr></thead><tbody>'+
+ list.map(r=>'<tr><td><strong>'+safe(r.id)+'</strong><br><span class="muted">'+safe(r.category)+'</span></td><td>'+safe(r.area)+'</td><td>'+safe(r.urgency)+'</td><td>'+badge(r.status)+'</td><td>'+safe(r.reviewNote||"—")+'</td><td><button class="btn btn-light btn-small" onclick="reviewCase(\''+r.id+'\')">Review</button></td></tr>').join("")+'</tbody></table>':'<div class="empty">No reports in this view.</div>';
 }
-function verify(id,status){
- const r=byId(id);if(!r)return;
- r.status=status;r.reviewNote=$("review-"+id).value.trim()||"No reviewer note added.";
- r.history=r.history||[];r.history.push({text:"Report "+status.toLowerCase(),time:now()});
- addActivity(r.id+" was marked "+status+".","✓");
- renderAll();toast("Review decision saved.");
+function reviewCase(id){
+ if(currentRole==="Reporter"){toast("Switch to verifier or coordinator view to review cases.");return}
+ const r=reportById(id);if(!r)return;
+ const decision=prompt("Enter decision: Verified, Pending or Rejected",r.status);
+ if(decision===null)return;
+ const normalized=decision.trim().toLowerCase();
+ const allowed={verified:"Verified",pending:"Pending",rejected:"Rejected"};
+ if(!allowed[normalized]){toast("Please enter Verified, Pending or Rejected.");return}
+ const note=prompt("Add a short, non-sensitive review note:",r.reviewNote||"");
+ if(note===null)return;
+ r.status=allowed[normalized];r.reviewNote=note.slice(0,200);
+ log("Report review updated",r.id+" status changed to "+r.status);
+ save();renderAll();toast("Review decision saved.");
 }
 function renderAssistance(){
- $("assistReport").innerHTML='<option value="">Choose a report</option>'+reports.map(r=>`<option value="${esc(r.id)}">${esc(r.id)} · ${esc(r.village)} · ${esc(r.status)}</option>`).join("");
- const totals=["Planned","In progress","Completed"].map(s=>[s,assistance.filter(a=>a.status===s).length]);
- chart("assistProgress",totals);
- $("assistanceList").innerHTML=assistance.map(a=>`
- <div class="feed-item"><div class="feed-icon">↗</div><div class="feed-text" style="flex:1"><b>${esc(a.id)} · ${esc(a.type)}</b><br>Linked report: ${esc(a.reportId)} · Estimated people reached: ${Number(a.people)||0}<br>${pill(a.status)}<small>${esc(a.notes||"No coordination note")} · ${esc(a.time||"")}</small><div class="voice-row" style="margin-top:8px"><button class="btn btn-white btn-xs" data-assist="${esc(a.id)}" data-state="Planned">Planned</button><button class="btn btn-white btn-xs" data-assist="${esc(a.id)}" data-state="In progress">In progress</button><button class="btn btn-teal btn-xs" data-assist="${esc(a.id)}" data-state="Completed">Completed</button></div></div></div>`).join("")||'<div class="empty">No assistance records yet.</div>';
- $("assistanceList").querySelectorAll("[data-assist]").forEach(b=>b.addEventListener("click",()=>updateAssistance(b.dataset.assist,b.dataset.state)));
+ const c=counts();
+ $("assistMetrics").innerHTML=
+ metric("Total records",data.assistance.length,"Assistance entries","♡")+
+ metric("Planned",data.assistance.filter(a=>a.status==="Planned").length,"Awaiting coordination","◷")+
+ metric("In progress",data.assistance.filter(a=>a.status==="In Progress").length,"Ongoing entries","↻")+
+ metric("Completed",c.completed,"Marked complete in demo","✓");
+ const list=data.assistance.slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+ $("assistanceTable").innerHTML=list.length?'<table><thead><tr><th>Record</th><th>Related report</th><th>Category</th><th>Quantity</th><th>Status</th><th>Update</th></tr></thead><tbody>'+
+ list.map(a=>'<tr><td><strong>'+safe(a.id)+'</strong></td><td><a href="#" onclick="openCase(\''+a.reportId+'\');return false">'+safe(a.reportId)+'</a></td><td>'+safe(a.category)+'</td><td>'+safe(a.quantity||"—")+'</td><td>'+badge(a.status)+'</td><td><button class="btn btn-light btn-small" onclick="updateAssistance(\''+a.id+'\')">Update</button></td></tr>').join("")+'</tbody></table>':'<div class="empty">No assistance records yet.</div>';
 }
-function updateAssistance(id,status){
- const a=assistance.find(x=>x.id===id);if(!a)return;
- a.status=status;addActivity(a.id+" status updated to "+status+".","↗");renderAll();toast("Assistance status updated.");
+function openAssistanceForm(){
+ if(currentRole==="Reporter"){toast("Switch to coordinator view to record assistance.");return}
+ const verified=data.reports.filter(r=>r.status==="Verified");
+ if(!verified.length){toast("Verify a report before recording assistance.");return}
+ $("aReport").innerHTML=verified.map(r=>'<option value="'+safe(r.id)+'">'+safe(r.id+" · "+r.category+" · "+r.area)+'</option>').join("");
+ $("assistModal").classList.add("show");
+}
+function closeAssistModal(){$("assistModal").classList.remove("show")}
+$("assistForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ if(currentRole==="Reporter")return;
+ const record={id:uid("AS"),reportId:$("aReport").value,category:$("aCategory").value,status:$("aStatus").value,quantity:$("aQuantity").value.trim(),note:$("aNote").value.trim(),createdAt:now()};
+ data.assistance.unshift(record);
+ log("Assistance record created",record.id+" linked to "+record.reportId);
+ save();$("assistForm").reset();closeAssistModal();renderAll();toast("Assistance record saved.");
+});
+function updateAssistance(id){
+ if(currentRole==="Reporter"){toast("Switch to coordinator view to update records.");return}
+ const a=data.assistance.find(x=>x.id===id);if(!a)return;
+ const next=prompt("Set status: Planned, In Progress or Completed",a.status);
+ if(next===null)return;
+ const options={"planned":"Planned","in progress":"In Progress","completed":"Completed"};
+ if(!options[next.trim().toLowerCase()]){toast("Invalid status.");return}
+ a.status=options[next.trim().toLowerCase()];
+ log("Assistance status updated",a.id+" status changed to "+a.status);
+ save();renderAll();toast("Assistance status updated.");
 }
 function renderFollowup(){
- const list=reports.filter(r=>r.status==="Verified");
- $("followupList").innerHTML=list.map(r=>{
-  const entries=assistance.filter(a=>a.reportId===r.id);
-  const completed=entries.some(a=>a.status==="Completed");
-  const pct=completed?100:entries.some(a=>a.status==="In progress")?60:entries.length?25:0;
-  return `<section class="card" style="margin-bottom:13px">
-   <div class="card-head"><div><div class="eyebrow">${esc(r.id)}</div><h3 class="card-title" style="margin-top:5px">${esc(r.village)}, ${esc(r.district)}</h3><div class="card-sub">${esc(r.category)} · ${r.affected} estimated people</div></div>${pill(r.confirmation||"Awaiting confirmation")}</div>
-   <div class="card-sub">RECORDED ASSISTANCE PROGRESS</div><div class="progress-track"><i style="width:${pct}%"></i></div><div class="card-sub">${entries.length} assistance record(s) · ${completed?"A record is marked completed":entries.length?"Assistance is recorded":"No assistance record linked yet"}</div>
-   <div class="grid-two" style="margin-top:12px;margin-bottom:0">
-    <div><label for="confirm-${esc(r.id)}">Community follow-up outcome</label><select id="confirm-${esc(r.id)}"><option ${r.confirmation==="Awaiting confirmation"?"selected":""}>Awaiting confirmation</option><option ${r.confirmation==="Need still exists"?"selected":""}>Need still exists</option><option ${r.confirmation==="Partially addressed"?"selected":""}>Partially addressed</option><option ${r.confirmation==="Resolved"?"selected":""}>Resolved</option><option ${r.confirmation==="Follow-up required"?"selected":""}>Follow-up required</option></select></div>
-    <div style="display:flex;align-items:end"><button class="btn btn-teal" data-confirm="${esc(r.id)}">Save follow-up outcome</button></div>
-   </div>
-   <div class="card-sub" style="margin-top:10px">This is a separately recorded confirmation, not automatic proof of delivery or resolution.</div>
-  </section>`;
- }).join("")||'<div class="card empty">No verified reports are available for follow-up yet.</div>';
- $("followupList").querySelectorAll("[data-confirm]").forEach(b=>b.addEventListener("click",()=>{
-  const r=byId(b.dataset.confirm);r.confirmation=$("confirm-"+r.id).value;
-  r.history=r.history||[];r.history.push({text:"Follow-up outcome: "+r.confirmation,time:now()});
-  addActivity(r.id+" follow-up outcome recorded: "+r.confirmation,"◎");renderAll();toast("Follow-up outcome saved.");
- }));
+ const unresolved=data.reports.filter(r=>r.status==="Verified"&&!r.followed);
+ $("followMetrics").innerHTML=
+ metric("Verified cases",data.reports.filter(r=>r.status==="Verified").length,"Human-reviewed reports","✓")+
+ metric("Awaiting follow-up",unresolved.length,"No outcome confirmation yet","◷")+
+ metric("Confirmed follow-up",data.reports.filter(r=>r.followed).length,"Outcome confirmation recorded","↻")+
+ metric("Completed assistance",data.assistance.filter(a=>a.status==="Completed").length,"Assistance status only","♡");
+ $("followTable").innerHTML=unresolved.length?'<table><thead><tr><th>Report</th><th>Category</th><th>Area</th><th>Assistance status</th><th>Outcome</th></tr></thead><tbody>'+
+ unresolved.map(r=>{
+  const related=data.assistance.filter(a=>a.reportId===r.id);
+  const state=related.length?related.map(a=>a.status).join(", "):"No assistance record";
+  return '<tr><td><strong>'+safe(r.id)+'</strong></td><td>'+safe(r.category)+'</td><td>'+safe(r.area)+'</td><td>'+safe(state)+'</td><td><button class="btn btn-primary btn-small" onclick="confirmFollowup(\''+r.id+'\')">Record follow-up</button></td></tr>';
+ }).join("")+'</tbody></table>':'<div class="empty">No verified cases awaiting follow-up.</div>';
+}
+function confirmFollowup(id){
+ if(currentRole==="Reporter"){toast("Switch to coordinator view to record follow-up.");return}
+ const r=reportById(id);if(!r)return;
+ const note=prompt("Record a short, non-sensitive outcome confirmation note:");
+ if(note===null)return;
+ r.followed=true;r.followupNote=note.slice(0,200);r.followupAt=now();
+ log("Follow-up confirmation recorded",r.id+" outcome confirmation saved.");
+ save();renderAll();toast("Follow-up recorded.");
 }
 function renderAnalytics(){
- chart("analyticsCategory",countBy(reports,"category"));
- chart("analyticsUrgency",countBy(reports,"urgency"));
- chart("analyticsStatus",countBy(reports,"status"));
- chart("analyticsAssistance",countBy(assistance,"status"));
+ const c=counts();
+ $("analyticsMetrics").innerHTML=
+ metric("Reports",c.total,"All sample records","▤")+
+ metric("Verified",c.verified,"Accepted after review","✓")+
+ metric("Assistance entries",c.assistance,"All assistance statuses","♡")+
+ metric("Follow-up gaps",c.gaps,"Verified cases not yet followed up","◷");
+ bars("analyticsCategories",categoryCounts());
+ bars("statusBars",{"Pending":c.pending,"Verified":c.verified,"Rejected":data.reports.filter(r=>r.status==="Rejected").length});
+ const areas={};data.reports.forEach(r=>areas[r.area]=(areas[r.area]||0)+1);
+ bars("areaAnalytics",areas);
 }
-function renderLocationRegister(){
- $("locationRegister").innerHTML=reports.map(r=>`<div class="feed-item"><div class="feed-icon">⌖</div><div class="feed-text"><b>${esc(r.village)}, ${esc(r.district)}</b><br>${esc(r.id)} · ${esc(r.category)}<small>${r.lat!=null?"Approximate coordinates recorded":"Manual area only"} · ${esc(r.status)}</small></div></div>`).join("");
+function areaCounts(){
+ const out={};data.reports.forEach(r=>out[r.area]=(out[r.area]||0)+1);return out;
 }
-
-function mapIcon(status){
- const color=status==="Verified"?"#168b83":status==="Pending"?"#d99a35":"#c75b5b";
- return L.divIcon({className:"",html:`<div style="width:17px;height:17px;background:${color};border:3px solid white;border-radius:50%;box-shadow:0 2px 8px #0005"></div>`,iconSize:[17,17],iconAnchor:[8,8]});
+function renderMap(){
+ const areas=areaCounts(),max=Math.max(1,...Object.values(areas));
+ $("areaGrid").innerHTML=Object.entries(areas).map(([name,n])=>'<div class="area-card"><strong>'+safe(name)+'</strong><p>Fictional aggregated reports</p><div class="area-count">'+n+'</div><div class="heat"><span style="width:'+(n/max*100)+'%"></span></div><p>'+Math.round(n/data.reports.length*100||0)+'% of reports in sample</p></div>').join("")||'<div class="empty">No area data available.</div>';
 }
-function drawMarkers(map,old){
- old.forEach(m=>map.removeLayer(m));old.length=0;
- reports.filter(r=>r.lat!=null&&r.lng!=null).forEach(r=>{
-  const marker=L.marker([r.lat,r.lng],{icon:mapIcon(r.status)}).addTo(map);
-  marker.bindPopup(`<b>${esc(r.id)}</b><br>${esc(r.village)}, ${esc(r.district)}<br>${esc(r.category)}<br>${esc(r.status)}<br>${r.affected} estimated people`);
-  old.push(marker);
- });
-}
-function initMaps(){
- if(!window.L){
-  $("map").innerHTML="Map library unavailable. Internet connection is required.";
-  $("mapLarge").innerHTML="Map library unavailable. Internet connection is required.";
-  return;
- }
- mapDash=L.map("map").setView([31.1,77.2],7);
- L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:"© OpenStreetMap"}).addTo(mapDash);
- mapBig=L.map("mapLarge").setView([31.1,77.2],7);
- L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:"© OpenStreetMap"}).addTo(mapBig);
- drawMarkers(mapDash,markersDash);drawMarkers(mapBig,markersBig);
-}
-function renderMaps(){
- if(mapDash&&window.L)drawMarkers(mapDash,markersDash);
- if(mapBig&&window.L)drawMarkers(mapBig,markersBig);
+function renderAudit(){
+ const q=($("auditSearch").value||"").toLowerCase();
+ const list=data.audit.filter(a=>[a.action,a.detail,a.actor].join(" ").toLowerCase().includes(q));
+ $("auditList").innerHTML=list.length?list.map(a=>'<div class="audit-item"><time>'+dateFmt(a.createdAt)+'</time><div><strong>'+safe(a.action)+'</strong><p>'+safe(a.detail)+'</p><span class="muted">Actor: '+safe(a.actor)+'</span></div></div>').join(""):'<div class="empty">No matching activity.</div>';
 }
 function renderAll(){
- renderMetrics();renderDashboard();renderReports();renderVerification();renderAssistance();renderFollowup();renderAnalytics();renderLocationRegister();renderMaps();renderNotifications();
+ renderDashboard();renderReports();renderVerification();renderAssistance();renderFollowup();renderAnalytics();renderMap();renderAudit();
 }
-
-function submitReport(e){
+$("reportForm").addEventListener("submit",e=>{
  e.preventDefault();
- const village=$("village").value.trim(),district=$("district").value.trim(),category=$("category").value;
- const duplicate=reports.some(r=>r.village.toLowerCase()===village.toLowerCase()&&r.district.toLowerCase()===district.toLowerCase()&&r.category===category);
- if(duplicate&&!confirm("A report with the same area and category already exists. Submit this as a separate report anyway?"))return;
- const id=makeId("PL");
- const r={id,village,district,category,urgency:$("urgency").value,affected:Number($("affected").value),group:$("group").value||"Not specified",details:$("details").value.trim(),evidence:$("evidence").value.trim(),reporter:$("reporter").value.trim(),status:"Pending",reviewNote:"",time:now(),createdAt:Date.now(),lat:gpsLat,lng:gpsLng,history:[{text:"Report submitted",time:now()}],confirmation:"Awaiting confirmation"};
- reports.unshift(r);addActivity(id+" submitted for human verification.","＋");
- $("reportForm").reset();clearGps();renderAll();toast("Report submitted to the local demo workspace.");window.scrollTo({top:0,behavior:"smooth"});
+ const report={
+  id:uid("PL"),category:$("fCategory").value,urgency:$("fUrgency").value,
+  area:$("fArea").value.trim(),group:$("fGroup").value.trim(),
+  description:$("fDescription").value.trim(),people:$("fPeople").value?Number($("fPeople").value):null,
+  status:"Pending",createdAt:now(),reviewNote:"",linkedTo:[],followed:false
+ };
+ if(!report.area||!report.description){toast("Please complete the required fields.");return}
+ const similar=data.reports.filter(r=>r.area.toLowerCase()===report.area.toLowerCase()&&r.category===report.category&&r.status!=="Rejected");
+ if(similar.length){
+  const confirmDuplicate=confirm("There are "+similar.length+" similar report(s) in this area and category. Submit this report anyway?");
+  if(!confirmDuplicate)return;
+ }
+ data.reports.unshift(report);
+ log("New community report submitted",report.id+" · "+report.category+" · "+report.area,"Reporter");
+ save();$("reportForm").reset();toast("Report submitted for human review.");
+ navigate("reports");
+});
+function openCase(id){
+ const r=reportById(id);if(!r)return;
+ const linked=data.reports.filter(x=>r.linkedTo?.includes(x.id)||x.linkedTo?.includes(r.id));
+ const assistance=data.assistance.filter(a=>a.reportId===id);
+ $("modalTitle").textContent="Case details · "+r.id;
+ $("modalBody").innerHTML=
+ '<div class="detail-grid">'+
+ detail("Category",r.category)+detail("Urgency",r.urgency)+detail("General area",r.area)+detail("Status",r.status)+
+ detail("Approximate affected count",r.people??"Not provided")+detail("Submitted",dateFmt(r.createdAt))+
+ '</div><div class="section-title">Community need description</div><p style="font-size:12px;line-height:1.7">'+safe(r.description)+'</p>'+
+ '<div class="section-title">Verification</div><p style="font-size:11px">'+safe(r.reviewNote||"No review note recorded.")+'</p>'+
+ '<div class="section-title">Assistance history</div>'+
+ (assistance.length?assistance.map(a=>'<div class="activity"><span class="activity-dot"></span><div><strong>'+safe(a.category)+' · '+safe(a.status)+'</strong><p>'+safe(a.quantity||"Quantity not specified")+' · '+safe(a.note||"")+'</p><time>'+dateFmt(a.createdAt)+'</time></div></div>').join(""):'<p class="muted" style="font-size:11px">No assistance records linked yet.</p>')+
+ '<div class="section-title">Related reports</div>'+
+ (linked.length?linked.map(x=>'<p style="font-size:11px"><a href="#" onclick="openCase(\''+x.id+'\');return false">'+safe(x.id)+'</a> · '+safe(x.category)+' · '+safe(x.area)+'</p>').join(""):'<p class="muted" style="font-size:11px">No linked reports.</p>')+
+ '<div class="section-title">Follow-up</div><p style="font-size:11px">'+(r.followed?'Outcome confirmation recorded on '+safe(dateFmt(r.followupAt)):'No follow-up confirmation recorded.')+'</p>'+
+ '<div class="no-print" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:20px"><button class="btn btn-outline" onclick="linkDuplicate(\''+r.id+'\')">Link related report</button><button class="btn btn-primary" onclick="printCase(\''+r.id+'\')">Print case summary</button></div>';
+ $("caseModal").classList.add("show");
 }
-function submitAssist(e){
- e.preventDefault();
- const id=makeId("AS");
- assistance.unshift({id,reportId:$("assistReport").value,type:$("assistType").value,people:Number($("assistPeople").value),status:$("assistStatus").value,notes:$("assistNotes").value.trim(),time:now()});
- const r=byId($("assistReport").value);if(r){r.history=r.history||[];r.history.push({text:"Assistance record created: "+id,time:now()});}
- addActivity("Assistance record "+id+" created.","↗");$("assistForm").reset();renderAll();toast("Assistance record saved.");
+function detail(label,value){return '<div class="detail-box"><small>'+safe(label)+'</small><strong>'+safe(value)+'</strong></div>'}
+function closeModal(){$("caseModal").classList.remove("show")}
+function linkDuplicate(id){
+ if(currentRole==="Reporter"){toast("Switch to verifier or coordinator view.");return}
+ const r=reportById(id);if(!r)return;
+ const other=data.reports.filter(x=>x.id!==id);
+ if(!other.length){toast("No other reports to link.");return}
+ const choice=prompt("Enter the report ID to link:\n"+other.map(x=>x.id+" · "+x.category+" · "+x.area).join("\n"));
+ if(!choice)return;
+ const target=reportById(choice.trim().toUpperCase());
+ if(!target||target.id===r.id){toast("Report ID not found.");return}
+ r.linkedTo=r.linkedTo||[];target.linkedTo=target.linkedTo||[];
+ if(r.linkedTo.includes(target.id)){toast("These reports are already linked.");return}
+ r.linkedTo.push(target.id);target.linkedTo.push(r.id);
+ log("Related reports linked",r.id+" linked with "+target.id);
+ save();openCase(id);toast("Related reports linked.");
 }
-function getGPS(){
- if(!navigator.geolocation){toast("Location is not supported by this browser.");return;}
- toast("Requesting optional location permission...");
- navigator.geolocation.getCurrentPosition(p=>{
-  gpsLat=Math.round(p.coords.latitude*100)/100;gpsLng=Math.round(p.coords.longitude*100)/100;
-  $("locationMode").value="gps";$("gpsStatus").textContent="Approximate coordinates selected: "+gpsLat+", "+gpsLng+". Coordinates are rounded before saving.";
-  toast("Approximate location captured.");
- },e=>toast(e.code===1?"Location permission denied. You can enter the area manually.":"Location unavailable. Enter the area manually."),{enableHighAccuracy:false,timeout:12000,maximumAge:60000});
+function printCase(id){
+ const r=reportById(id);if(!r)return;
+ const assistance=data.assistance.filter(a=>a.reportId===id);
+ const win=window.open("","_blank");
+ if(!win){toast("Allow pop-ups to print the case summary.");return}
+ win.document.write('<html><head><title>Case '+safe(id)+'</title><style>body{font-family:Arial;padding:35px;color:#203444}h1{color:#168b82}p{line-height:1.6}small{color:#71818d}hr{border:0;border-top:1px solid #ddd}</style></head><body><h1>PAHUNCH LEDGER</h1><h2>Case summary · '+safe(r.id)+'</h2><p><b>DEMO DATA — FICTIONAL RECORD</b></p><hr><p><b>Category:</b> '+safe(r.category)+'</p><p><b>Urgency:</b> '+safe(r.urgency)+'</p><p><b>Area:</b> '+safe(r.area)+'</p><p><b>Status:</b> '+safe(r.status)+'</p><p><b>Submitted:</b> '+safe(dateFmt(r.createdAt))+'</p><p><b>Description:</b> '+safe(r.description)+'</p><p><b>Review note:</b> '+safe(r.reviewNote||"None")+'</p><h3>Assistance records</h3>'+assistance.map(a=>'<p>'+safe(a.id)+' · '+safe(a.category)+' · '+safe(a.status)+' · '+safe(a.quantity||"")+'</p>').join("")+'<hr><small>Generated from a local prototype. Not an official record or proof of service delivery.</small><script>window.onload=()=>window.print()<\/script></body></html>');
+ win.document.close();
 }
-function clearGps(){gpsLat=null;gpsLng=null;if($("gpsStatus"))$("gpsStatus").textContent="No coordinates selected. Manual area details will be used.";$("locationMode").value="manual";}
-function voiceInput(){
- const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!SR){toast("Voice input is not supported in this browser. Try Chrome.");return;}
- if(listening){recognition.stop();return;}
- recognition=new SR();recognition.lang=$("voiceLang").value;recognition.continuous=true;recognition.interimResults=true;
- let finalText=$("details").value.trim();if(finalText)finalText+=" ";
- recognition.onstart=()=>{listening=true;$("micBtn").textContent="■ Stop speaking";$("voiceStatus").textContent="Listening… speak, then press stop."};
- recognition.onresult=e=>{let interim="";for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)finalText+=e.results[i][0].transcript+" ";else interim+=e.results[i][0].transcript;}$("details").value=(finalText+interim).trim();};
- recognition.onerror=e=>{$("voiceStatus").textContent="Voice input error: "+e.error;};
- recognition.onend=()=>{listening=false;$("micBtn").textContent="🎙 Speak report";$("voiceStatus").textContent=$("details").value.trim()?"Speech converted to text. Review it before submitting.":"No speech captured. Try again.";};
- try{recognition.start();}catch(e){toast("Could not start microphone. Check browser permissions.");}
+function printCurrent(){window.print()}
+function exportCSV(type){
+ let rows=[],filename=type;
+ if(type==="reports"){
+  rows=[["ID","Category","Urgency","Area","Description","Status","Created","Affected estimate","Follow-up"]];
+  data.reports.forEach(r=>rows.push([r.id,r.category,r.urgency,r.area,r.description,r.status,r.createdAt,r.people??"",r.followed?"Confirmed":"Pending"]));
+ }else if(type==="assistance"){
+  rows=[["ID","Report ID","Category","Status","Quantity","Note","Created"]];
+  data.assistance.forEach(a=>rows.push([a.id,a.reportId,a.category,a.status,a.quantity,a.note,a.createdAt]));
+ }else{
+  rows=[["ID","Action","Detail","Actor","Date"]];
+  data.audit.forEach(a=>rows.push([a.id,a.action,a.detail,a.actor,a.createdAt]));
+ }
+ const csv=rows.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\r\n");
+ downloadFile(filename+".csv",csv,"text/csv;charset=utf-8");
+ toast("CSV export prepared.");
 }
-function csv(filename,rows){
- const body=rows.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\r\n");
- const blob=new Blob(["\uFEFF"+body],{type:"text/csv;charset=utf-8"});
- const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1200);
+function downloadFile(name,content,type){
+ const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
 }
-function exportReportCSV(){csv("pahunch-ledger-reports.csv",[["ID","Village","District","Category","Urgency","Estimated affected","Group","Status","Details","Evidence","Reviewer note","Latitude","Longitude","Submitted","Follow-up"],...reports.map(r=>[r.id,r.village,r.district,r.category,r.urgency,r.affected,r.group,r.status,r.details,r.evidence,r.reviewNote,r.lat,r.lng,r.time,r.confirmation])]);}
-function exportAssistCSV(){csv("pahunch-ledger-assistance.csv",[["ID","Report ID","Type","People reached","Status","Notes","Time"],...assistance.map(a=>[a.id,a.reportId,a.type,a.people,a.status,a.notes,a.time])]);}
-function renderNotifications(){
- $("notifications").innerHTML=notifications.slice(0,8).map(n=>`<div class="notification">${esc(n.text)}<div style="color:#8794a2;margin-top:4px">${esc(n.time)}</div></div>`).join("")||'<div class="empty">No notifications.</div>';
+function backupData(){
+ const backup={app:"Pahunch Ledger",version:3,exportedAt:now(),data};
+ downloadFile("pahunch-ledger-backup.json",JSON.stringify(backup,null,2),"application/json");
+ toast("JSON backup exported.");
 }
-$("notifyBtn").addEventListener("click",()=>$("notificationPanel").classList.toggle("show"));
-$("closeNotify").addEventListener("click",()=>$("notificationPanel").classList.remove("show"));
-$("languageBtn").addEventListener("click",()=>toast("Hindi language support can be added as a complete translated interface in a later version."));
-$("reportForm").addEventListener("submit",submitReport);
-$("assistForm").addEventListener("submit",submitAssist);
-$("micBtn").addEventListener("click",voiceInput);
-$("gpsBtn").addEventListener("click",getGPS);
-$("clearGps").addEventListener("click",clearGps);
-$("reportSearch").addEventListener("input",renderReports);
-$("filterStatus").addEventListener("change",renderReports);
-$("filterUrgency").addEventListener("change",renderReports);
-$("exportReports").addEventListener("click",exportReportCSV);
-$("exportAssist").addEventListener("click",exportAssistCSV);
-$("analyticsExport").addEventListener("click",exportReportCSV);
-
-/* Initialise demo data and interface */
-load();
-initMaps();
+function restoreData(file){
+ if(!file)return;
+ const reader=new FileReader();
+ reader.onload=()=>{
+  try{
+   const parsed=JSON.parse(reader.result);
+   const d=parsed.data||parsed;
+   if(!Array.isArray(d.reports)||!Array.isArray(d.assistance)||!Array.isArray(d.audit))throw Error("Invalid file");
+   if(!confirm("Restore this backup? It will replace the current local demo records."))return;
+   data=d;save();log("Workspace restored","A JSON backup was imported.");renderAll();toast("Backup restored.");
+  }catch(e){toast("Invalid backup file. No changes made.")}
+ };
+ reader.readAsText(file);
+}
+function resetDemo(){
+ if(!confirm("Reset all local records to the original fictional sample dataset? Export a backup first if needed."))return;
+ data=seedData();save();log("Demo data reset","Original fictional sample dataset restored.");renderAll();toast("Demo data reset.");
+}
+function openBackupTools(){
+ const choice=prompt("Workspace tools:\n1 = Export JSON backup\n2 = Import JSON backup\n3 = Reset demo data\nEnter 1, 2 or 3:");
+ if(choice==="1")backupData();
+ if(choice==="2")$("backupInput").click();
+ if(choice==="3")resetDemo();
+}
+const backupInput=document.createElement("input");
+backupInput.type="file";backupInput.accept=".json,application/json";backupInput.style.display="none";
+backupInput.addEventListener("change",()=>{restoreData(backupInput.files[0]);backupInput.value=""});
+document.body.appendChild(backupInput);
+$("backupInput")?.addEventListener("change",()=>{});
+function addBackupButton(){
+ const b=document.createElement("button");b.className="btn btn-outline";b.textContent="⚙ Data tools";b.onclick=openBackupTools;
+ $("top-actions-extra")?.appendChild(b);
+}
 renderAll();
 </script>
 </body>
