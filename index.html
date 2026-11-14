@@ -1,67 +1,304 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#123c35">
-<title>Pahunch Ledger | Community Response Demo</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<title>Pahunch Ledger | Community Response</title>
 <style>
-:root{--green:#123c35;--green2:#1d6657;--mint:#e8f3ed;--paper:#f6f8f5;--ink:#182b27;--muted:#71817b;--line:#e1e9e4;--orange:#d8873c;--red:#c75b55;--blue:#527fa5;--white:#fff;--shadow:0 10px 30px rgba(22,55,44,.07)}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.topbar{height:68px;background:var(--green);color:white;display:flex;align-items:center;justify-content:space-between;padding:0 max(22px,calc((100% - 1280px)/2));position:sticky;top:0;z-index:900}.brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:.2px}.brandmark{width:37px;height:37px;border-radius:12px;background:#d8eee1;color:var(--green);display:grid;place-items:center;font-size:20px}.brand small{display:block;font-size:10px;letter-spacing:1.5px;font-weight:600;color:#b9d2c7}.top-actions{display:flex;align-items:center;gap:10px}.demo-tag{font-size:11px;background:#ffffff1c;border:1px solid #ffffff38;padding:7px 10px;border-radius:20px}.btn{border:0;border-radius:10px;padding:10px 15px;font-weight:700;font-size:13px;transition:.18s}.btn-primary{background:var(--green2);color:white}.btn-primary:hover{background:#174e43}.btn-light{background:white;color:var(--green);border:1px solid var(--line)}.btn-outline{background:transparent;color:var(--green);border:1px solid #b9ccc2}.btn-danger{background:#fff0ef;color:#a8413c}.btn-small{padding:7px 10px;font-size:12px}.wrap{max-width:1280px;margin:auto;padding:26px 22px 60px}.hero{background:linear-gradient(120deg,#123c35,#1e6957);color:white;border-radius:22px;padding:34px 36px;display:grid;grid-template-columns:1.4fr .8fr;gap:20px;align-items:center;box-shadow:var(--shadow)}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.8px;color:#b8d8c9;font-weight:800}.hero h1{font-size:clamp(28px,4vw,43px);line-height:1.08;margin:12px 0}.hero p{color:#d8e8e0;line-height:1.65;max-width:650px;font-size:14px}.hero-side{background:#ffffff12;border:1px solid #ffffff28;border-radius:17px;padding:20px}.hero-side strong{font-size:14px}.hero-side p{font-size:12px;margin:8px 0 14px}.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.hero .btn-light{border:0}.hero .btn-outline{color:white;border-color:#ffffff66}.demo-notice{margin:16px 0;padding:11px 14px;background:#fff8e9;border:1px solid #f0dfb9;border-radius:11px;color:#735b31;font-size:12px;line-height:1.5}.section-head{display:flex;align-items:end;justify-content:space-between;gap:15px;margin:28px 0 14px}.section-head h2{font-size:20px;margin:0}.section-head p{font-size:12px;color:var(--muted);margin:5px 0 0}.rolebar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:white;border:1px solid var(--line);padding:12px 14px;border-radius:15px;box-shadow:var(--shadow);margin:18px 0}.role-tabs{display:flex;gap:7px;flex-wrap:wrap}.role-tab{border:1px solid var(--line);background:#fff;padding:9px 13px;border-radius:9px;font-size:12px;font-weight:750;color:#53645d}.role-tab.active{background:var(--green);border-color:var(--green);color:white}.role-caption{font-size:12px;color:var(--muted)}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.metric{background:white;border:1px solid var(--line);border-radius:15px;padding:17px;box-shadow:var(--shadow)}.metric-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px}.metric-icon{width:31px;height:31px;border-radius:10px;background:var(--mint);display:grid;place-items:center;color:var(--green2);font-size:16px}.metric strong{display:block;font-size:29px;margin:11px 0 3px}.metric small{font-size:11px;color:var(--muted)}.grid-main{display:grid;grid-template-columns:1.2fr .8fr;gap:15px;margin-top:15px}.panel{background:white;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow);min-width:0}.panel-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}.panel-title h3{font-size:15px;margin:0}.panel-title span{font-size:11px;color:var(--muted)}#map{height:355px;border-radius:12px;z-index:1;background:#e9efeb}.map-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:11px;color:var(--muted)}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.chart-box{height:180px;position:relative}.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:15px}.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:15px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:11px;font-weight:750;color:#52645c}.field input,.field select,.field textarea,.filters input,.filters select{width:100%;padding:10px 11px;border:1px solid #dce6df;border-radius:9px;background:#fbfcfb;color:var(--ink);font-size:13px;outline:none}.field textarea{min-height:78px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:#68a58b;box-shadow:0 0 0 3px #dff0e6}.form-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:13px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 12px}.filters input{flex:1;min-width:140px}.filters select{width:auto;min-width:125px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:12px;min-width:650px}th{text-align:left;color:#75847d;font-size:10px;text-transform:uppercase;letter-spacing:.7px;padding:10px 9px;border-bottom:1px solid var(--line)}td{padding:12px 9px;border-bottom:1px solid #edf1ee;vertical-align:middle}tr:last-child td{border-bottom:0}.pill{display:inline-block;padding:5px 8px;border-radius:20px;font-size:10px;font-weight:800;background:#edf2ee;color:#53635b}.pill.pending{background:#fff2dc;color:#946323}.pill.verified,.pill.completed{background:#e2f3e9;color:#286847}.pill.rejected{background:#fdebea;color:#a74642}.pill.high{background:#fdebea;color:#a74642}.pill.medium{background:#fff2dc;color:#946323}.pill.low{background:#e7f1fb;color:#426c93}.empty{padding:22px;text-align:center;color:var(--muted);font-size:12px}.list{display:flex;flex-direction:column;gap:9px}.list-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px;border:1px solid var(--line);border-radius:11px}.list-item strong{font-size:12px}.list-item small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.list-actions{display:flex;gap:6px;flex-wrap:wrap}.activity{border-left:2px solid #c9ded2;margin-left:6px;padding-left:15px;display:flex;flex-direction:column;gap:13px}.activity-item{position:relative}.activity-item:before{content:"";position:absolute;left:-21px;top:3px;width:9px;height:9px;border-radius:50%;background:#4f9678;border:2px solid white;box-shadow:0 0 0 1px #c9ded2}.activity-item strong{font-size:12px}.activity-item small{display:block;font-size:10px;color:var(--muted);margin-top:3px}.role-panel{display:none}.role-panel.active{display:block}.footer{margin-top:28px;text-align:center;color:#85938c;font-size:11px;line-height:1.6}.toast{position:fixed;right:18px;bottom:18px;background:#163f36;color:white;padding:12px 16px;border-radius:11px;font-size:12px;box-shadow:var(--shadow);z-index:2000;opacity:0;transform:translateY(10px);transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:translateY(0)}.small-muted{font-size:10px;color:var(--muted)}.unmet-row{padding:12px;border:1px solid #f0e2c7;background:#fffcf6;border-radius:11px}.unmet-row strong{font-size:12px}.unmet-row p{font-size:11px;color:#786b54;margin:5px 0}.barline{height:7px;border-radius:9px;background:#edf1ee;overflow:hidden;margin-top:8px}.barline i{display:block;height:100%;background:#d18b45;border-radius:9px}.hidden{display:none!important}
-@media(max-width:850px){.hero{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}.grid-main,.content-grid{grid-template-columns:1fr}.chart-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:540px){.topbar{height:60px;padding:0 14px}.top-actions .demo-tag{display:none}.wrap{padding:15px 12px 40px}.hero{padding:24px 20px;border-radius:16px}.hero h1{font-size:29px}.metrics{gap:8px}.metric{padding:12px}.metric strong{font-size:24px}.metric-top{font-size:10px}.rolebar{align-items:flex-start}.role-caption{width:100%}.role-tabs{width:100%}.role-tab{flex:1;padding:9px 7px;font-size:11px}.panel{padding:14px}.chart-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}#map{height:300px}.section-head{align-items:flex-start;flex-direction:column}}
+:root{--navy:#142b45;--blue:#245b83;--teal:#168779;--bg:#f3f6f9;--muted:#64748b;--border:#e2e8f0;--white:#fff;--orange:#d97706;--red:#c24141}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:#1e293b}
+header{background:var(--navy);color:white;padding:16px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:800;letter-spacing:1px;font-size:19px}
+.brand small{display:block;font-size:9px;letter-spacing:2px;color:#b9cddd;margin-top:4px}
+.header-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.demo{font-size:11px;color:#b9f2df;border:1px solid #4a8d7f;padding:7px 10px;border-radius:20px}
+button{border:0;border-radius:7px;padding:10px 14px;cursor:pointer;font-weight:700;font-size:13px}
+button:focus,input:focus,select:focus,textarea:focus{outline:2px solid #6da9d1;outline-offset:2px}
+.btn-light{background:#fff;color:var(--navy)}
+.btn-primary{background:var(--blue);color:white}
+.btn-green{background:var(--teal);color:white}
+.btn-red{background:#fff0f0;color:var(--red)}
+.btn-small{padding:7px 10px;font-size:12px}
+main{max-width:1200px;margin:auto;padding:25px 18px 45px}
+.hero{background:linear-gradient(115deg,#17334f,#286b82);color:white;border-radius:14px;padding:30px;margin-bottom:18px}
+.hero h1{font-size:clamp(25px,4vw,38px);margin:0 0 10px}
+.hero p{max-width:700px;line-height:1.6;color:#e0edf4;margin:0}
+.notice{background:#fff8e8;border:1px solid #f2d69a;color:#79521b;padding:12px 15px;border-radius:8px;font-size:12px;line-height:1.5;margin:15px 0 22px}
+.section-title{font-size:19px;color:var(--navy);margin:24px 0 12px}
+.rolebar{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}
+.rolebar button{background:#e4ebf1;color:#29435d}
+.rolebar button.active{background:var(--navy);color:white}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:15px 0}
+.metric,.panel,.chartbox{background:white;border:1px solid var(--border);border-radius:11px;padding:17px}
+.metric span{font-size:12px;color:var(--muted)}
+.metric strong{display:block;font-size:29px;color:var(--navy);margin-top:8px}
+.metric small{color:var(--muted);font-size:11px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.panel h3,.chartbox h3{font-size:16px;color:var(--navy);margin:0 0 13px}
+.panel p{font-size:13px;line-height:1.5;color:var(--muted)}
+label{display:block;font-size:12px;font-weight:700;color:#40536a;margin:12px 0 5px}
+input,select,textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:7px;font:14px Arial;background:white;color:#1e293b}
+textarea{min-height:85px;resize:vertical}
+form button{margin-top:14px}
+.hidden{display:none!important}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:650px}
+th,td{text-align:left;padding:11px 9px;border-bottom:1px solid var(--border);vertical-align:top}
+th{color:#53677d;background:#f7f9fb}
+td{line-height:1.45}
+.pill{display:inline-block;border-radius:20px;padding:4px 8px;font-size:10px;font-weight:700;background:#edf2f7;color:#475569}
+.pending{background:#fff4d9;color:#98620b}
+.verified{background:#e0f5ed;color:#13765e}
+.unverified{background:#fee9e9;color:#a73737}
+.completed{background:#e0f5ed;color:#13765e}
+.urgent{color:#b42318;font-weight:700}
+.list-item{border-bottom:1px solid var(--border);padding:11px 0;font-size:13px;line-height:1.5}
+.list-item:last-child{border:0}
+.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.actions button{font-size:11px;padding:7px 9px}
+.bar-row{display:grid;grid-template-columns:105px 1fr 30px;gap:8px;align-items:center;margin:12px 0;font-size:12px}
+.bar{height:10px;background:#edf1f5;border-radius:20px;overflow:hidden}
+.bar i{display:block;height:100%;background:#258b83;border-radius:20px}
+.mapbox{height:240px;background:#e7eef0;border-radius:9px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;padding:15px}
+.mapbox:before{content:"";position:absolute;inset:0;background:linear-gradient(30deg,transparent 48%,#cbd9d4 49%,#cbd9d4 51%,transparent 52%),linear-gradient(120deg,transparent 48%,#cbd9d4 49%,#cbd9d4 51%,transparent 52%);background-size:85px 85px}
+.maptext{position:relative;background:#fff;padding:14px;border-radius:9px;max-width:290px;font-size:12px;line-height:1.5;box-shadow:0 2px 10px #0001}
+.pin{display:inline-block;background:#d97706;color:white;padding:5px 8px;border-radius:15px;margin:3px;font-size:10px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.filters>*{flex:1;min-width:130px}
+footer{text-align:center;color:#7b8997;font-size:11px;padding:25px 10px;border-top:1px solid var(--border)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#17334f;color:white;padding:12px 18px;border-radius:8px;display:none;z-index:9;font-size:13px;box-shadow:0 4px 20px #0003}
+@media(max-width:750px){.metrics{grid-template-columns:repeat(2,1fr)}.grid2,.grid3{grid-template-columns:1fr}.hero{padding:23px}.metric strong{font-size:25px}}
+@media(max-width:380px){main{padding:16px 11px}.metrics{gap:8px}.metric{padding:12px}}
 </style>
 </head>
+<body>
+<header>
+ <div class="brand">↗ PAHUCH LEDGER<small>COMMUNITY RESPONSE & COORDINATION</small></div>
+ <div class="header-right"><span class="demo">● HACKATHON DEMO</span><button class="btn-light btn-small" onclick="resetDemo()">Reset demo</button></div>
+</header>
+
+<main>
+<section class="hero">
+ <h1>From community reports to coordinated response.</h1>
+ <p>Pahunch Ledger is a community-focused prototype designed to organise reported needs, support human verification, and help coordinators track assistance gaps.</p>
+</section>
+
+<div class="notice"><b>DEMO DISCLAIMER:</b> This prototype uses fictional sample reports and simulated workflows. It is not connected to live emergency services, government systems, or real aid delivery. Do not enter real personal or sensitive information.</div>
+
+<h2 class="section-title">Response dashboard</h2>
+<div class="metrics">
+ <div class="metric"><span>Total reports</span><strong id="mTotal">0</strong><small>All submitted reports</small></div>
+ <div class="metric"><span>Verified reports</span><strong id="mVerified">0</strong><small>Reviewed by demo reviewer</small></div>
+ <div class="metric"><span>Pending review</span><strong id="mPending">0</strong><small>Awaiting human review</small></div>
+ <div class="metric"><span>Assistance records</span><strong id="mAssisted">0</strong><small>Recorded in this demo</small></div>
+</div>
+
+<div class="rolebar">
+ <button id="tabReporter" class="active" onclick="switchRole('reporter')">1. Community Reporter</button>
+ <button id="tabReviewer" onclick="switchRole('reviewer')">2. Verification Desk</button>
+ <button id="tabCoordinator" onclick="switchRole('coordinator')">3. Assistance Coordinator</button>
+</div>
+
+<section id="reporterPanel" class="panel">
+ <h3>Submit a community report</h3>
+ <p>Enter fictional information to demonstrate how a community report is recorded.</p>
+ <form id="reportForm">
+  <div class="grid2">
+   <div><label for="village">Village / Area *</label><input id="village" required placeholder="e.g. Devgarh"></div>
+   <div><label for="district">District *</label><input id="district" required placeholder="e.g. Shimla"></div>
+   <div><label for="category">Report category *</label><select id="category" required><option value="">Select category</option><option>Road access</option><option>Food and essentials</option><option>Water supply</option><option>Shelter</option><option>Medical assistance</option><option>Infrastructure damage</option><option>Other</option></select></div>
+   <div><label for="urgency">Reported urgency *</label><select id="urgency" required><option value="">Select urgency</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+   <div><label for="affected">People affected (estimated) *</label><input id="affected" type="number" min="1" max="100000" required placeholder="e.g. 25"></div>
+   <div><label for="reporterName">Reporter label (optional)</label><input id="reporterName" maxlength="40" placeholder="e.g. Community volunteer"></div>
+  </div>
+  <label for="details">Report details *</label><textarea id="details" required maxlength="500" placeholder="Briefly describe the reported need..."></textarea>
+  <button class="btn-primary" type="submit">Submit report</button>
+ </form>
+</section>
+
+<section id="reviewerPanel" class="panel hidden">
+ <h3>Verification desk</h3>
+ <p>Review submitted reports. Verification is a human review step, not automatic confirmation.</p>
+ <div id="reviewQueue"></div>
+</section>
+
+<section id="coordinatorPanel" class="panel hidden">
+ <h3>Assistance coordination</h3>
+ <p>Record assistance against a report. These records are fictional and do not represent actual delivery.</p>
+ <form id="assistanceForm">
+  <label for="assistReport">Select report *</label><select id="assistReport" required></select>
+  <div class="grid2">
+   <div><label for="assistType">Assistance type *</label><select id="assistType" required><option value="">Select type</option><option>Food and essentials</option><option>Water supply</option><option>Medical assistance</option><option>Transport support</option><option>Shelter support</option><option>Road access support</option><option>Other</option></select></div>
+   <div><label for="assistPeople">People reached (estimated) *</label><input id="assistPeople" type="number" min="1" required placeholder="e.g. 15"></div>
+  </div>
+  <label for="assistStatus">Assistance status *</label><select id="assistStatus" required><option>In progress</option><option>Completed</option></select>
+  <label for="assistNotes">Notes</label><textarea id="assistNotes" maxlength="300" placeholder="Add a short demo note..."></textarea>
+  <button class="btn-green" type="submit">Record assistance</button>
+ </form>
+ <h3 style="margin-top:25px">Assistance records</h3>
+ <div id="assistanceList"></div>
+</section>
+
+<h2 class="section-title">Situation overview</h2>
+<div class="grid2">
+ <section class="panel">
+  <h3>Report locations (illustrative)</h3>
+  <div class="mapbox"><div class="maptext"><b>Illustrative reporting map</b><br>Sample locations only. No live GPS or live incident mapping.<div id="mapPins" style="margin-top:8px"></div></div></div>
+ </section>
+ <section class="panel">
+  <h3>Reports by category</h3>
+  <div id="categoryChart"></div>
+ </section>
+ <section class="panel">
+  <h3>Report review status</h3>
+  <div id="statusChart"></div>
+ </section>
+ <section class="panel">
+  <h3>Reported urgency</h3>
+  <div id="urgencyChart"></div>
+ </section>
+</div>
+
+<h2 class="section-title">Assistance gap tracker</h2>
+<section class="panel">
+ <p>Verified reports without a completed assistance record are shown here as items that may need follow-up. This does not prove that assistance has not reached a community through other channels.</p>
+ <div id="unmetList"></div>
+</section>
+
+<h2 class="section-title">Community report register</h2>
+<section class="panel">
+ <div class="filters">
+  <input id="searchReports" placeholder="Search area or category..." oninput="renderReports()">
+  <select id="statusFilter" onchange="renderReports()"><option value="">All statuses</option><option>Pending</option><option>Verified</option><option>Unable to verify</option></select>
+  <select id="urgencyFilter" onchange="renderReports()"><option value="">All urgency levels</option><option>High</option><option>Medium</option><option>Low</option></select>
+ </div>
+ <div class="table-wrap"><table><thead><tr><th>Report ID</th><th>Area</th><th>Category</th><th>Urgency</th><th>Affected</th><th>Status</th><th>Submitted</th></tr></thead><tbody id="reportRows"></tbody></table></div>
+ <div style="margin-top:12px"><button class="btn-primary btn-small" onclick="exportCSV()">Export report register (CSV)</button></div>
+</section>
+
+<h2 class="section-title">Activity log</h2>
+<section class="panel"><div id="activityLog"></div></section>
+</main>
+
+<footer>PAHUCH LEDGER · HACK FOR A SOCIAL CAUSE · PROTOTYPE DEMONSTRATION<br>All sample records are fictional. Not an operational emergency response platform.</footer>
+<div id="toast" class="toast"></div>
+
 <script>
-const DEMO_KEY='pahunchLedgerOneClickDemoV1';
-const seed={
- reports:[
-  {id:'PL-1001',village:'Demo Village',district:'Mandi',category:'Water supply',urgency:'High',affected:50,details:'Sample report: water access disruption reported by a community volunteer.',reporter:'Community volunteer',status:'Pending',created:'Today, 10:15 AM',lat:31.5892,lng:76.9182},
-  {id:'PL-1002',village:'Hillview Hamlet',district:'Kullu',category:'Road access',urgency:'High',affected:32,details:'Sample report: access route needs assessment after heavy rainfall.',reporter:'Local resident',status:'Verified',created:'Today, 9:40 AM',lat:31.9579,lng:77.1095},
-  {id:'PL-1003',village:'Pine Ridge',district:'Shimla',category:'Essential supplies',urgency:'Medium',affected:24,details:'Sample report: essential supply coordination requested.',reporter:'Student volunteer',status:'Verified',created:'Yesterday, 4:20 PM',lat:31.1048,lng:77.1734},
-  {id:'PL-1004',village:'Riverbend',district:'Kangra',category:'Power supply',urgency:'Low',affected:18,details:'Sample report: power supply update requested.',reporter:'Community volunteer',status:'Unable to verify',created:'Yesterday, 1:05 PM',lat:32.0998,lng:76.2691},
-  {id:'PL-1005',village:'Upper Meadow',district:'Chamba',category:'Medical assistance',urgency:'High',affected:12,details:'Sample report: request for coordination of medical assistance. No personal details included.',reporter:'Local volunteer',status:'Pending',created:'Today, 8:30 AM',lat:32.5534,lng:76.1258}
- ],
- assistance:[
-  {id:'AS-201',reportId:'PL-1003',type:'Essential supplies coordination',people:16,status:'In progress',notes:'Sample coordination update: supplies handover recorded in demo.',created:'Yesterday, 5:10 PM'},
-  {id:'AS-202',reportId:'PL-1002',type:'Road access update',people:10,status:'Completed',notes:'Sample update recorded for demonstration.',created:'Today, 11:00 AM'}
- ],
- activity:[
-  {title:'Demo workspace opened',detail:'Sample records loaded for presentation',time:'Just now'},
-  {title:'Assistance update recorded',detail:'PL-1002 · Sample coordination entry',time:'Today, 11:00 AM'},
-  {title:'Report marked verified',detail:'PL-1003 · Reviewer demo action',time:'Yesterday, 4:45 PM'}
- ]
-};
-let state=loadState(),currentRole='reporter',map=null,markerLayer=null,charts={};
-function clone(x){return JSON.parse(JSON.stringify(x))}
-function loadState(){try{const s=JSON.parse(localStorage.getItem(DEMO_KEY));if(s&&Array.isArray(s.reports)&&Array.isArray(s.assistance)&&Array.isArray(s.activity))return s}catch(e){}return clone(seed)}
-function saveState(){localStorage.setItem(DEMO_KEY,JSON.stringify(state))}
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove('show'),2600)}
-function addActivity(title,detail){state.activity.unshift({title,detail,time:new Date().toLocaleString()});state.activity=state.activity.slice(0,20)}
-function switchRole(role){currentRole=role;document.querySelectorAll('.role-tab').forEach(b=>b.classList.toggle('active',b.dataset.role===role));document.querySelectorAll('.role-panel').forEach(p=>p.classList.remove('active'));document.getElementById(role+'Panel').classList.add('active');const captions={reporter:'Reporter view · Submit a community needs report.',reviewer:'Reviewer view · Review reports and record a decision.',coordinator:'Coordinator view · Record assistance and track updates.'};document.getElementById('roleCaption').textContent=captions[role];if(role==='reviewer')renderReviewQueue();if(role==='coordinator'){renderAssistance();populateAssistSelect()}setTimeout(()=>{if(map)map.invalidateSize()},150)}
-function updateMetrics(){const total=state.reports.length,verified=state.reports.filter(r=>r.status==='Verified').length,pending=state.reports.filter(r=>r.status==='Pending').length,assisted=state.assistance.reduce((n,a)=>n+(Number(a.people)||0),0);document.getElementById('mTotal').textContent=total;document.getElementById('mVerified').textContent=verified;document.getElementById('mPending').textContent=pending;document.getElementById('mAssisted').textContent=assisted.toLocaleString('en-IN')}
-function pillStatus(s){let cls=s==='Verified'?'verified':s==='Completed'?'completed':s==='Unable to verify'?'rejected':'pending';return `<span class="pill ${cls}">${esc(s)}</span>`}
-function pillUrgency(s){return `<span class="pill ${s.toLowerCase()}">${esc(s)}</span>`}
-function renderReports(){const q=document.getElementById('searchReports').value.toLowerCase(),sf=document.getElementById('statusFilter').value,uf=document.getElementById('urgencyFilter').value;const rows=state.reports.filter(r=>(sf==='All'||r.status===sf)&&(uf==='All'||r.urgency===uf)&&[r.id,r.village,r.district,r.category].join(' ').toLowerCase().includes(q));document.getElementById('reportRows').innerHTML=rows.length?rows.map(r=>`<tr><td><b>${esc(r.id)}</b></td><td>${esc(r.village)}<br><span class="small-muted">${esc(r.district)}</span></td><td>${esc(r.category)}</td><td>${pillUrgency(r.urgency)}</td><td>${Number(r.affected).toLocaleString('en-IN')}</td><td>${pillStatus(r.status)}</td><td>${esc(r.created)}</td></tr>`).join(''):`<tr><td colspan="7" class="empty">No matching reports found.</td></tr>`}
-function renderReviewQueue(){const pending=state.reports.filter(r=>r.status==='Pending');document.getElementById('reviewQueue').innerHTML=pending.length?pending.map(r=>`<div class="list-item"><div><strong>${esc(r.id)} · ${esc(r.village)}</strong><small>${esc(r.category)} · ${esc(r.district)} · ${r.affected} people reported</small><small>${esc(r.details)}</small></div><div class="list-actions"><button class="btn btn-primary btn-small" onclick="reviewReport('${r.id}','Verified')">Verify</button><button class="btn btn-danger btn-small" onclick="reviewReport('${r.id}','Unable to verify')">Needs check</button></div></div>`).join(''):'<div class="empty">No pending reports. Submit a report in Reporter view to try the review flow.</div>'}
-function reviewReport(id,status){const r=state.reports.find(x=>x.id===id);if(!r)return;r.status=status;addActivity('Report review updated',`${id} · Marked ${status} in demo`);saveState();refreshAll();renderReviewQueue();showToast(`${id} marked ${status}.`)}
-function populateAssistSelect(){const s=document.getElementById('assistReport');const opts=state.reports.filter(r=>r.status==='Verified');s.innerHTML=opts.length?opts.map(r=>`<option value="${r.id}">${esc(r.id)} · ${esc(r.village)} — ${esc(r.category)}</option>`).join(''):'<option value="">No verified reports yet — verify a report first</option>'}
-function renderAssistance(){const el=document.getElementById('assistanceList');el.innerHTML=state.assistance.length?state.assistance.map(a=>{const r=state.reports.find(x=>x.id===a.reportId);return `<div class="list-item"><div><strong>${esc(a.type)}</strong><small>${esc(a.reportId)} · ${esc(r?r.village:'Area unavailable')} · ${a.people} people recorded</small><small>${esc(a.notes||'No note added')}</small></div>${pillStatus(a.status)}</div>`}).join(''):'<div class="empty">No assistance updates have been recorded yet.</div>'}
-function renderUnmet(){const list=state.reports.filter(r=>r.status==='Verified'&&!state.assistance.some(a=>a.reportId===r.id&&a.status==='Completed'));document.getElementById('unmetList').innerHTML=list.length?list.map(r=>{const logged=state.assistance.filter(a=>a.reportId===r.id).reduce((n,a)=>n+Number(a.people||0),0);return `<div class="unmet-row"><strong>${esc(r.village)} · ${esc(r.category)}</strong><p>${esc(r.district)} · ${r.affected} people reported · ${logged?logged+' people in assistance records':'No completed assistance record yet'}</p><div class="barline"><i style="width:${Math.min(100,Math.round(logged/Math.max(1,r.affected)*100))}%"></i></div></div>`}).join(''):'<div class="empty">No verified reports are currently flagged by this simple demo rule.</div>'}
-function renderActivity(){document.getElementById('activityLog').innerHTML=state.activity.slice(0,8).map(a=>`<div class="activity-item"><strong>${esc(a.title)}</strong><small>${esc(a.detail)} · ${esc(a.time)}</small></div>`).join('')}
-function initMap(){if(!window.L){document.getElementById('map').innerHTML='<div class="empty">Map library could not load. Check your internet connection and refresh the page.</div>';return}map=L.map('map').setView([31.75,76.95],7);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);markerLayer=L.layerGroup().addTo(map);renderMap()}
-function renderMap(){if(!map||!markerLayer)return;markerLayer.clearLayers();const colors={High:'#d45e52',Medium:'#d69a45',Low:'#5488ad'};state.reports.forEach(r=>{if(typeof r.lat!=='number'||typeof r.lng!=='number')return;const m=L.circleMarker([r.lat,r.lng],{radius:9,color:'#fff',weight:2,fillColor:colors[r.urgency]||'#5488ad',fillOpacity:.95}).addTo(markerLayer);m.bindPopup(`<b>${esc(r.village)}</b><br>${esc(r.district)}<br>${esc(r.category)} · ${esc(r.urgency)}<br>Status: ${esc(r.status)}<br><small>Illustrative demo location</small>`)});const coords=state.assistance.map(a=>state.reports.find(r=>r.id===a.reportId)).filter(r=>r&&typeof r.lat==='number');coords.forEach(r=>L.marker([r.lat+.012,r.lng+.012]).addTo(markerLayer).bindPopup(`<b>Assistance record</b><br>${esc(r.village)}<br><small>Illustrative demo marker</small>`))}
-function makeCharts(){if(!window.Chart)return;Chart.defaults.font.family='Inter, system-ui, sans-serif';Chart.defaults.font.size=10;const common={responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:9,usePointStyle:true,padding:12}}}};const create=(id,type,data,opts={})=>{const c=document.getElementById(id);if(!c)return;if(charts[id])charts[id].destroy();charts[id]=new Chart(c,{type,data,options:{...common,...opts}})};const count=s=>state.reports.filter(r=>r.status===s).length;create('statusChart','doughnut',{labels:['Pending','Verified','Unable to verify'],datasets:[{data:[count('Pending'),count('Verified'),count('Unable to verify')],backgroundColor:['#d69a45','#4c9873','#c76a63'],borderWidth:0}]},{cutout:'66%'});const cats=['Water supply','Essential supplies','Medical assistance','Road access','Shelter','Power supply','Other'];create('categoryChart','bar',{labels:cats,datasets:[{label:'Reports',data:cats.map(c=>state.reports.filter(r=>r.category===c).length),backgroundColor:'#5d9a7b',borderRadius:5}]},{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{precision:0}},y:{grid:{display:false}}}});const total=state.reports.reduce((n,r)=>n+Number(r.affected||0),0),ass=state.assistance.reduce((n,a)=>n+Number(a.people||0),0);create('assistanceChart','bar',{labels:['People reported affected','People in assistance records'],datasets:[{data:[total,ass],backgroundColor:['#d8a45c','#5a9879'],borderRadius:6}]},{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}});create('urgencyChart','doughnut',{labels:['High','Medium','Low'],datasets:[{data:['High','Medium','Low'].map(u=>state.reports.filter(r=>r.urgency===u).length),backgroundColor:['#c9675e','#d6a04d','#6691b4'],borderWidth:0}]},{cutout:'58%'})}
-function refreshAll(){updateMetrics();renderReports();renderReviewQueue();renderAssistance();populateAssistSelect();renderUnmet();renderActivity();renderMap();makeCharts()}
-document.getElementById('reportForm').addEventListener('submit',e=>{e.preventDefault();const village=document.getElementById('village').value.trim(),district=document.getElementById('district').value.trim(),affected=Number(document.getElementById('affected').value),details=document.getElementById('details').value.trim();if(!village||!district||!details||!Number.isInteger(affected)||affected<1){showToast('Please complete the required fields.');return}const id='PL-'+(1006+state.reports.length);state.reports.unshift({id,village,district,category:document.getElementById('category').value,urgency:document.getElementById('urgency').value,affected,details,reporter:document.getElementById('reporterName').value.trim()||'Demo reporter',status:'Pending',created:new Date().toLocaleString(),lat:null,lng:null});addActivity('New report submitted',`${id} · ${village}, ${district} · Waiting for review`);saveState();e.target.reset();refreshAll();showToast('Report submitted. Switch to Reviewer to review it.')});
-document.getElementById('assistanceForm').addEventListener('submit',e=>{e.preventDefault();const reportId=document.getElementById('assistReport').value,people=Number(document.getElementById('assistPeople').value);if(!reportId){showToast('Verify a report before adding assistance.');return}if(!Number.isInteger(people)||people<0){showToast('Enter a valid number.');return}const type=document.getElementById('assistType').value,notes=document.getElementById('assistNotes').value.trim();state.assistance.unshift({id:'AS-'+(203+state.assistance.length),reportId,type,people,status:'Completed',notes:notes||'Sample assistance update recorded.',created:new Date().toLocaleString()});addActivity('Assistance update recorded',`${reportId} · ${type} · ${people} people recorded`);saveState();e.target.reset();refreshAll();showToast('Assistance update saved in this demo.')});
-function exportCSV(){const headers=['Reference','Village or area','District','Need category','Urgency','People affected','Status','Reported'];const rows=state.reports.map(r=>[r.id,r.village,r.district,r.category,r.urgency,r.affected,r.status,r.created]);const safe=v=>{let s=String(v??'');if(/^[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'};const csv=[headers,...rows].map(row=>row.map(safe).join(',')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='pahunch-ledger-demo-reports.csv';a.click();URL.revokeObjectURL(url);showToast('CSV export prepared.')}
-function resetDemo(){if(!confirm('Reset the demo to its original sample data?'))return;state=clone(seed);saveState();refreshAll();switchRole('reporter');showToast('Demo reset to sample data.')}
-window.addEventListener('load',()=>{initMap();refreshAll();switchRole('reporter')});
+const STORE="pahunchLedgerOneClickDemoV2";
+const seedReports=[
+{id:"PL-001",village:"Devgarh",district:"Shimla",category:"Road access",urgency:"High",affected:45,reporter:"Community volunteer",details:"Sample report of road access disruption after heavy rainfall.",status:"Verified",time:"10 Nov 2026, 09:20",pin:true},
+{id:"PL-002",village:"Kandaghat",district:"Solan",category:"Water supply",urgency:"Medium",affected:28,reporter:"Local resident",details:"Sample report of interrupted water supply.",status:"Pending",time:"10 Nov 2026, 10:05",pin:true},
+{id:"PL-003",village:"Rohru",district:"Shimla",category:"Infrastructure damage",urgency:"High",affected:60,reporter:"Volunteer group",details:"Sample report of infrastructure damage requiring assessment.",status:"Verified",time:"10 Nov 2026, 11:15",pin:true},
+{id:"PL-004",village:"Arki",district:"Solan",category:"Food and essentials",urgency:"Low",affected:18,reporter:"Community volunteer",details:"Sample report requesting essential supplies.",status:"Pending",time:"10 Nov 2026, 12:30",pin:true},
+{id:"PL-005",village:"Theog",district:"Shimla",category:"Shelter",urgency:"Medium",affected:22,reporter:"Local volunteer",details:"Sample report of temporary shelter needs.",status:"Unable to verify",time:"10 Nov 2026, 13:10",pin:true}
+];
+const seedAssistance=[
+{id:"AS-001",reportId:"PL-001",type:"Road access support",people:20,status:"In progress",notes:"Illustrative coordination record."},
+{id:"AS-002",reportId:"PL-003",type:"Other",people:30,status:"Completed",notes:"Illustrative assistance record."}
+];
+let reports,assistance,activity,activeRole="reporter";
+function loadData(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(STORE));
+  if(saved&&Array.isArray(saved.reports)&&Array.isArray(saved.assistance)){reports=saved.reports;assistance=saved.assistance;activity=saved.activity||[];return}
+ }catch(e){}
+ reports=JSON.parse(JSON.stringify(seedReports));
+ assistance=JSON.parse(JSON.stringify(seedAssistance));
+ activity=["Demo workspace loaded with fictional sample records."];
+ saveData();
+}
+function saveData(){localStorage.setItem(STORE,JSON.stringify({reports,assistance,activity}))}
+function log(message){activity.unshift(new Date().toLocaleString()+" — "+message);activity=activity.slice(0,12);saveData()}
+function toast(message){const el=document.getElementById("toast");el.textContent=message;el.style.display="block";setTimeout(()=>el.style.display="none",2400)}
+function switchRole(role){
+ activeRole=role;
+ ["reporter","reviewer","coordinator"].forEach(r=>{
+  document.getElementById(r+"Panel").classList.toggle("hidden",r!==role);
+  document.getElementById("tab"+r[0].toUpperCase()+r.slice(1)).classList.toggle("active",r===role);
+ });
+ if(role==="reviewer")renderReview();
+ if(role==="coordinator")renderAssistance();
+}
+function statusClass(s){return s==="Verified"?"verified":s==="Pending"?"pending":"unverified"}
+function renderMetrics(){
+ document.getElementById("mTotal").textContent=reports.length;
+ document.getElementById("mVerified").textContent=reports.filter(r=>r.status==="Verified").length;
+ document.getElementById("mPending").textContent=reports.filter(r=>r.status==="Pending").length;
+ document.getElementById("mAssisted").textContent=assistance.length;
+}
+function renderReports(){
+ const q=document.getElementById("searchReports").value.toLowerCase();
+ const st=document.getElementById("statusFilter").value;
+ const ur=document.getElementById("urgencyFilter").value;
+ const rows=reports.filter(r=>(!q||(r.village+" "+r.district+" "+r.category).toLowerCase().includes(q))&&(!st||r.status===st)&&(!ur||r.urgency===ur));
+ document.getElementById("reportRows").innerHTML=rows.map(r=>`<tr><td><b>${esc(r.id)}</b></td><td>${esc(r.village)}, ${esc(r.district)}</td><td>${esc(r.category)}</td><td class="${r.urgency==="High"?"urgent":""}">${esc(r.urgency)}</td><td>${r.affected}</td><td><span class="pill ${statusClass(r.status)}">${esc(r.status)}</span></td><td>${esc(r.time)}</td></tr>`).join("")||'<tr><td colspan="7">No matching reports.</td></tr>';
+}
+function renderReview(){
+ const pending=reports.filter(r=>r.status==="Pending");
+ document.getElementById("reviewQueue").innerHTML=pending.map(r=>`<div class="list-item"><b>${esc(r.id)} · ${esc(r.village)}, ${esc(r.district)}</b><br>${esc(r.category)} · ${esc(r.urgency)} urgency · ${r.affected} people estimated<br>${esc(r.details)}<div class="actions"><button class="btn-green" onclick="reviewReport('${r.id}','Verified')">Mark verified</button><button class="btn-red" onclick="reviewReport('${r.id}','Unable to verify')">Unable to verify</button></div></div>`).join("")||"<p>No reports are currently awaiting review.</p>";
+}
+function reviewReport(id,status){
+ const r=reports.find(x=>x.id===id);if(!r)return;
+ r.status=status;log(id+" marked "+status+" by demo reviewer.");refreshAll();renderReview();toast("Review status updated.");
+}
+function renderAssistance(){
+ const select=document.getElementById("assistReport");
+ const old=select.value;
+ select.innerHTML='<option value="">Choose a report</option>'+reports.map(r=>`<option value="${esc(r.id)}">${esc(r.id)} · ${esc(r.village)} (${esc(r.status)})</option>`).join("");
+ if(reports.some(r=>r.id===old))select.value=old;
+ document.getElementById("assistanceList").innerHTML=assistance.map(a=>`<div class="list-item"><b>${esc(a.id)} · ${esc(a.type)}</b><br>Report: ${esc(a.reportId)} · Estimated people reached: ${a.people}<br>Status: <span class="pill ${a.status==="Completed"?"completed":"pending"}">${esc(a.status)}</span><br>${esc(a.notes||"No additional notes")}</div>`).join("")||"<p>No assistance records yet.</p>";
+}
+function renderUnmet(){
+ const list=reports.filter(r=>r.status==="Verified"&&!assistance.some(a=>a.reportId===r.id&&a.status==="Completed"));
+ document.getElementById("unmetList").innerHTML=list.map(r=>`<div class="list-item"><b>${esc(r.village)}, ${esc(r.district)}</b> · ${esc(r.category)}<br>Report ${esc(r.id)} · ${r.affected} people estimated · ${esc(r.urgency)} urgency<br><span class="pill pending">Follow-up may be needed</span></div>`).join("")||"<p>No verified reports currently appear in this demo follow-up list.</p>";
+}
+function bars(id,items){
+ const max=Math.max(1,...items.map(x=>x[1]));
+ document.getElementById(id).innerHTML=items.map(x=>`<div class="bar-row"><span>${esc(x[0])}</span><div class="bar"><i style="width:${Math.max(0,x[1]/max*100)}%"></i></div><b>${x[1]}</b></div>`).join("")||"<p>No data available.</p>";
+}
+function renderCharts(){
+ const cats=["Road access","Food and essentials","Water supply","Shelter","Medical assistance","Infrastructure damage","Other"];
+ bars("categoryChart",cats.map(c=>[c,reports.filter(r=>r.category===c).length]).filter(x=>x[1]>0));
+ bars("statusChart",["Verified","Pending","Unable to verify"].map(s=>[s,reports.filter(r=>r.status===s).length]));
+ bars("urgencyChart",["High","Medium","Low"].map(s=>[s,reports.filter(r=>r.urgency===s).length]));
+ document.getElementById("mapPins").innerHTML=reports.filter(r=>r.pin).map(r=>`<span class="pin">${esc(r.village)}</span>`).join("")||"No illustrative pins";
+}
+function renderActivity(){
+ document.getElementById("activityLog").innerHTML=activity.map(a=>`<div class="list-item">${esc(a)}</div>`).join("")||"<p>No activity recorded.</p>";
+}
+function refreshAll(){renderMetrics();renderReports();renderCharts();renderUnmet();renderActivity()}
+function esc(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+document.getElementById("reportForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const id="PL-"+String(Date.now()).slice(-6);
+ reports.unshift({id,village:document.getElementById("village").value.trim(),district:document.getElementById("district").value.trim(),category:document.getElementById("category").value,urgency:document.getElementById("urgency").value,affected:Number(document.getElementById("affected").value),reporter:document.getElementById("reporterName").value.trim(),details:document.getElementById("details").value.trim(),status:"Pending",time:new Date().toLocaleString(),pin:false});
+ log("New community report "+id+" submitted and marked Pending.");
+ e.target.reset();refreshAll();toast("Report submitted to the demo review queue.");
+});
+document.getElementById("assistanceForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const reportId=document.getElementById("assistReport").value;
+ if(!reportId){toast("Please select a report.");return}
+ const id="AS-"+String(Date.now()).slice(-6);
+ assistance.unshift({id,reportId,type:document.getElementById("assistType").value,people:Number(document.getElementById("assistPeople").value),status:document.getElementById("assistStatus").value,notes:document.getElementById("assistNotes").value.trim()});
+ log("Assistance record "+id+" added for "+reportId+".");
+ e.target.reset();renderAssistance();refreshAll();toast("Assistance record added.");
+});
+function exportCSV(){
+ const header=["Report ID","Village","District","Category","Urgency","People affected","Status","Submitted"];
+ const rows=reports.map(r=>[r.id,r.village,r.district,r.category,r.urgency,r.affected,r.status,r.time]);
+ const csv=[header,...rows].map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\n");
+ const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
+ const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="pahunch-ledger-demo-reports.csv";a.click();URL.revokeObjectURL(url);
+}
+function resetDemo(){
+ if(!confirm("Reset the demo and restore the original fictional sample records?"))return;
+ localStorage.removeItem(STORE);loadData();document.getElementById("reportForm").reset();document.getElementById("assistanceForm").reset();refreshAll();switchRole("reporter");toast("Demo data reset.");
+}
+loadData();refreshAll();switchRole("reporter");
 </script>
 </body>
 </html>
