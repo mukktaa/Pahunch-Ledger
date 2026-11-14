@@ -3,100 +3,92 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#142b45">
 <title>Pahunch Ledger | Community Response</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-:root{--navy:#142b45;--blue:#245b83;--teal:#168779;--bg:#f3f6f9;--muted:#64748b;--border:#e2e8f0;--white:#fff;--orange:#d97706;--red:#c24141}
+:root{--navy:#142b45;--blue:#28618a;--teal:#168779;--bg:#f3f6f9;--muted:#64748b;--border:#e2e8f0;--white:#fff;--red:#b94343;--gold:#a66c13}
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:#1e293b}
-header{background:var(--navy);color:white;padding:16px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+body{margin:0;background:var(--bg);color:#243447;font-family:Arial,sans-serif}
+header{background:var(--navy);color:white;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .brand{font-weight:800;letter-spacing:1px;font-size:19px}
-.brand small{display:block;font-size:9px;letter-spacing:2px;color:#b9cddd;margin-top:4px}
-.header-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.demo{font-size:11px;color:#b9f2df;border:1px solid #4a8d7f;padding:7px 10px;border-radius:20px}
-button{border:0;border-radius:7px;padding:10px 14px;cursor:pointer;font-weight:700;font-size:13px}
-button:focus,input:focus,select:focus,textarea:focus{outline:2px solid #6da9d1;outline-offset:2px}
-.btn-light{background:#fff;color:var(--navy)}
-.btn-primary{background:var(--blue);color:white}
-.btn-green{background:var(--teal);color:white}
-.btn-red{background:#fff0f0;color:var(--red)}
-.btn-small{padding:7px 10px;font-size:12px}
-main{max-width:1200px;margin:auto;padding:25px 18px 45px}
-.hero{background:linear-gradient(115deg,#17334f,#286b82);color:white;border-radius:14px;padding:30px;margin-bottom:18px}
-.hero h1{font-size:clamp(25px,4vw,38px);margin:0 0 10px}
-.hero p{max-width:700px;line-height:1.6;color:#e0edf4;margin:0}
-.notice{background:#fff8e8;border:1px solid #f2d69a;color:#79521b;padding:12px 15px;border-radius:8px;font-size:12px;line-height:1.5;margin:15px 0 22px}
-.section-title{font-size:19px;color:var(--navy);margin:24px 0 12px}
-.rolebar{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}
-.rolebar button{background:#e4ebf1;color:#29435d}
-.rolebar button.active{background:var(--navy);color:white}
-.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:15px 0}
-.metric,.panel,.chartbox{background:white;border:1px solid var(--border);border-radius:11px;padding:17px}
-.metric span{font-size:12px;color:var(--muted)}
-.metric strong{display:block;font-size:29px;color:var(--navy);margin-top:8px}
-.metric small{color:var(--muted);font-size:11px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.panel h3,.chartbox h3{font-size:16px;color:var(--navy);margin:0 0 13px}
-.panel p{font-size:13px;line-height:1.5;color:var(--muted)}
-label{display:block;font-size:12px;font-weight:700;color:#40536a;margin:12px 0 5px}
-input,select,textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:7px;font:14px Arial;background:white;color:#1e293b}
-textarea{min-height:85px;resize:vertical}
-form button{margin-top:14px}
+.brand small{display:block;font-size:9px;letter-spacing:2px;color:#c2d4e1;margin-top:4px}
+.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.demo{font-size:10px;color:#b9f2df;border:1px solid #4a8d7f;border-radius:20px;padding:7px 10px}
+button{border:0;border-radius:7px;padding:10px 13px;cursor:pointer;font-weight:700;font-size:12px}
+button:focus,input:focus,select:focus,textarea:focus{outline:2px solid #65a6d5;outline-offset:2px}
+.light{background:white;color:var(--navy)}.primary{background:var(--blue);color:white}.green{background:var(--teal);color:white}.danger{background:#fff0f0;color:var(--red)}.small{padding:7px 9px;font-size:11px}
+main{max-width:1200px;margin:auto;padding:23px 17px 45px}
+.hero{background:linear-gradient(115deg,#17334f,#286b82);color:white;border-radius:13px;padding:27px;margin-bottom:15px}
+.hero h1{font-size:clamp(25px,4vw,36px);margin:0 0 9px}.hero p{line-height:1.6;color:#e1edf4;max-width:760px;margin:0}
+.notice{background:#fff7e6;border:1px solid #eed39a;color:#76521d;padding:12px;border-radius:8px;font-size:12px;line-height:1.55;margin:13px 0 20px}
+h2{font-size:19px;color:var(--navy);margin:23px 0 12px}
+.panel,.metric{background:white;border:1px solid var(--border);border-radius:11px;padding:16px}
+.panel h3{font-size:16px;color:var(--navy);margin:0 0 12px}
+.panel p{font-size:12px;color:var(--muted);line-height:1.55}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.metric span{font-size:12px;color:var(--muted)}.metric strong{display:block;font-size:28px;color:var(--navy);margin:7px 0}.metric small{font-size:10px;color:var(--muted)}
+.roles{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}
+.roles button{background:#e4ebf1;color:#29435d}.roles button.active{background:var(--navy);color:white}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+label{display:block;font-size:12px;font-weight:700;color:#40536a;margin:11px 0 5px}
+input,select,textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:7px;font:13px Arial;background:white;color:#243447}
+textarea{min-height:75px;resize:vertical}
+form button{margin-top:13px}
 .hidden{display:none!important}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:12px;min-width:650px}
-th,td{text-align:left;padding:11px 9px;border-bottom:1px solid var(--border);vertical-align:top}
-th{color:#53677d;background:#f7f9fb}
-td{line-height:1.45}
-.pill{display:inline-block;border-radius:20px;padding:4px 8px;font-size:10px;font-weight:700;background:#edf2f7;color:#475569}
-.pending{background:#fff4d9;color:#98620b}
-.verified{background:#e0f5ed;color:#13765e}
-.unverified{background:#fee9e9;color:#a73737}
-.completed{background:#e0f5ed;color:#13765e}
-.urgent{color:#b42318;font-weight:700}
-.list-item{border-bottom:1px solid var(--border);padding:11px 0;font-size:13px;line-height:1.5}
-.list-item:last-child{border:0}
+.hint{font-size:11px;color:var(--muted);line-height:1.5;margin-top:5px}
+.location-line{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.location-line button{flex-shrink:0}
+.location-result{background:#f0f6f8;padding:9px;border-radius:7px;font-size:11px;line-height:1.5;margin-top:8px;overflow-wrap:anywhere}
+#map{height:300px;border-radius:9px;background:#e8eff1;z-index:1}
+.map-fallback{padding:20px;text-align:center;color:var(--muted);font-size:12px}
+.tag{display:inline-block;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:700;background:#edf2f7;color:#475569}
+.pending,.planned{background:#fff3d7;color:#93610b}.verified,.completed{background:#e0f5ed;color:#13765e}.unverified{background:#fee9e9;color:#a73737}.progress{background:#e6f1ff;color:#285c91}
+.list-item{padding:11px 0;border-bottom:1px solid var(--border);font-size:12px;line-height:1.55}.list-item:last-child{border:0}
 .actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
-.actions button{font-size:11px;padding:7px 9px}
-.bar-row{display:grid;grid-template-columns:105px 1fr 30px;gap:8px;align-items:center;margin:12px 0;font-size:12px}
-.bar{height:10px;background:#edf1f5;border-radius:20px;overflow:hidden}
-.bar i{display:block;height:100%;background:#258b83;border-radius:20px}
-.mapbox{height:240px;background:#e7eef0;border-radius:9px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;padding:15px}
-.mapbox:before{content:"";position:absolute;inset:0;background:linear-gradient(30deg,transparent 48%,#cbd9d4 49%,#cbd9d4 51%,transparent 52%),linear-gradient(120deg,transparent 48%,#cbd9d4 49%,#cbd9d4 51%,transparent 52%);background-size:85px 85px}
-.maptext{position:relative;background:#fff;padding:14px;border-radius:9px;max-width:290px;font-size:12px;line-height:1.5;box-shadow:0 2px 10px #0001}
-.pin{display:inline-block;background:#d97706;color:white;padding:5px 8px;border-radius:15px;margin:3px;font-size:10px}
-.filters{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.actions button{padding:7px 9px;font-size:10px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:730px;font-size:11px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--border);vertical-align:top}
+th{background:#f7f9fb;color:#53677d}
+.filters{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}
 .filters>*{flex:1;min-width:130px}
-footer{text-align:center;color:#7b8997;font-size:11px;padding:25px 10px;border-top:1px solid var(--border)}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#17334f;color:white;padding:12px 18px;border-radius:8px;display:none;z-index:9;font-size:13px;box-shadow:0 4px 20px #0003}
-@media(max-width:750px){.metrics{grid-template-columns:repeat(2,1fr)}.grid2,.grid3{grid-template-columns:1fr}.hero{padding:23px}.metric strong{font-size:25px}}
-@media(max-width:380px){main{padding:16px 11px}.metrics{gap:8px}.metric{padding:12px}}
+.bar-row{display:grid;grid-template-columns:105px 1fr 24px;gap:7px;align-items:center;margin:12px 0;font-size:11px}
+.bar{height:10px;background:#edf1f5;border-radius:20px;overflow:hidden}.bar i{display:block;height:100%;background:#258b83;border-radius:20px}
+footer{text-align:center;color:#7b8997;font-size:10px;padding:22px;border-top:1px solid var(--border)}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#17334f;color:white;padding:12px 17px;border-radius:8px;display:none;z-index:9999;font-size:12px;max-width:90%;text-align:center}
+@media(max-width:700px){.metrics{grid-template-columns:repeat(2,1fr)}.grid2,.grid3{grid-template-columns:1fr}.hero{padding:21px}main{padding:16px 11px 35px}}
 </style>
 </head>
 <body>
 <header>
  <div class="brand">↗ PAHUCH LEDGER<small>COMMUNITY RESPONSE & COORDINATION</small></div>
- <div class="header-right"><span class="demo">● HACKATHON DEMO</span><button class="btn-light btn-small" onclick="resetDemo()">Reset demo</button></div>
+ <div class="header-actions">
+  <span class="demo">● HACKATHON DEMO</span>
+  <button class="light small" id="languageBtn" onclick="toggleLanguage()">हिन्दी</button>
+  <button class="light small" onclick="resetDemo()">Reset demo</button>
+ </div>
 </header>
 
 <main>
 <section class="hero">
- <h1>From community reports to coordinated response.</h1>
- <p>Pahunch Ledger is a community-focused prototype designed to organise reported needs, support human verification, and help coordinators track assistance gaps.</p>
+ <h1 id="heroTitle">From community reports to coordinated response.</h1>
+ <p id="heroText">A community-focused prototype to organise reported needs, support human verification and help coordinators track assistance gaps.</p>
 </section>
 
-<div class="notice"><b>DEMO DISCLAIMER:</b> This prototype uses fictional sample reports and simulated workflows. It is not connected to live emergency services, government systems, or real aid delivery. Do not enter real personal or sensitive information.</div>
+<div class="notice"><b>DEMO DISCLAIMER:</b> This prototype uses fictional sample records. It is not connected to emergency services, government systems or actual aid delivery. Location sharing is optional. Do not enter real personal or sensitive information. Demo records are saved only in this browser on this device.</div>
 
-<h2 class="section-title">Response dashboard</h2>
+<h2>Response dashboard</h2>
 <div class="metrics">
  <div class="metric"><span>Total reports</span><strong id="mTotal">0</strong><small>All submitted reports</small></div>
- <div class="metric"><span>Verified reports</span><strong id="mVerified">0</strong><small>Reviewed by demo reviewer</small></div>
- <div class="metric"><span>Pending review</span><strong id="mPending">0</strong><small>Awaiting human review</small></div>
- <div class="metric"><span>Assistance records</span><strong id="mAssisted">0</strong><small>Recorded in this demo</small></div>
+ <div class="metric"><span>Verified reports</span><strong id="mVerified">0</strong><small>Human-reviewed reports</small></div>
+ <div class="metric"><span>Pending review</span><strong id="mPending">0</strong><small>Awaiting review</small></div>
+ <div class="metric"><span>Assistance records</span><strong id="mAssisted">0</strong><small>Recorded in demo</small></div>
 </div>
 
-<div class="rolebar">
+<div class="roles">
  <button id="tabReporter" class="active" onclick="switchRole('reporter')">1. Community Reporter</button>
  <button id="tabReviewer" onclick="switchRole('reviewer')">2. Verification Desk</button>
  <button id="tabCoordinator" onclick="switchRole('coordinator')">3. Assistance Coordinator</button>
@@ -104,125 +96,145 @@ footer{text-align:center;color:#7b8997;font-size:11px;padding:25px 10px;border-t
 
 <section id="reporterPanel" class="panel">
  <h3>Submit a community report</h3>
- <p>Enter fictional information to demonstrate how a community report is recorded.</p>
+ <p>Report a community-level need. You can enter an area manually or optionally share an approximate device location.</p>
  <form id="reportForm">
   <div class="grid2">
-   <div><label for="village">Village / Area *</label><input id="village" required placeholder="e.g. Devgarh"></div>
-   <div><label for="district">District *</label><input id="district" required placeholder="e.g. Shimla"></div>
-   <div><label for="category">Report category *</label><select id="category" required><option value="">Select category</option><option>Road access</option><option>Food and essentials</option><option>Water supply</option><option>Shelter</option><option>Medical assistance</option><option>Infrastructure damage</option><option>Other</option></select></div>
+   <div><label for="village">Village / Area *</label><input id="village" required maxlength="70" placeholder="e.g. Devgarh"></div>
+   <div><label for="district">District *</label><input id="district" required maxlength="70" placeholder="e.g. Shimla"></div>
+   <div><label for="category">Report category *</label><select id="category" required><option value="">Select category</option><option>Road access</option><option>Food and essentials</option><option>Water supply</option><option>Shelter</option><option>Medical assistance</option><option>Infrastructure damage</option><option>Electricity</option><option>Other</option></select></div>
    <div><label for="urgency">Reported urgency *</label><select id="urgency" required><option value="">Select urgency</option><option>High</option><option>Medium</option><option>Low</option></select></div>
-   <div><label for="affected">People affected (estimated) *</label><input id="affected" type="number" min="1" max="100000" required placeholder="e.g. 25"></div>
-   <div><label for="reporterName">Reporter label (optional)</label><input id="reporterName" maxlength="40" placeholder="e.g. Community volunteer"></div>
+   <div><label for="affected">Estimated people affected *</label><input id="affected" type="number" min="1" max="100000" required placeholder="e.g. 25"></div>
+   <div><label for="group">Community group (optional aggregate)</label><select id="group"><option value="">Not specified</option><option>Older adults</option><option>Children and families</option><option>People with disabilities</option><option>General community</option></select></div>
   </div>
-  <label for="details">Report details *</label><textarea id="details" required maxlength="500" placeholder="Briefly describe the reported need..."></textarea>
-  <button class="btn-primary" type="submit">Submit report</button>
+
+  <h3 style="margin-top:22px">Location information</h3>
+  <label for="locationMode">Location method</label>
+  <select id="locationMode"><option value="manual">Manual area entry</option><option value="gps">Use approximate device location</option></select>
+  <div class="location-line">
+   <button class="primary" type="button" onclick="getLocation()">Use my current location</button>
+   <button class="light" type="button" onclick="clearLocation()">Clear GPS location</button>
+  </div>
+  <div class="hint">GPS is optional. Your browser will ask permission. The demo rounds coordinates to approximately 1 km and does not continuously track your device.</div>
+  <div id="locationResult" class="location-result">No GPS location selected. Manual village and district details will be used.</div>
+  <input type="hidden" id="lat"><input type="hidden" id="lng">
+
+  <label for="details">Report details *</label>
+  <textarea id="details" required maxlength="600" placeholder="Describe the reported community need without including names, phone numbers or private details."></textarea>
+  <label for="evidence">Evidence / source notes (optional)</label>
+  <textarea id="evidence" maxlength="350" placeholder="e.g. Community volunteer observation, local notice, photo reference held by reviewer..."></textarea>
+  <div class="hint">This demo records evidence notes only. It does not upload or store photo/video files.</div>
+  <label for="reporterName">Reporter label (optional)</label>
+  <input id="reporterName" maxlength="40" placeholder="e.g. Community volunteer">
+  <button class="primary" type="submit">Submit report</button>
  </form>
 </section>
 
 <section id="reviewerPanel" class="panel hidden">
  <h3>Verification desk</h3>
- <p>Review submitted reports. Verification is a human review step, not automatic confirmation.</p>
+ <p>Review the report details, evidence notes and submission time. A human reviewer makes the decision; the system does not automatically verify reports.</p>
  <div id="reviewQueue"></div>
 </section>
 
 <section id="coordinatorPanel" class="panel hidden">
  <h3>Assistance coordination</h3>
- <p>Record assistance against a report. These records are fictional and do not represent actual delivery.</p>
+ <p>Record planned or ongoing support, and mark it completed only when the demo coordinator records completion.</p>
  <form id="assistanceForm">
   <label for="assistReport">Select report *</label><select id="assistReport" required></select>
   <div class="grid2">
-   <div><label for="assistType">Assistance type *</label><select id="assistType" required><option value="">Select type</option><option>Food and essentials</option><option>Water supply</option><option>Medical assistance</option><option>Transport support</option><option>Shelter support</option><option>Road access support</option><option>Other</option></select></div>
-   <div><label for="assistPeople">People reached (estimated) *</label><input id="assistPeople" type="number" min="1" required placeholder="e.g. 15"></div>
+   <div><label for="assistType">Assistance type *</label><select id="assistType" required><option value="">Select type</option><option>Food and essentials</option><option>Water supply</option><option>Medical assistance</option><option>Transport support</option><option>Shelter support</option><option>Road access support</option><option>Electricity support</option><option>Other</option></select></div>
+   <div><label for="assistPeople">Estimated people reached *</label><input id="assistPeople" type="number" min="1" required placeholder="e.g. 15"></div>
   </div>
-  <label for="assistStatus">Assistance status *</label><select id="assistStatus" required><option>In progress</option><option>Completed</option></select>
-  <label for="assistNotes">Notes</label><textarea id="assistNotes" maxlength="300" placeholder="Add a short demo note..."></textarea>
-  <button class="btn-green" type="submit">Record assistance</button>
+  <label for="assistStatus">Assistance status *</label><select id="assistStatus" required><option>Planned</option><option>In progress</option><option>Completed</option></select>
+  <label for="assistNotes">Coordination notes</label><textarea id="assistNotes" maxlength="300" placeholder="Add a short coordination note..."></textarea>
+  <button class="green" type="submit">Save assistance record</button>
  </form>
- <h3 style="margin-top:25px">Assistance records</h3>
+ <h3 style="margin-top:24px">Assistance records</h3>
  <div id="assistanceList"></div>
 </section>
 
-<h2 class="section-title">Situation overview</h2>
+<h2>Situation overview</h2>
 <div class="grid2">
  <section class="panel">
-  <h3>Report locations (illustrative)</h3>
-  <div class="mapbox"><div class="maptext"><b>Illustrative reporting map</b><br>Sample locations only. No live GPS or live incident mapping.<div id="mapPins" style="margin-top:8px"></div></div></div>
+  <h3>Report location map</h3>
+  <div id="map"><div class="map-fallback">Map loading. Internet connection is needed for map tiles.</div></div>
+  <p>Only reports with optional approximate coordinates appear as pins. Manual area reports remain visible in the register.</p>
+  <div id="mapList"></div>
  </section>
  <section class="panel">
-  <h3>Reports by category</h3>
-  <div id="categoryChart"></div>
+  <h3>Reports by category</h3><div id="categoryChart"></div>
+  <h3 style="margin-top:24px">Review status</h3><div id="statusChart"></div>
  </section>
  <section class="panel">
-  <h3>Report review status</h3>
-  <div id="statusChart"></div>
+  <h3>Reported urgency</h3><div id="urgencyChart"></div>
  </section>
  <section class="panel">
-  <h3>Reported urgency</h3>
-  <div id="urgencyChart"></div>
+  <h3>Community needs summary</h3><div id="groupSummary"></div>
  </section>
 </div>
 
-<h2 class="section-title">Assistance gap tracker</h2>
+<h2>Assistance gap tracker</h2>
 <section class="panel">
- <p>Verified reports without a completed assistance record are shown here as items that may need follow-up. This does not prove that assistance has not reached a community through other channels.</p>
+ <p>Verified reports without a completed assistance record are shown for follow-up. This does not prove that help has not reached the community through other channels.</p>
  <div id="unmetList"></div>
 </section>
 
-<h2 class="section-title">Community report register</h2>
+<h2>Community report register</h2>
 <section class="panel">
  <div class="filters">
   <input id="searchReports" placeholder="Search area or category..." oninput="renderReports()">
   <select id="statusFilter" onchange="renderReports()"><option value="">All statuses</option><option>Pending</option><option>Verified</option><option>Unable to verify</option></select>
-  <select id="urgencyFilter" onchange="renderReports()"><option value="">All urgency levels</option><option>High</option><option>Medium</option><option>Low</option></select>
+  <select id="urgencyFilter" onchange="renderReports()"><option value="">All urgency</option><option>High</option><option>Medium</option><option>Low</option></select>
  </div>
- <div class="table-wrap"><table><thead><tr><th>Report ID</th><th>Area</th><th>Category</th><th>Urgency</th><th>Affected</th><th>Status</th><th>Submitted</th></tr></thead><tbody id="reportRows"></tbody></table></div>
- <div style="margin-top:12px"><button class="btn-primary btn-small" onclick="exportCSV()">Export report register (CSV)</button></div>
+ <div class="table-wrap"><table><thead><tr><th>ID</th><th>Area</th><th>Category</th><th>Urgency</th><th>Affected</th><th>Status</th><th>Location</th><th>Time</th></tr></thead><tbody id="reportRows"></tbody></table></div>
+ <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+  <button class="primary small" onclick="exportCSV()">Export reports CSV</button>
+  <button class="light small" onclick="exportAssistance()">Export assistance CSV</button>
+ </div>
 </section>
 
-<h2 class="section-title">Activity log</h2>
+<h2>Activity log</h2>
 <section class="panel"><div id="activityLog"></div></section>
 </main>
 
-<footer>PAHUCH LEDGER · HACK FOR A SOCIAL CAUSE · PROTOTYPE DEMONSTRATION<br>All sample records are fictional. Not an operational emergency response platform.</footer>
+<footer>PAHUCH LEDGER · HACK FOR A SOCIAL CAUSE · PROTOTYPE DEMONSTRATION<br>Fictional demo records · Optional approximate location · No live authority integration</footer>
 <div id="toast" class="toast"></div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const STORE="pahunchLedgerOneClickDemoV2";
+const STORE="pahunchLedgerExpandedDemoV1";
 const seedReports=[
-{id:"PL-001",village:"Devgarh",district:"Shimla",category:"Road access",urgency:"High",affected:45,reporter:"Community volunteer",details:"Sample report of road access disruption after heavy rainfall.",status:"Verified",time:"10 Nov 2026, 09:20",pin:true},
-{id:"PL-002",village:"Kandaghat",district:"Solan",category:"Water supply",urgency:"Medium",affected:28,reporter:"Local resident",details:"Sample report of interrupted water supply.",status:"Pending",time:"10 Nov 2026, 10:05",pin:true},
-{id:"PL-003",village:"Rohru",district:"Shimla",category:"Infrastructure damage",urgency:"High",affected:60,reporter:"Volunteer group",details:"Sample report of infrastructure damage requiring assessment.",status:"Verified",time:"10 Nov 2026, 11:15",pin:true},
-{id:"PL-004",village:"Arki",district:"Solan",category:"Food and essentials",urgency:"Low",affected:18,reporter:"Community volunteer",details:"Sample report requesting essential supplies.",status:"Pending",time:"10 Nov 2026, 12:30",pin:true},
-{id:"PL-005",village:"Theog",district:"Shimla",category:"Shelter",urgency:"Medium",affected:22,reporter:"Local volunteer",details:"Sample report of temporary shelter needs.",status:"Unable to verify",time:"10 Nov 2026, 13:10",pin:true}
+{id:"PL-001",village:"Devgarh",district:"Shimla",category:"Road access",urgency:"High",affected:45,group:"General community",details:"Sample report of road access disruption after heavy rainfall.",evidence:"Illustrative community observation.",status:"Verified",reviewNote:"Sample record reviewed for demonstration.",time:"14 Nov 2026, 09:20",lat:31.104,lng:77.173},
+{id:"PL-002",village:"Kandaghat",district:"Solan",category:"Water supply",urgency:"Medium",affected:28,group:"Children and families",details:"Sample report of interrupted water supply.",evidence:"Illustrative local notice reference.",status:"Pending",reviewNote:"",time:"14 Nov 2026, 10:05",lat:30.969,lng:77.105},
+{id:"PL-003",village:"Rohru",district:"Shimla",category:"Infrastructure damage",urgency:"High",affected:60,group:"General community",details:"Sample report of infrastructure damage requiring assessment.",evidence:"Illustrative volunteer observation.",status:"Verified",reviewNote:"Sample record reviewed for demonstration.",time:"14 Nov 2026, 11:15",lat:31.203,lng:77.753},
+{id:"PL-004",village:"Arki",district:"Solan",category:"Food and essentials",urgency:"Low",affected:18,group:"Older adults",details:"Sample report requesting essential supplies.",evidence:"Illustrative community report.",status:"Pending",reviewNote:"",time:"14 Nov 2026, 12:30",lat:null,lng:null},
+{id:"PL-005",village:"Theog",district:"Shimla",category:"Shelter",urgency:"Medium",affected:22,group:"General community",details:"Sample report of temporary shelter needs.",evidence:"Illustrative community report.",status:"Unable to verify",reviewNote:"Insufficient supporting information in this fictional example.",time:"14 Nov 2026, 13:10",lat:null,lng:null}
 ];
 const seedAssistance=[
 {id:"AS-001",reportId:"PL-001",type:"Road access support",people:20,status:"In progress",notes:"Illustrative coordination record."},
 {id:"AS-002",reportId:"PL-003",type:"Other",people:30,status:"Completed",notes:"Illustrative assistance record."}
 ];
-let reports,assistance,activity,activeRole="reporter";
+let reports=[],assistance=[],activity=[],activeRole="reporter",map=null,markers=[],hindi=false;
 function loadData(){
  try{
-  const saved=JSON.parse(localStorage.getItem(STORE));
-  if(saved&&Array.isArray(saved.reports)&&Array.isArray(saved.assistance)){reports=saved.reports;assistance=saved.assistance;activity=saved.activity||[];return}
+  const s=JSON.parse(localStorage.getItem(STORE));
+  if(s&&Array.isArray(s.reports)&&Array.isArray(s.assistance)){reports=s.reports;assistance=s.assistance;activity=s.activity||[];return}
  }catch(e){}
- reports=JSON.parse(JSON.stringify(seedReports));
- assistance=JSON.parse(JSON.stringify(seedAssistance));
- activity=["Demo workspace loaded with fictional sample records."];
- saveData();
+ reports=JSON.parse(JSON.stringify(seedReports));assistance=JSON.parse(JSON.stringify(seedAssistance));activity=["Demo workspace loaded with fictional sample records."];saveData();
 }
-function saveData(){localStorage.setItem(STORE,JSON.stringify({reports,assistance,activity}))}
-function log(message){activity.unshift(new Date().toLocaleString()+" — "+message);activity=activity.slice(0,12);saveData()}
-function toast(message){const el=document.getElementById("toast");el.textContent=message;el.style.display="block";setTimeout(()=>el.style.display="none",2400)}
-function switchRole(role){
- activeRole=role;
- ["reporter","reviewer","coordinator"].forEach(r=>{
-  document.getElementById(r+"Panel").classList.toggle("hidden",r!==role);
-  document.getElementById("tab"+r[0].toUpperCase()+r.slice(1)).classList.toggle("active",r===role);
+function saveData(){try{localStorage.setItem(STORE,JSON.stringify({reports,assistance,activity}))}catch(e){toast("Browser storage is full. Export your records.");}}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function toast(t){let e=document.getElementById("toast");e.textContent=t;e.style.display="block";clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>e.style.display="none",2600)}
+function log(t){activity.unshift(new Date().toLocaleString()+" — "+t);activity=activity.slice(0,20);saveData()}
+function switchRole(r){
+ activeRole=r;
+ ["reporter","reviewer","coordinator"].forEach(x=>{
+ document.getElementById(x+"Panel").classList.toggle("hidden",x!==r);
+ document.getElementById("tab"+x[0].toUpperCase()+x.slice(1)).classList.toggle("active",x===r);
  });
- if(role==="reviewer")renderReview();
- if(role==="coordinator")renderAssistance();
+ if(r==="reviewer")renderReview();if(r==="coordinator")renderAssistance();
 }
 function statusClass(s){return s==="Verified"?"verified":s==="Pending"?"pending":"unverified"}
+function assistClass(s){return s==="Completed"?"completed":s==="In progress"?"progress":"planned"}
 function renderMetrics(){
  document.getElementById("mTotal").textContent=reports.length;
  document.getElementById("mVerified").textContent=reports.filter(r=>r.status==="Verified").length;
@@ -230,75 +242,120 @@ function renderMetrics(){
  document.getElementById("mAssisted").textContent=assistance.length;
 }
 function renderReports(){
- const q=document.getElementById("searchReports").value.toLowerCase();
- const st=document.getElementById("statusFilter").value;
- const ur=document.getElementById("urgencyFilter").value;
- const rows=reports.filter(r=>(!q||(r.village+" "+r.district+" "+r.category).toLowerCase().includes(q))&&(!st||r.status===st)&&(!ur||r.urgency===ur));
- document.getElementById("reportRows").innerHTML=rows.map(r=>`<tr><td><b>${esc(r.id)}</b></td><td>${esc(r.village)}, ${esc(r.district)}</td><td>${esc(r.category)}</td><td class="${r.urgency==="High"?"urgent":""}">${esc(r.urgency)}</td><td>${r.affected}</td><td><span class="pill ${statusClass(r.status)}">${esc(r.status)}</span></td><td>${esc(r.time)}</td></tr>`).join("")||'<tr><td colspan="7">No matching reports.</td></tr>';
+ let q=document.getElementById("searchReports").value.toLowerCase(),st=document.getElementById("statusFilter").value,ur=document.getElementById("urgencyFilter").value;
+ let rows=reports.filter(r=>(!q||(r.village+" "+r.district+" "+r.category).toLowerCase().includes(q))&&(!st||r.status===st)&&(!ur||r.urgency===ur));
+ document.getElementById("reportRows").innerHTML=rows.map(r=>`<tr><td><b>${esc(r.id)}</b></td><td>${esc(r.village)}, ${esc(r.district)}</td><td>${esc(r.category)}</td><td>${esc(r.urgency)}</td><td>${r.affected}</td><td><span class="tag ${statusClass(r.status)}">${esc(r.status)}</span></td><td>${r.lat!=null?"Approx. GPS":"Manual area"}</td><td>${esc(r.time)}</td></tr>`).join("")||'<tr><td colspan="8">No matching reports.</td></tr>';
 }
 function renderReview(){
- const pending=reports.filter(r=>r.status==="Pending");
- document.getElementById("reviewQueue").innerHTML=pending.map(r=>`<div class="list-item"><b>${esc(r.id)} · ${esc(r.village)}, ${esc(r.district)}</b><br>${esc(r.category)} · ${esc(r.urgency)} urgency · ${r.affected} people estimated<br>${esc(r.details)}<div class="actions"><button class="btn-green" onclick="reviewReport('${r.id}','Verified')">Mark verified</button><button class="btn-red" onclick="reviewReport('${r.id}','Unable to verify')">Unable to verify</button></div></div>`).join("")||"<p>No reports are currently awaiting review.</p>";
+ let pending=reports.filter(r=>r.status==="Pending");
+ document.getElementById("reviewQueue").innerHTML=pending.map(r=>`<div class="list-item"><b>${esc(r.id)} · ${esc(r.village)}, ${esc(r.district)}</b><br>${esc(r.category)} · ${esc(r.urgency)} urgency · ${r.affected} people estimated<br>${esc(r.details)}<br><b>Evidence notes:</b> ${esc(r.evidence||"No evidence notes provided")}<br><b>Submitted:</b> ${esc(r.time)}<label for="note-${r.id}">Reviewer note</label><textarea id="note-${r.id}" maxlength="250" placeholder="Explain your review decision..."></textarea><div class="actions"><button class="green" onclick="reviewReport('${r.id}','Verified')">Mark verified</button><button class="danger" onclick="reviewReport('${r.id}','Unable to verify')">Unable to verify</button></div></div>`).join("")||"<p>No reports are awaiting review.</p>";
 }
 function reviewReport(id,status){
- const r=reports.find(x=>x.id===id);if(!r)return;
- r.status=status;log(id+" marked "+status+" by demo reviewer.");refreshAll();renderReview();toast("Review status updated.");
+ let r=reports.find(x=>x.id===id);if(!r)return;
+ r.status=status;r.reviewNote=document.getElementById("note-"+id)?.value.trim()||"No reviewer note added.";
+ log(id+" marked "+status+" by demo reviewer.");refreshAll();renderReview();toast("Review decision saved.");
 }
 function renderAssistance(){
- const select=document.getElementById("assistReport");
- const old=select.value;
- select.innerHTML='<option value="">Choose a report</option>'+reports.map(r=>`<option value="${esc(r.id)}">${esc(r.id)} · ${esc(r.village)} (${esc(r.status)})</option>`).join("");
- if(reports.some(r=>r.id===old))select.value=old;
- document.getElementById("assistanceList").innerHTML=assistance.map(a=>`<div class="list-item"><b>${esc(a.id)} · ${esc(a.type)}</b><br>Report: ${esc(a.reportId)} · Estimated people reached: ${a.people}<br>Status: <span class="pill ${a.status==="Completed"?"completed":"pending"}">${esc(a.status)}</span><br>${esc(a.notes||"No additional notes")}</div>`).join("")||"<p>No assistance records yet.</p>";
+ let s=document.getElementById("assistReport"),old=s.value;
+ s.innerHTML='<option value="">Choose a report</option>'+reports.map(r=>`<option value="${esc(r.id)}">${esc(r.id)} · ${esc(r.village)} (${esc(r.status)})</option>`).join("");
+ if(reports.some(r=>r.id===old))s.value=old;
+ document.getElementById("assistanceList").innerHTML=assistance.map(a=>`<div class="list-item"><b>${esc(a.id)} · ${esc(a.type)}</b><br>Report: ${esc(a.reportId)} · Estimated people reached: ${a.people}<br>Status: <span class="tag ${assistClass(a.status)}">${esc(a.status)}</span><br>${esc(a.notes||"No notes")}<div class="actions"><button class="light small" onclick="changeAssist('${a.id}','Planned')">Planned</button><button class="light small" onclick="changeAssist('${a.id}','In progress')">In progress</button><button class="green small" onclick="changeAssist('${a.id}','Completed')">Completed</button></div></div>`).join("")||"<p>No assistance records yet.</p>";
 }
+function changeAssist(id,status){let a=assistance.find(x=>x.id===id);if(!a)return;a.status=status;log(a.id+" status changed to "+status+".");refreshAll();renderAssistance();toast("Assistance status updated.");}
 function renderUnmet(){
- const list=reports.filter(r=>r.status==="Verified"&&!assistance.some(a=>a.reportId===r.id&&a.status==="Completed"));
- document.getElementById("unmetList").innerHTML=list.map(r=>`<div class="list-item"><b>${esc(r.village)}, ${esc(r.district)}</b> · ${esc(r.category)}<br>Report ${esc(r.id)} · ${r.affected} people estimated · ${esc(r.urgency)} urgency<br><span class="pill pending">Follow-up may be needed</span></div>`).join("")||"<p>No verified reports currently appear in this demo follow-up list.</p>";
+ let list=reports.filter(r=>r.status==="Verified"&&!assistance.some(a=>a.reportId===r.id&&a.status==="Completed"));
+ document.getElementById("unmetList").innerHTML=list.map(r=>`<div class="list-item"><b>${esc(r.village)}, ${esc(r.district)}</b> · ${esc(r.category)}<br>${esc(r.id)} · ${r.affected} people estimated · ${esc(r.urgency)} urgency<br><span class="tag planned">Follow-up may be needed</span></div>`).join("")||"<p>No verified reports currently appear in this demo follow-up list.</p>";
 }
 function bars(id,items){
- const max=Math.max(1,...items.map(x=>x[1]));
- document.getElementById(id).innerHTML=items.map(x=>`<div class="bar-row"><span>${esc(x[0])}</span><div class="bar"><i style="width:${Math.max(0,x[1]/max*100)}%"></i></div><b>${x[1]}</b></div>`).join("")||"<p>No data available.</p>";
+ let max=Math.max(1,...items.map(x=>x[1]));
+ document.getElementById(id).innerHTML=items.map(x=>`<div class="bar-row"><span>${esc(x[0])}</span><div class="bar"><i style="width:${x[1]/max*100}%"></i></div><b>${x[1]}</b></div>`).join("")||"<p>No data.</p>";
 }
 function renderCharts(){
- const cats=["Road access","Food and essentials","Water supply","Shelter","Medical assistance","Infrastructure damage","Other"];
- bars("categoryChart",cats.map(c=>[c,reports.filter(r=>r.category===c).length]).filter(x=>x[1]>0));
+ let cats=["Road access","Food and essentials","Water supply","Shelter","Medical assistance","Infrastructure damage","Electricity","Other"];
+ bars("categoryChart",cats.map(c=>[c,reports.filter(r=>r.category===c).length]).filter(x=>x[1]));
  bars("statusChart",["Verified","Pending","Unable to verify"].map(s=>[s,reports.filter(r=>r.status===s).length]));
  bars("urgencyChart",["High","Medium","Low"].map(s=>[s,reports.filter(r=>r.urgency===s).length]));
- document.getElementById("mapPins").innerHTML=reports.filter(r=>r.pin).map(r=>`<span class="pin">${esc(r.village)}</span>`).join("")||"No illustrative pins";
+ let groups=["Older adults","Children and families","People with disabilities","General community","Not specified"];
+ bars("groupSummary",groups.map(g=>[g,reports.filter(r=>(r.group||"Not specified")===g).length]));
 }
-function renderActivity(){
- document.getElementById("activityLog").innerHTML=activity.map(a=>`<div class="list-item">${esc(a)}</div>`).join("")||"<p>No activity recorded.</p>";
+function renderActivity(){document.getElementById("activityLog").innerHTML=activity.map(a=>`<div class="list-item">${esc(a)}</div>`).join("")||"<p>No activity recorded.</p>"}
+function refreshAll(){renderMetrics();renderReports();renderCharts();renderUnmet();renderActivity();renderMap()}
+function initMap(){
+ if(!window.L){document.getElementById("map").innerHTML='<div class="map-fallback">Interactive map unavailable. Internet access is needed to load the map library. Report details remain available below.</div>';return}
+ map=L.map("map").setView([31.1,77.2],8);
+ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:"© OpenStreetMap"}).addTo(map);
+ renderMap();
 }
-function refreshAll(){renderMetrics();renderReports();renderCharts();renderUnmet();renderActivity()}
-function esc(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function renderMap(){
+ let list=document.getElementById("mapList");
+ list.innerHTML=reports.map(r=>`<div class="list-item">${esc(r.village)}, ${esc(r.district)} · ${esc(r.category)} · ${r.lat!=null?"Approximate pin available":"Manual location"}</div>`).join("");
+ if(!map)return;
+ markers.forEach(m=>map.removeLayer(m));markers=[];
+ reports.filter(r=>r.lat!=null&&r.lng!=null).forEach(r=>{
+ let m=L.marker([r.lat,r.lng]).addTo(map).bindPopup("<b>"+esc(r.id)+"</b><br>"+esc(r.village)+", "+esc(r.district)+"<br>"+esc(r.category)+"<br>"+esc(r.status));
+ markers.push(m);
+ });
+}
+function getLocation(){
+ if(!navigator.geolocation){toast("This browser does not support location.");return}
+ toast("Requesting location permission...");
+ navigator.geolocation.getCurrentPosition(pos=>{
+  const lat=Math.round(pos.coords.latitude*100)/100,lng=Math.round(pos.coords.longitude*100)/100;
+  document.getElementById("lat").value=lat;document.getElementById("lng").value=lng;
+  document.getElementById("locationMode").value="gps";
+  document.getElementById("locationResult").textContent="Approximate location selected: "+lat+", "+lng+". Confirm that you want to include this area with your report.";
+  if(map){map.setView([lat,lng],11);L.circle([lat,lng],{radius:500,color:"#168779"}).addTo(map).bindPopup("Approximate location selected on this device").openPopup()}
+  toast("Approximate location captured.");
+ },err=>{toast(err.code===1?"Location permission denied. You can enter the area manually.":"Location unavailable. Please enter the area manually.");},{enableHighAccuracy:false,timeout:12000,maximumAge:60000});
+}
+function clearLocation(){
+ document.getElementById("lat").value="";document.getElementById("lng").value="";
+ document.getElementById("locationMode").value="manual";
+ document.getElementById("locationResult").textContent="GPS location cleared. Manual village and district details will be used.";
+}
 document.getElementById("reportForm").addEventListener("submit",e=>{
  e.preventDefault();
- const id="PL-"+String(Date.now()).slice(-6);
- reports.unshift({id,village:document.getElementById("village").value.trim(),district:document.getElementById("district").value.trim(),category:document.getElementById("category").value,urgency:document.getElementById("urgency").value,affected:Number(document.getElementById("affected").value),reporter:document.getElementById("reporterName").value.trim(),details:document.getElementById("details").value.trim(),status:"Pending",time:new Date().toLocaleString(),pin:false});
- log("New community report "+id+" submitted and marked Pending.");
- e.target.reset();refreshAll();toast("Report submitted to the demo review queue.");
+ let village=document.getElementById("village").value.trim(),district=document.getElementById("district").value.trim(),category=document.getElementById("category").value;
+ let duplicate=reports.some(r=>r.village.toLowerCase()===village.toLowerCase()&&r.district.toLowerCase()===district.toLowerCase()&&r.category===category);
+ if(duplicate&&!confirm("A report with the same area and category already exists. Submit this as a separate report anyway?"))return;
+ let lat=document.getElementById("lat").value,lng=document.getElementById("lng").value;
+ let id="PL-"+String(Date.now()).slice(-7);
+ reports.unshift({id,village,district,category,urgency:document.getElementById("urgency").value,affected:Number(document.getElementById("affected").value),group:document.getElementById("group").value||"Not specified",details:document.getElementById("details").value.trim(),evidence:document.getElementById("evidence").value.trim(),reporter:document.getElementById("reporterName").value.trim(),status:"Pending",reviewNote:"",time:new Date().toLocaleString(),lat:lat===""?null:Number(lat),lng:lng===""?null:Number(lng)});
+ log("New report "+id+" submitted. Status: Pending.");
+ e.target.reset();clearLocation();refreshAll();toast("Report saved in this device's demo workspace.");window.scrollTo({top:0,behavior:"smooth"});
 });
 document.getElementById("assistanceForm").addEventListener("submit",e=>{
- e.preventDefault();
- const reportId=document.getElementById("assistReport").value;
- if(!reportId){toast("Please select a report.");return}
- const id="AS-"+String(Date.now()).slice(-6);
+ e.preventDefault();let reportId=document.getElementById("assistReport").value;if(!reportId)return;
+ let id="AS-"+String(Date.now()).slice(-7);
  assistance.unshift({id,reportId,type:document.getElementById("assistType").value,people:Number(document.getElementById("assistPeople").value),status:document.getElementById("assistStatus").value,notes:document.getElementById("assistNotes").value.trim()});
- log("Assistance record "+id+" added for "+reportId+".");
- e.target.reset();renderAssistance();refreshAll();toast("Assistance record added.");
+ log("Assistance record "+id+" saved for "+reportId+".");e.target.reset();refreshAll();renderAssistance();toast("Assistance record saved.");
 });
+function csvDownload(filename,rows){
+ let csv=rows.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\n");
+ let blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
 function exportCSV(){
- const header=["Report ID","Village","District","Category","Urgency","People affected","Status","Submitted"];
- const rows=reports.map(r=>[r.id,r.village,r.district,r.category,r.urgency,r.affected,r.status,r.time]);
- const csv=[header,...rows].map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\n");
- const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
- const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="pahunch-ledger-demo-reports.csv";a.click();URL.revokeObjectURL(url);
+ csvDownload("pahunch-ledger-reports.csv",[["ID","Village","District","Category","Urgency","Affected","Group","Status","Details","Evidence notes","Reviewer notes","Latitude approximate","Longitude approximate","Submitted"],...reports.map(r=>[r.id,r.village,r.district,r.category,r.urgency,r.affected,r.group,r.status,r.details,r.evidence,r.reviewNote,r.lat,r.lng,r.time])]);
+}
+function exportAssistance(){
+ csvDownload("pahunch-ledger-assistance.csv",[["ID","Report ID","Type","People reached","Status","Notes"],...assistance.map(a=>[a.id,a.reportId,a.type,a.people,a.status,a.notes])]);
 }
 function resetDemo(){
- if(!confirm("Reset the demo and restore the original fictional sample records?"))return;
- localStorage.removeItem(STORE);loadData();document.getElementById("reportForm").reset();document.getElementById("assistanceForm").reset();refreshAll();switchRole("reporter");toast("Demo data reset.");
+ if(!confirm("Reset all local demo changes and restore the original fictional sample records?"))return;
+ localStorage.removeItem(STORE);loadData();document.getElementById("reportForm").reset();document.getElementById("assistanceForm").reset();clearLocation();refreshAll();switchRole("reporter");toast("Demo reset.");
 }
-loadData();refreshAll();switchRole("reporter");
+function toggleLanguage(){
+ hindi=!hindi;
+ document.getElementById("languageBtn").textContent=hindi?"English":"हिन्दी";
+ document.getElementById("heroTitle").textContent=hindi?"समुदाय की रिपोर्ट से समन्वित सहायता तक।":"From community reports to coordinated response.";
+ document.getElementById("heroText").textContent=hindi?"समुदाय की जरूरतों को दर्ज करने, मानवीय सत्यापन और सहायता समन्वय को व्यवस्थित करने वाला एक प्रोटोटाइप।":"A community-focused prototype to organise reported needs, support human verification and help coordinators track assistance gaps.";
+ toast(hindi?"मुख्य परिचय हिन्दी में बदल दिया गया।":"Main introduction changed to English.");
+}
+loadData();
+initMap();
+refreshAll();
+switchRole("reporter");
 </script>
 </body>
 </html>
