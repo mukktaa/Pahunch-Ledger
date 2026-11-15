@@ -673,5 +673,196 @@ function addBackupButton(){
 }
 renderAll();
 </script>
+<style>
+/* Pahunch Ledger upgrade — retains original theme */
+.upgrade-section{border-top:1px solid var(--line);margin-top:22px;padding-top:15px}
+.upgrade-section h3{font-size:13px;margin:0 0 7px}
+.upgrade-help{font-size:10px;color:var(--muted);line-height:1.6;margin:0 0 13px}
+.upgrade-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 15px}
+.upgrade-check{display:flex;gap:8px;align-items:flex-start;font-size:11px;margin:9px 0}
+.upgrade-check input{margin-top:2px}
+.upgrade-tag{display:inline-block;padding:4px 8px;border-radius:20px;background:var(--teal2);color:#16766e;font-size:10px;font-weight:700}
+.upgrade-card{border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0;background:#fbfcfc}
+.upgrade-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.upgrade-history{border-left:2px solid var(--teal);padding:5px 0 5px 13px;margin:10px 0}
+.upgrade-history strong{font-size:11px}
+.upgrade-history p{font-size:10px;color:var(--muted);margin:4px 0}
+@media(max-width:700px){.upgrade-grid{grid-template-columns:1fr}}
+</style>
+
+<script>
+"use strict";
+
+/* Preserve the existing v3 records and add new collections. */
+data.verifications=data.verifications||[];
+data.tasks=data.tasks||[];
+data.organisations=data.organisations||[
+ {id:"ORG-01",name:"Himalayan Community Support (DEMO)",area:"Solan district",type:"Community support",contact:"Demo coordinator",phone:"+91-00000-00001"},
+ {id:"ORG-02",name:"Mountain Relief Network (DEMO)",area:"Shimla district",type:"Relief coordination",contact:"Demo coordinator",phone:"+91-00000-00002"},
+ {id:"ORG-03",name:"Community Resource Group (DEMO)",area:"Mandi district",type:"Local support",contact:"Demo coordinator",phone:"+91-00000-00003"},
+ {id:"ORG-04",name:"Regional Support Unit (DEMO)",area:"Kangra district",type:"Supply coordination",contact:"Demo coordinator",phone:"+91-00000-00004"}
+];
+save();
+
+/* Add fields to the existing report form, without replacing it. */
+(function addReporterFields(){
+ const form=$("reportForm");
+ if(!form||$("incidentType"))return;
+ const section=document.createElement("div");
+ section.className="upgrade-section";
+ section.innerHTML=`
+  <h3>Report type and incident context</h3>
+  <p class="upgrade-help">Choose whether this is a general community need or a disaster-related report. All figures are estimates supplied by the reporter, not verified assessments.</p>
+  <div class="upgrade-grid">
+   <div class="field">
+    <label>Report type *</label>
+    <select id="incidentType">
+     <option value="General community need">General community need</option>
+     <option value="Disaster incident">Disaster incident</option>
+    </select>
+   </div>
+   <div class="field">
+    <label>Incident date (if known)</label>
+    <input id="incidentDate" type="date">
+   </div>
+   <div class="field">
+    <label>Community / ward (optional)</label>
+    <input id="incidentWard" maxlength="70" placeholder="General ward or community name">
+   </div>
+   <div class="field">
+    <label>Approximate affected population</label>
+    <input id="incidentAffected" type="number" min="0" max="100000" placeholder="Estimate">
+   </div>
+  </div>
+  <div id="disasterFields" hidden>
+   <div class="section-title">Aggregate population estimates</div>
+   <p class="upgrade-help">Demographic groups may overlap. Do not add these figures together to calculate the total affected population.</p>
+   <div class="upgrade-grid">
+    <div class="field"><label>Children (estimate)</label><input id="countChildren" type="number" min="0" max="100000" value="0"></div>
+    <div class="field"><label>Older adults (estimate)</label><input id="countOlder" type="number" min="0" max="100000" value="0"></div>
+    <div class="field"><label>Pregnant people (estimate)</label><input id="countPregnant" type="number" min="0" max="100000" value="0"></div>
+    <div class="field"><label>People with disabilities (estimate)</label><input id="countDisability" type="number" min="0" max="100000" value="0"></div>
+   </div>
+   <div class="section-title">Reported condition estimates</div>
+   <p class="upgrade-help">These are unverified reports, not medical assessments. The categories below are mutually exclusive; their total must not exceed the affected-population estimate.</p>
+   <div class="upgrade-grid">
+    <div class="field"><label>Reported deceased — unverified</label><input id="countDeceased" type="number" min="0" max="100000" value="0"></div>
+    <div class="field"><label>Reported urgent medical need</label><input id="countUrgent" type="number" min="0" max="100000" value="0"></div>
+    <div class="field"><label>Reported minor injuries / no immediate need</label><input id="countMinor" type="number" min="0" max="100000" value="0"></div>
+    <div class="field"><label>Unknown / unassessed</label><input id="countUnknown" type="number" min="0" max="100000" value="0"></div>
+   </div>
+  </div>
+  <div class="section-title">Optional supporting information</div>
+  <div class="field">
+   <label>Evidence type</label>
+   <select id="reportEvidenceType">
+    <option value="">Not provided</option>
+    <option>Official public notice</option>
+    <option>Community representative information</option>
+    <option>Recognised organisation update</option>
+    <option>Field observation</option>
+    <option>Reporter-provided photo / document</option>
+    <option>Other / not yet known</option>
+   </select>
+  </div>
+  <div class="field">
+   <label>Select supporting files (optional)</label>
+   <input id="reportFiles" type="file" accept="image/*,video/*,.pdf,.doc,.docx" multiple>
+   <p class="form-note">Demo only: this records selected file names and sizes in this browser. Files are not uploaded or shared. Do not select media showing identifiable children, injured people or deceased people.</p>
+   <div id="selectedFiles" class="form-note"></div>
+  </div>
+  <div class="upgrade-actions">
+   <button class="btn btn-outline btn-small" type="button" id="voiceReport">🎙 Voice to text</button>
+   <button class="btn btn-outline btn-small" type="button" id="locationSnapshot">⌖ Add approximate location snapshot</button>
+  </div>
+  <p id="locationResult" class="form-note">Location is optional and will only be requested if you press the button.</p>
+  <p class="form-note">Location is a one-time approximate snapshot, not continuous tracking. You may leave it blank.</p>
+ `;
+ const consent=form.querySelector("#fConsent").closest("label");
+ form.insertBefore(section,consent);
+
+ $("incidentType").addEventListener("change",()=>{
+  $("disasterFields").hidden=$("incidentType").value!=="Disaster incident";
+ });
+
+ $("reportFiles").addEventListener("change",()=>{
+  const files=[...$("reportFiles").files];
+  $("selectedFiles").textContent=files.length?
+   files.map(f=>f.name+" ("+Math.round(f.size/1024)+" KB)").join(" · "):
+   "No files selected.";
+ });
+
+ $("voiceReport").addEventListener("click",()=>{
+  const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!Speech){toast("Voice input is not supported in this browser.");return}
+  const recognition=new Speech();
+  recognition.lang=language==="hi"?"hi-IN":"en-IN";
+  recognition.interimResults=false;
+  recognition.onresult=e=>{
+   $("fDescription").value+=($("fDescription").value?" ":"")+e.results[0][0].transcript;
+  };
+  recognition.onerror=()=>toast("Voice input could not be completed.");
+  recognition.start();
+ });
+
+ $("locationSnapshot").addEventListener("click",()=>{
+  if(!navigator.geolocation){toast("Location is not available in this browser.");return}
+  $("locationResult").textContent="Requesting permission…";
+  navigator.geolocation.getCurrentPosition(pos=>{
+   const lat=Math.round(pos.coords.latitude*100)/100;
+   const lon=Math.round(pos.coords.longitude*100)/100;
+   window.plApproxLocation={lat,lon};
+   $("locationResult").textContent="Approximate location snapshot added: "+lat+", "+lon;
+  },()=>{
+   $("locationResult").textContent="Location was not shared.";
+   toast("Location permission was not granted.");
+  },{enableHighAccuracy:false,timeout:10000,maximumAge:60000});
+ });
+})();
+
+/* Capture the new fields after the original form creates its report. */
+let plPreviousReportIds=new Set(data.reports.map(r=>r.id));
+$("reportForm").addEventListener("submit",()=>{
+ const snapshot={
+  incidentType:$("incidentType").value,
+  incidentDate:$("incidentDate").value,
+  ward:$("incidentWard").value.trim(),
+  affected:$("incidentAffected").value?Number($("incidentAffected").value):null,
+  demographics:{
+   children:Number($("countChildren").value||0),
+   olderAdults:Number($("countOlder").value||0),
+   pregnantPeople:Number($("countPregnant").value||0),
+   peopleWithDisabilities:Number($("countDisability").value||0)
+  },
+  conditionEstimates:{
+   reportedDeceased:Number($("countDeceased").value||0),
+   urgentMedicalNeed:Number($("countUrgent").value||0),
+   minorOrNoImmediateNeed:Number($("countMinor").value||0),
+   unknown:Number($("countUnknown").value||0)
+  },
+  evidenceType:$("reportEvidenceType").value,
+  evidenceFiles:[...$("reportFiles").files].map(f=>({name:f.name,size:f.size})),
+  approximateLocation:window.plApproxLocation||null
+ };
+ const total=Object.values(snapshot.conditionEstimates).reduce((a,b)=>a+b,0);
+ const affected=snapshot.affected??Number($("fPeople").value||0);
+ if(snapshot.incidentType==="Disaster incident"&&affected&&total>affected){
+  alert("The condition estimate total cannot exceed the affected-population estimate.");
+  return;
+ }
+ window.plPendingReportUpgrade=snapshot;
+ plPreviousReportIds=new Set(data.reports.map(r=>r.id));
+},true);
+
+$("reportForm").addEventListener("submit",()=>{
+ const created=data.reports.find(r=>!plPreviousReportIds.has(r.id));
+ if(!created||!window.plPendingReportUpgrade)return;
+ Object.assign(created,window.plPendingReportUpgrade);
+ if(created.affected!==null)created.people=created.affected;
+ save();
+ window.plPendingReportUpgrade=null;
+ window.plApproxLocation=null;
+},false);
+</script>
 </body>
 </html>
