@@ -1822,5 +1822,497 @@ if(document.readyState==="loading"){
 }
 })();
 </script>
+
+<style>
+.pl-language-select{
+  padding:8px 10px;
+  border:1px solid var(--border,#dce5e9);
+  border-radius:8px;
+  background:var(--panel,#fff);
+  color:inherit;
+  font:inherit;
+  cursor:pointer;
+  max-width:145px;
+}
+</style>
+
+<script>
+(function(){
+"use strict";
+
+const translations={
+  hi:{
+    "Overview":"डैशबोर्ड",
+    "Community reports":"सामुदायिक रिपोर्ट",
+    "Submit a report":"रिपोर्ट जमा करें",
+    "Verification desk":"सत्यापन डेस्क",
+    "Assistance tracking":"सहायता ट्रैकिंग",
+    "Follow-up tracker":"फॉलो-अप ट्रैकर",
+    "Analytics":"विश्लेषण",
+    "Area overview":"क्षेत्र का विवरण",
+    "Audit log":"गतिविधि रिकॉर्ड",
+    "New report":"नई रिपोर्ट",
+    "Reporter":"रिपोर्टर",
+    "Verifier":"सत्यापनकर्ता",
+    "Coordinator":"समन्वयक",
+    "Pending":"लंबित",
+    "Verified":"सत्यापित",
+    "Rejected":"अस्वीकृत",
+    "Clarification requested":"स्पष्टीकरण मांगा गया",
+    "Planned":"नियोजित",
+    "Assigned":"सौंपा गया",
+    "Dispatched":"भेजा गया",
+    "Delivered":"पहुंचाया गया",
+    "Partially delivered":"आंशिक रूप से पहुंचाया गया",
+    "Unable to deliver":"पहुंचाना संभव नहीं हुआ",
+    "Save":"सहेजें",
+    "Cancel":"रद्द करें",
+    "Submit":"जमा करें",
+    "Search":"खोजें",
+    "Filter":"फ़िल्टर",
+    "Export CSV":"CSV डाउनलोड करें",
+    "Backup data":"डेटा बैकअप",
+    "Restore data":"डेटा पुनर्स्थापित करें",
+    "Reset demo":"डेमो रीसेट करें",
+    "Category":"श्रेणी",
+    "Urgency":"तात्कालिकता",
+    "Area":"क्षेत्र",
+    "Description":"विवरण",
+    "Status":"स्थिति",
+    "Date":"तारीख",
+    "Actions":"कार्रवाई",
+    "Report ID":"रिपोर्ट आईडी",
+    "Affected people":"प्रभावित लोग",
+    "Community group":"समुदाय समूह",
+    "Verification":"सत्यापन",
+    "Assistance":"सहायता",
+    "Follow-up":"अनुवर्ती कार्रवाई",
+    "Create assistance task":"सहायता कार्य बनाएं",
+    "Human Verification Desk":"मानव सत्यापन डेस्क",
+    "Review checklist":"समीक्षा सूची",
+    "Decision":"निर्णय",
+    "Reviewer note / reason":"समीक्षक की टिप्पणी / कारण",
+    "Verification history":"सत्यापन इतिहास",
+    "Possible duplicate reports":"संभावित डुप्लिकेट रिपोर्ट",
+    "Coordinator Operations Desk":"समन्वयक संचालन डेस्क",
+    "Assistance task register":"सहायता कार्य रजिस्टर",
+    "Area organisation directory":"क्षेत्रीय संगठन निर्देशिका",
+    "Save follow-up outcome":"फॉलो-अप परिणाम सहेजें",
+    "Select report":"रिपोर्ट चुनें",
+    "Select assistance":"सहायता चुनें",
+    "Select outcome":"परिणाम चुनें",
+    "English":"अंग्रेज़ी",
+    "Hindi":"हिन्दी",
+    "Punjabi":"पंजाबी"
+  },
+  pa:{
+    "Overview":"ਸੰਖੇਪ ਜਾਣਕਾਰੀ",
+    "Community reports":"ਭਾਈਚਾਰਕ ਰਿਪੋਰਟਾਂ",
+    "Submit a report":"ਰਿਪੋਰਟ ਜਮ੍ਹਾਂ ਕਰੋ",
+    "Verification desk":"ਤਸਦੀਕ ਡੈਸਕ",
+    "Assistance tracking":"ਸਹਾਇਤਾ ਟ੍ਰੈਕਿੰਗ",
+    "Follow-up tracker":"ਫਾਲੋ-ਅੱਪ ਟ੍ਰੈਕਰ",
+    "Analytics":"ਵਿਸ਼ਲੇਸ਼ਣ",
+    "Area overview":"ਇਲਾਕੇ ਦੀ ਜਾਣਕਾਰੀ",
+    "Audit log":"ਕਾਰਵਾਈ ਰਿਕਾਰਡ",
+    "New report":"ਨਵੀਂ ਰਿਪੋਰਟ",
+    "Reporter":"ਰਿਪੋਰਟਰ",
+    "Verifier":"ਤਸਦੀਕਕਰਤਾ",
+    "Coordinator":"ਸੰਯੋਜਕ",
+    "Pending":"ਬਕਾਇਆ",
+    "Verified":"ਤਸਦੀਕਸ਼ੁਦਾ",
+    "Rejected":"ਰੱਦ ਕੀਤਾ",
+    "Clarification requested":"ਸਪਸ਼ਟੀਕਰਨ ਮੰਗਿਆ ਗਿਆ",
+    "Planned":"ਯੋਜਨਾਬੱਧ",
+    "Assigned":"ਸੌਂਪਿਆ ਗਿਆ",
+    "Dispatched":"ਭੇਜਿਆ ਗਿਆ",
+    "Delivered":"ਪਹੁੰਚਾਇਆ ਗਿਆ",
+    "Partially delivered":"ਅੰਸ਼ਕ ਤੌਰ 'ਤੇ ਪਹੁੰਚਾਇਆ ਗਿਆ",
+    "Unable to deliver":"ਪਹੁੰਚਾਉਣਾ ਸੰਭਵ ਨਹੀਂ ਹੋਇਆ",
+    "Save":"ਸੰਭਾਲੋ",
+    "Cancel":"ਰੱਦ ਕਰੋ",
+    "Submit":"ਜਮ੍ਹਾਂ ਕਰੋ",
+    "Search":"ਖੋਜੋ",
+    "Filter":"ਫਿਲਟਰ",
+    "Export CSV":"CSV ਡਾਊਨਲੋਡ ਕਰੋ",
+    "Backup data":"ਡਾਟਾ ਬੈਕਅੱਪ",
+    "Restore data":"ਡਾਟਾ ਮੁੜ ਪ੍ਰਾਪਤ ਕਰੋ",
+    "Reset demo":"ਡੈਮੋ ਰੀਸੈੱਟ ਕਰੋ",
+    "Category":"ਸ਼੍ਰੇਣੀ",
+    "Urgency":"ਜ਼ਰੂਰੀਅਤ",
+    "Area":"ਇਲਾਕਾ",
+    "Description":"ਵੇਰਵਾ",
+    "Status":"ਸਥਿਤੀ",
+    "Date":"ਤਾਰੀਖ",
+    "Actions":"ਕਾਰਵਾਈਆਂ",
+    "Report ID":"ਰਿਪੋਰਟ ਆਈਡੀ",
+    "Affected people":"ਪ੍ਰਭਾਵਿਤ ਲੋਕ",
+    "Community group":"ਭਾਈਚਾਰਕ ਸਮੂਹ",
+    "Verification":"ਤਸਦੀਕ",
+    "Assistance":"ਸਹਾਇਤਾ",
+    "Follow-up":"ਫਾਲੋ-ਅੱਪ",
+    "Create assistance task":"ਸਹਾਇਤਾ ਕਾਰਜ ਬਣਾਓ",
+    "Human Verification Desk":"ਮਨੁੱਖੀ ਤਸਦੀਕ ਡੈਸਕ",
+    "Review checklist":"ਸਮੀਖਿਆ ਸੂਚੀ",
+    "Decision":"ਫੈਸਲਾ",
+    "Reviewer note / reason":"ਸਮੀਖਿਅਕ ਦੀ ਟਿੱਪਣੀ / ਕਾਰਨ",
+    "Verification history":"ਤਸਦੀਕ ਇਤਿਹਾਸ",
+    "Possible duplicate reports":"ਸੰਭਾਵਿਤ ਦੁਹਰਾਈਆਂ ਰਿਪੋਰਟਾਂ",
+    "Coordinator Operations Desk":"ਸੰਯੋਜਕ ਕਾਰਜ ਡੈਸਕ",
+    "Assistance task register":"ਸਹਾਇਤਾ ਕਾਰਜ ਰਜਿਸਟਰ",
+    "Area organisation directory":"ਇਲਾਕਾ ਸੰਸਥਾ ਡਾਇਰੈਕਟਰੀ",
+    "Save follow-up outcome":"ਫਾਲੋ-ਅੱਪ ਨਤੀਜਾ ਸੰਭਾਲੋ",
+    "Select report":"ਰਿਪੋਰਟ ਚੁਣੋ",
+    "Select assistance":"ਸਹਾਇਤਾ ਚੁਣੋ",
+    "Select outcome":"ਨਤੀਜਾ ਚੁਣੋ",
+    "English":"ਅੰਗਰੇਜ਼ੀ",
+    "Hindi":"ਹਿੰਦੀ",
+    "Punjabi":"ਪੰਜਾਬੀ"
+  }
+};
+
+let language="en";
+const originalText=new WeakMap();
+
+function clean(s){
+  return String(s||"").replace(/\s+/g," ").trim();
+}
+function translateTextNode(node){
+  const parent=node.parentElement;
+  if(!parent)return;
+  if(parent.closest("script,style,textarea,input,option,[data-user-content],.user-content"))return;
+
+  if(!originalText.has(node))originalText.set(node,node.nodeValue);
+  const original=originalText.get(node);
+  const key=clean(original);
+  if(!key)return;
+
+  if(language==="en"){
+    node.nodeValue=original;
+    return;
+  }
+  const translated=translations[language]?.[key];
+  if(translated){
+    const leading=original.match(/^\s*/)?.[0]||"";
+    const trailing=original.match(/\s*$/)?.[0]||"";
+    node.nodeValue=leading+translated+trailing;
+  }
+}
+
+function translatePage(){
+  // Translate existing English/Hindi-tagged elements first.
+  document.querySelectorAll("[data-en],[data-hi]").forEach(el=>{
+    if(!el.dataset.plOriginal){
+      el.dataset.plOriginal=el.textContent;
+    }
+    if(language==="en"&&el.dataset.en){
+      el.textContent=el.dataset.en;
+    }else if(language==="hi"&&el.dataset.hi){
+      el.textContent=el.dataset.hi;
+    }
+  });
+
+  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+  const nodes=[];
+  while(walker.nextNode())nodes.push(walker.currentNode);
+  nodes.forEach(translateTextNode);
+
+  document.querySelectorAll("input[placeholder],textarea[placeholder]").forEach(el=>{
+    if(!el.dataset.plOriginalPlaceholder){
+      el.dataset.plOriginalPlaceholder=el.placeholder;
+    }
+    const key=clean(el.dataset.plOriginalPlaceholder);
+    if(language==="en")el.placeholder=el.dataset.plOriginalPlaceholder;
+    else if(translations[language]?.[key])el.placeholder=translations[language][key];
+  });
+
+  document.documentElement.lang=language==="en"?"en":language==="hi"?"hi":"pa";
+}
+
+function createSelector(){
+  const old=document.getElementById("langBtn");
+  if(document.getElementById("plLanguageSelect"))return;
+
+  const select=document.createElement("select");
+  select.id="plLanguageSelect";
+  select.className="pl-language-select";
+  select.setAttribute("aria-label","Select interface language");
+  select.innerHTML=`
+    <option value="en">English</option>
+    <option value="hi">हिन्दी</option>
+    <option value="pa">ਪੰਜਾਬੀ</option>
+  `;
+  select.value=language;
+  select.addEventListener("change",()=>{
+    language=select.value;
+    translatePage();
+  });
+
+  if(old){
+    old.replaceWith(select);
+  }else{
+    const actions=document.querySelector(".top-actions,.topbar,.top-bar");
+    if(actions)actions.appendChild(select);
+  }
+}
+
+function init(){
+  createSelector();
+  translatePage();
+
+  // Re-translate fixed interface text when a page is re-rendered.
+  const observer=new MutationObserver(()=>{
+    if(!document.getElementById("plLanguageSelect"))createSelector();
+    translatePage();
+  });
+  observer.observe(document.body,{childList:true,subtree:true});
+}
+
+window.plSetLanguage=function(lang){
+  if(!["en","hi","pa"].includes(lang))return;
+  language=lang;
+  const select=document.getElementById("plLanguageSelect");
+  if(select)select.value=lang;
+  translatePage();
+};
+window.plGetLanguage=()=>language;
+
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",init);
+}else{
+  init();
+}
+})();
+</script>
+<style>
+.pl-tools-panel{
+  position:fixed;inset:0;background:rgba(10,25,40,.58);
+  z-index:9999;display:none;align-items:center;justify-content:center;
+  padding:16px;
+}
+.pl-tools-panel.open{display:flex}
+.pl-tools-box{
+  background:var(--panel,#fff);color:var(--text,#243746);
+  width:min(720px,100%);max-height:88vh;overflow:auto;
+  border-radius:16px;padding:20px;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+}
+.pl-tools-box h2,.pl-tools-box h3{color:var(--navy,#102b3f)}
+.pl-tools-actions{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}
+.pl-tools-actions button{
+  border:0;border-radius:8px;padding:10px 14px;
+  background:var(--teal,#168b82);color:white;
+  font-weight:600;cursor:pointer;
+}
+.pl-tools-actions .secondary{background:#64748b}
+.pl-roadmap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pl-roadmap-item{
+  border:1px solid var(--border,#dce5e9);
+  padding:12px;border-radius:10px;font-size:13px;
+}
+.pl-roadmap-item strong{display:block;margin-bottom:5px;color:var(--navy,#102b3f)}
+.pl-tools-warning{
+  padding:11px;border-radius:9px;
+  background:rgba(190,130,40,.1);
+  border:1px solid rgba(190,130,40,.3);
+  font-size:12px;line-height:1.6;
+}
+@media(max-width:600px){.pl-roadmap{grid-template-columns:1fr}}
+</style>
+<script>
+(function(){
+"use strict";
+
+const STORAGE_KEY="pahunch_ledger_v3";
+
+function readDemoData(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw)return null;
+    return JSON.parse(raw);
+  }catch(e){
+    alert("The saved demo data could not be read.");
+    return null;
+  }
+}
+
+function downloadBackup(){
+  const data=readDemoData();
+  if(!data){
+    alert("No saved demo data was found in this browser.");
+    return;
+  }
+  const backup={
+    application:"Pahunch Ledger",
+    backupType:"Browser demo backup",
+    createdAt:new Date().toISOString(),
+    data
+  };
+  const blob=new Blob([JSON.stringify(backup,null,2)],{
+    type:"application/json"
+  });
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="pahunch-ledger-backup-"+new Date().toISOString().slice(0,10)+".json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function restoreBackup(file){
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const parsed=JSON.parse(reader.result);
+      const data=parsed.data||parsed;
+      if(!data||typeof data!=="object"||Array.isArray(data)){
+        throw new Error("Invalid backup structure");
+      }
+      if(!Array.isArray(data.reports)){
+        throw new Error("This file does not contain a valid report list.");
+      }
+      const confirmed=confirm(
+        "Restore this backup? It will replace the demo data currently saved in this browser."
+      );
+      if(!confirmed)return;
+
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+      alert("Backup restored. The page will now reload.");
+      location.reload();
+    }catch(e){
+      alert("Could not restore this file. Please select a valid Pahunch Ledger JSON backup.");
+    }
+  };
+  reader.onerror=()=>alert("The selected file could not be read.");
+  reader.readAsText(file);
+}
+
+function createTools(){
+  if(document.getElementById("plToolsPanel"))return;
+
+  const panel=document.createElement("div");
+  panel.id="plToolsPanel";
+  panel.className="pl-tools-panel";
+  panel.innerHTML=`
+    <section class="pl-tools-box" role="dialog" aria-modal="true" aria-labelledby="plToolsTitle">
+      <div style="display:flex;justify-content:space-between;gap:12px;align-items:center">
+        <h2 id="plToolsTitle">Pahunch Ledger — Demo Tools</h2>
+        <button type="button" id="plToolsClose" aria-label="Close" style="border:0;background:transparent;font-size:23px;cursor:pointer">×</button>
+      </div>
+
+      <h3>Data backup and restore</h3>
+      <p style="font-size:13px">Export a copy of the demo records saved in this browser, or restore a previous JSON backup.</p>
+      <div class="pl-tools-actions">
+        <button type="button" id="plExportBackup">Download JSON backup</button>
+        <button type="button" class="secondary" id="plImportBackup">Restore JSON backup</button>
+        <input type="file" id="plBackupFile" accept=".json,application/json" hidden>
+      </div>
+
+      <div class="pl-tools-warning">
+        <strong>Prototype data notice:</strong> Data is stored locally in this browser. It does not automatically synchronise with another device or another user's browser. Do not enter real people's sensitive information.
+      </div>
+
+      <h3 style="margin-top:22px">Project workflow</h3>
+      <div class="pl-roadmap">
+        <div class="pl-roadmap-item">
+          <strong>1. Community reporting</strong>
+          People submit a community need or incident with an area, category, description and available supporting information.
+        </div>
+        <div class="pl-roadmap-item">
+          <strong>2. Human verification</strong>
+          A reviewer checks details, possible duplicates, sources, evidence and limitations before recording a decision.
+        </div>
+        <div class="pl-roadmap-item">
+          <strong>3. Assistance coordination</strong>
+          A coordinator creates a task linked to a verified report and records the planned support and task progress.
+        </div>
+        <div class="pl-roadmap-item">
+          <strong>4. Delivery recording</strong>
+          Dispatch references and delivery confirmation sources are recorded as separate task milestones.
+        </div>
+        <div class="pl-roadmap-item">
+          <strong>5. Follow-up and outcomes</strong>
+          A separate follow-up records whether the reported need was addressed, partly addressed or remains unresolved.
+        </div>
+        <div class="pl-roadmap-item">
+          <strong>6. Audit and learning</strong>
+          Activity history and analytics help demonstrate the process and identify gaps for future improvement.
+        </div>
+      </div>
+
+      <h3 style="margin-top:22px">Future development</h3>
+      <ul style="font-size:13px;line-height:1.8;padding-left:20px">
+        <li>Secure server-side database, authentication and role permissions.</li>
+        <li>Secure media storage and privacy controls.</li>
+        <li>Offline-first reporting with safe synchronisation.</li>
+        <li>Real partnerships with authorised local organisations.</li>
+        <li>Community testing and feedback before deployment.</li>
+      </ul>
+      <div class="pl-tools-actions">
+        <button type="button" class="secondary" id="plToolsCloseBottom">Close</button>
+      </div>
+    </section>
+  `;
+  document.body.appendChild(panel);
+
+  const close=()=>panel.classList.remove("open");
+  document.getElementById("plToolsClose").onclick=close;
+  document.getElementById("plToolsCloseBottom").onclick=close;
+  panel.addEventListener("click",e=>{
+    if(e.target===panel)close();
+  });
+  document.getElementById("plExportBackup").onclick=downloadBackup;
+  document.getElementById("plImportBackup").onclick=()=>{
+    document.getElementById("plBackupFile").click();
+  };
+  document.getElementById("plBackupFile").onchange=e=>{
+    restoreBackup(e.target.files[0]);
+    e.target.value="";
+  };
+}
+
+function addToolsButton(){
+  if(document.getElementById("plOpenTools"))return;
+  const button=document.createElement("button");
+  button.id="plOpenTools";
+  button.type="button";
+  button.textContent="Data Tools";
+  button.style.cssText="border:0;border-radius:8px;padding:9px 12px;background:var(--teal,#168b82);color:white;font-weight:600;cursor:pointer";
+  button.onclick=()=>document.getElementById("plToolsPanel").classList.add("open");
+
+  const host=document.querySelector(".top-actions,.topbar,.top-bar");
+  if(host)host.appendChild(button);
+  else document.body.insertBefore(button,document.body.firstChild);
+}
+
+function addFooterNotice(){
+  if(document.getElementById("plPrototypeFooter"))return;
+  const footer=document.createElement("div");
+  footer.id="plPrototypeFooter";
+  footer.style.cssText="margin:24px 0 12px;padding:12px;border-top:1px solid var(--border,#dce5e9);font-size:11px;line-height:1.6;color:var(--muted,#64748b);text-align:center";
+  footer.textContent="Pahunch Ledger is a demonstration prototype, not an emergency response service. Sample organisations, contacts and records are fictional. Real verification and assistance require authorised people and organisations.";
+  document.body.appendChild(footer);
+}
+
+function init(){
+  // Fix the ID expected by the original backup/restore controls.
+  const oldInput=document.querySelector('input[type="file"]:not(#plBackupFile)');
+  if(oldInput&&!oldInput.id)oldInput.id="backupInput";
+
+  createTools();
+  addToolsButton();
+  addFooterNotice();
+}
+
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",init);
+}else{
+  init();
+}
+})();
+</script>
 </body>
 </html>
