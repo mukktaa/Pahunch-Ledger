@@ -1,46 +1,1217 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#123247">
-<title>Pahunch Ledger — Community Coordination</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#123247">
+<title>Pahunch Ledger</title>
+
 <style>
-:root{--navy:#123247;--teal:#13877e;--bg:#f3f6f7;--ink:#203542;--muted:#6e808a;--line:#dfe7e9;--white:#fff;--gold:#b77a25;--red:#b84c52;--green:#23835f}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.shell{max-width:1500px;margin:auto}.top{background:var(--navy);color:white;padding:16px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.brand{font-weight:800;font-size:20px}.brand small{display:block;font-size:11px;font-weight:400;color:#c4d4dc;margin-top:4px}.topright{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.top select,.top button{border:1px solid #ffffff55;border-radius:9px;padding:9px;background:#ffffff12;color:white}.top option{color:#123247}.rolebar{display:flex;gap:8px;padding:14px 20px;background:white;border-bottom:1px solid var(--line);flex-wrap:wrap;align-items:center}.rolebar span{font-size:12px;color:var(--muted);font-weight:bold;margin-right:5px}.role{border:1px solid var(--line);background:#f6f8f9;padding:10px 14px;border-radius:9px;font-weight:bold;color:var(--ink)}.role.active{background:var(--teal);color:white;border-color:var(--teal)}main{padding:22px;max-width:1200px;margin:auto}.banner{background:#fff7e9;border:1px solid #f0dfbb;color:#76551e;padding:12px 14px;border-radius:10px;font-size:12px;line-height:1.55;margin-bottom:17px}.welcome{display:flex;justify-content:space-between;gap:12px;align-items:start;margin:6px 0 18px}.welcome h1{margin:0 0 6px;font-size:25px}.welcome p{margin:0;color:var(--muted);line-height:1.5}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.three{grid-template-columns:repeat(4,minmax(0,1fr))}.card{background:white;border:1px solid var(--line);border-radius:13px;padding:17px;margin-bottom:14px;min-width:0}.card h2,.card h3{margin:0 0 12px;font-size:16px}.card h3{font-size:14px}.field{display:flex;flex-direction:column;gap:5px;margin:0 0 12px}.field label{font-size:12px;font-weight:bold;color:#526771}.field input,.field select,.field textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:white;color:var(--ink)}.field textarea{min-height:85px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:0;border-radius:8px;padding:10px 13px;background:var(--teal);color:white;font-weight:bold;font-size:12px}.btn.alt{background:#eaf0f2;color:var(--ink)}.btn.dark{background:var(--navy)}.btn.red{background:#fff0f0;color:var(--red)}.btn.gold{background:#fff4df;color:#8c611e}.btn:disabled{opacity:.5;cursor:not-allowed}.actions{display:flex;gap:7px;flex-wrap:wrap}.muted{color:var(--muted);font-size:12px;line-height:1.5}.tiny{font-size:11px;color:var(--muted)}.tag{display:inline-block;padding:5px 8px;border-radius:30px;background:#edf2f3;font-size:10px;font-weight:bold}.tag.pending{background:#fff2d9;color:#91651d}.tag.verified{background:#e6f3ed;color:#20724f}.tag.rejected{background:#ffeded;color:#a53d45}.tag.clarify{background:#fff2e7;color:#9a5a20}.tag.progress{background:#eaf2ff;color:#3769a0}.tag.done{background:#e6f3ed;color:#20724f}.stat{font-size:26px;font-weight:800;margin:6px 0}.list{display:grid;gap:9px}.item{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fff}.itemhead{display:flex;justify-content:space-between;gap:10px;align-items:start}.item h3{margin:0 0 5px;font-size:13px}.item p{margin:5px 0;color:var(--muted);font-size:11px;line-height:1.5}.divider{border:0;border-top:1px solid var(--line);margin:14px 0}.checklist{display:grid;grid-template-columns:1fr 1fr;gap:8px}.check{display:flex;gap:8px;align-items:start;background:#f7f9fa;padding:9px;border-radius:8px;font-size:12px}.check input{margin-top:2px}.hidden{display:none!important}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:600px}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);font-size:11px;vertical-align:top}th{color:var(--muted);font-size:10px;text-transform:uppercase}.toast{position:fixed;bottom:18px;right:18px;background:var(--navy);color:white;padding:12px 16px;border-radius:9px;display:none;z-index:20}.toast.show{display:block}.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.step{background:#f7f9fa;border:1px solid var(--line);padding:12px;border-radius:9px}.step b{display:block;font-size:12px;margin-bottom:5px}.step small{color:var(--muted);font-size:10px;line-height:1.4}.note{background:#edf7f5;border:1px solid #d7ebe7;border-radius:9px;padding:10px;font-size:11px;line-height:1.5;margin:10px 0}.foot{text-align:center;color:#8a999f;font-size:10px;padding:20px}@media(max-width:760px){main{padding:14px}.grid,.three,.row{grid-template-columns:1fr}.welcome{display:block}.steps{grid-template-columns:1fr 1fr}.top{padding:13px}.brand{font-size:17px}.checklist{grid-template-columns:1fr}}
-</style></head>
-<body><div class="shell">
-<header class="top"><div class="brand">Pahunch Ledger <small data-i18n="tagline">Community needs → verification → assistance → follow-up</small></div><div class="topright"><label class="tiny" style="color:#d6e3e8" for="lang" data-i18n="language">Language</label><select id="lang" aria-label="Language"><option value="en">English</option><option value="hi">हिन्दी</option><option value="pa">ਪੰਜਾਬੀ</option></select><button id="reset" type="button" data-i18n="reset">Reset demo</button></div></header>
-<nav class="rolebar"><span data-i18n="switchPortal">OPEN DEMO PORTAL:</span><button class="role active" data-role="reporter" data-i18n="reporter">Reporter portal</button><button class="role" data-role="verifier" data-i18n="verifier">Verifier portal</button><button class="role" data-role="coordinator" data-i18n="coordinator">Coordinator portal</button></nav>
-<main><div class="banner" data-i18n="demoWarning">DEMO MODE — No login is required. Switching portals is for presentation only. Sample organisations, contact details and records are fictional. This prototype is not an emergency service and does not dispatch real assistance.</div>
-<section id="reporterPortal"></section><section id="verifierPortal" class="hidden"></section><section id="coordinatorPortal" class="hidden"></section>
-</main><div class="foot">Pahunch Ledger · Prototype demonstration · Human review required</div></div><div id="toast" class="toast" role="status"></div>
+:root {
+  --navy:#123247;
+  --teal:#13877e;
+  --bg:#f3f6f7;
+  --ink:#203542;
+  --muted:#6e808a;
+  --line:#dfe7e9;
+  --white:#fff;
+  --green:#23835f;
+  --red:#b84c52;
+  --gold:#b77a25;
+}
+
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Arial,sans-serif;
+  font-size:14px;
+}
+
+button,input,select,textarea {
+  font:inherit;
+}
+
+button { cursor:pointer; }
+
+.top {
+  background:var(--navy);
+  color:white;
+  padding:16px 22px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+}
+
+.brand {
+  font-size:21px;
+  font-weight:800;
+}
+
+.brand small {
+  display:block;
+  font-size:11px;
+  font-weight:normal;
+  margin-top:5px;
+  color:#c4d4dc;
+}
+
+.top-controls {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.top select,.top button {
+  padding:9px;
+  border-radius:8px;
+  border:1px solid #ffffff55;
+  background:#ffffff12;
+  color:white;
+}
+
+.top option { color:#123247; }
+
+.rolebar {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  flex-wrap:wrap;
+  padding:14px 20px;
+  background:white;
+  border-bottom:1px solid var(--line);
+}
+
+.rolebar span {
+  font-size:11px;
+  font-weight:bold;
+  color:var(--muted);
+}
+
+.role {
+  padding:10px 14px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:#f6f8f9;
+  color:var(--ink);
+  font-weight:bold;
+}
+
+.role.active {
+  background:var(--teal);
+  color:white;
+  border-color:var(--teal);
+}
+
+main {
+  max-width:1200px;
+  margin:auto;
+  padding:22px;
+}
+
+.banner {
+  padding:13px;
+  border-radius:10px;
+  background:#fff7e9;
+  border:1px solid #f0dfbb;
+  color:#76551e;
+  font-size:12px;
+  line-height:1.6;
+  margin-bottom:18px;
+}
+
+.welcome {
+  display:flex;
+  justify-content:space-between;
+  align-items:start;
+  gap:12px;
+  margin:8px 0 18px;
+}
+
+.welcome h1 {
+  margin:0 0 7px;
+  font-size:25px;
+}
+
+.welcome p {
+  margin:0;
+  color:var(--muted);
+  line-height:1.5;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+
+.card {
+  background:white;
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:17px;
+  margin-bottom:14px;
+}
+
+.card h2 {
+  margin:0 0 13px;
+  font-size:17px;
+}
+
+.card h3 {
+  margin:0 0 10px;
+  font-size:14px;
+}
+
+.field {
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin-bottom:13px;
+}
+
+.field label {
+  font-size:12px;
+  font-weight:bold;
+  color:#526771;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width:100%;
+  padding:10px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:white;
+  color:var(--ink);
+}
+
+.field textarea {
+  min-height:85px;
+  resize:vertical;
+}
+
+.row {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.btn {
+  border:0;
+  border-radius:8px;
+  padding:10px 14px;
+  background:var(--teal);
+  color:white;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.btn.secondary {
+  background:#eaf0f2;
+  color:var(--ink);
+}
+
+.btn.dark { background:var(--navy); }
+
+.btn.danger {
+  background:#fff0f0;
+  color:var(--red);
+}
+
+.actions {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.muted {
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+}
+
+.tiny {
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.5;
+}
+
+.tag {
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:30px;
+  background:#edf2f3;
+  font-size:10px;
+  font-weight:bold;
+}
+
+.tag.pending {
+  background:#fff2d9;
+  color:#91651d;
+}
+
+.tag.verified {
+  background:#e6f3ed;
+  color:#20724f;
+}
+
+.tag.rejected {
+  background:#ffeded;
+  color:#a53d45;
+}
+
+.tag.progress {
+  background:#eaf2ff;
+  color:#3769a0;
+}
+
+.list {
+  display:grid;
+  gap:10px;
+}
+
+.item {
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:13px;
+  background:white;
+}
+
+.item h3 {
+  margin:0 0 6px;
+  font-size:13px;
+}
+
+.item p {
+  margin:5px 0;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.5;
+}
+
+.item-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:start;
+  gap:10px;
+}
+
+.divider {
+  border:0;
+  border-top:1px solid var(--line);
+  margin:15px 0;
+}
+
+.checklist {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+}
+
+.check {
+  display:flex;
+  align-items:start;
+  gap:8px;
+  padding:10px;
+  background:#f7f9fa;
+  border-radius:8px;
+  font-size:12px;
+}
+
+.check input { margin-top:2px; }
+
+.hidden { display:none !important; }
+
+.table-wrap { overflow:auto; }
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  min-width:560px;
+}
+
+th,td {
+  text-align:left;
+  padding:10px;
+  border-bottom:1px solid var(--line);
+  font-size:11px;
+  vertical-align:top;
+}
+
+th {
+  color:var(--muted);
+  font-size:10px;
+  text-transform:uppercase;
+}
+
+.note {
+  background:#edf7f5;
+  border:1px solid #d7ebe7;
+  border-radius:9px;
+  padding:11px;
+  font-size:11px;
+  line-height:1.6;
+  margin:12px 0;
+}
+
+.toast {
+  display:none;
+  position:fixed;
+  bottom:18px;
+  right:18px;
+  z-index:20;
+  padding:12px 16px;
+  border-radius:9px;
+  background:var(--navy);
+  color:white;
+}
+
+.toast.show { display:block; }
+
+footer {
+  text-align:center;
+  padding:20px;
+  color:#8a999f;
+  font-size:10px;
+}
+
+@media(max-width:700px) {
+  main { padding:14px; }
+  .grid,.row { grid-template-columns:1fr; }
+  .checklist { grid-template-columns:1fr; }
+  .welcome { display:block; }
+  .top { padding:13px; }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="top">
+  <div class="brand">
+    Pahunch Ledger
+    <small data-i18n="tagline">
+      Community needs → verification → assistance → follow-up
+    </small>
+  </div>
+
+  <div class="top-controls">
+    <label for="language" data-i18n="language">Language</label>
+
+    <select id="language">
+      <option value="en">English</option>
+      <option value="hi">हिन्दी</option>
+      <option value="pa">ਪੰਜਾਬੀ</option>
+    </select>
+
+    <button id="resetDemo" type="button" data-i18n="reset">
+      Reset demo
+    </button>
+  </div>
+</header>
+
+<nav class="rolebar">
+  <span data-i18n="switchPortal">SWITCH PORTAL:</span>
+
+  <button class="role active" data-role="reporter">
+    Reporter
+  </button>
+
+  <button class="role" data-role="verifier">
+    Verifier
+  </button>
+
+  <button class="role" data-role="coordinator">
+    Coordinator
+  </button>
+</nav>
+
+<main>
+
+<div class="banner" data-i18n="demoWarning">
+  DEMO MODE — These are demonstration portals. Sample data and
+  contact details are fictional. This is not an emergency service.
+</div>
+
+<section id="reporterPortal"></section>
+
+<section id="verifierPortal" class="hidden"></section>
+
+<section id="coordinatorPortal" class="hidden"></section>
+
+</main>
+
+<footer>
+  Pahunch Ledger · Community assistance coordination prototype
+</footer>
+
+</div>
+
+<div id="toast" class="toast" role="status"></div>
+
 <script>
-const $=id=>document.getElementById(id), now=()=>new Date().toISOString(), uid=p=>p+'-'+Math.random().toString(36).slice(2,7).toUpperCase(), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const dict={en:{tagline:'Community needs → verification → assistance → follow-up',language:'Language',reset:'Reset demo',switchPortal:'OPEN DEMO PORTAL:',reporter:'Reporter portal',verifier:'Verifier portal',coordinator:'Coordinator portal',demoWarning:'DEMO MODE — No login is required. Switching portals is for presentation only. Sample organisations, contact details and records are fictional. This prototype is not an emergency service and does not dispatch real assistance.',reporterTitle:'Community Reporter',reporterSub:'Share a community need and track its progress.',submitReport:'Submit a report',reportType:'Report type',general:'General community need',disaster:'Disaster incident',category:'Category',urgency:'Urgency',area:'Area / locality',group:'Community / ward (optional)',people:'Estimated people affected',description:'Describe the need (avoid personal details)',attach:'Evidence files (photo/video)',location:'Approximate location',getLocation:'Use current location once',noLocation:'No location captured',demographics:'Aggregate population estimates (may overlap)',children:'Children',older:'Older adults',pregnant:'Pregnant people',disabled:'People with disabilities',conditions:'Reported condition estimates (not medical diagnosis)',deceased:'Reported deceased — unverified',urgent:'Reported urgent medical attention needed',minor:'Minor injuries / no immediate need reported',unknown:'Not assessed / unknown',submit:'Submit for review',myReports:'Track submitted reports',emptyReports:'No reports submitted yet.',status:'Status',tracking:'Tracking ID',reportDetails:'Report details',reviewQueue:'Verification queue',reviewSub:'Review submissions and record the checks performed.',allReports:'All reports',checklist:'Verification checklist',check1:'Area and incident details are sufficiently clear',check2:'Date/time or reporting period reviewed',check3:'Duplicate reports checked',check4:'Evidence/source reviewed',check5:'Uncertainty and limitations recorded',sourceType:'Source checked',sourceName:'Source / organisation name',evidenceType:'Evidence reviewed',evidenceNote:'What does this evidence support?',duplicate:'Duplicate check result',noDuplicate:'No likely duplicate found',possibleDuplicate:'Possible duplicate — needs comparison',duplicateOf:'Related report ID (if any)',decision:'Verification decision',pending:'Pending checks',clarification:'Needs clarification',verifiedStatus:'Verified by human review',rejected:'Rejected',reviewNote:'Verifier notes / reason',clarifyQuestion:'Clarification requested (non-sensitive)',saveReview:'Save verification review',coordinatorTitle:'Assistance Coordinator',coordinatorSub:'Turn verified needs into assigned, trackable assistance tasks.',overview:'Operations overview',verifiedCases:'Verified reports',openTasks:'Open assistance tasks',delivered:'Marked delivered',followupDue:'Follow-ups due',areaDirectory:'Area organisation & team directory',directorySub:'Fictional demonstration contacts — replace with authorised local partners before real deployment.',createTask:'Create assistance task',selectReport:'Verified report',organisation:'Assigned organisation',team:'Team / unit',contact:'Coordinator contact point',phone:'Contact number',assistanceType:'Assistance type',quantity:'Quantity / scope',resourceSource:'Resource source',plannedDate:'Planned date',destination:'Destination / area',taskNote:'Task notes',create:'Create task',taskBoard:'Assistance tracking board',taskStatus:'Task status',planned:'Planned',assigned:'Assigned',dispatched:'Dispatched',deliveredStatus:'Delivered',partial:'Partially delivered',unable:'Unable to deliver',updateTask:'Update task',dispatchRef:'Dispatch / handover reference',deliveryProof:'Delivery confirmation source',deliveryNote:'Delivery / exception notes',saveUpdate:'Save progress update',followups:'Separate follow-up & outcome confirmation',followupOutcome:'Follow-up outcome',addressed:'Need addressed (reported)',partly:'Partly addressed',unresolved:'Need remains unresolved',followupSource:'Who confirmed / source',followupNote:'Outcome notes (no personal details)',recordFollowup:'Record follow-up',activity:'Activity history',workflow:'Real-life workflow',need:'Need reported',verify:'Human verification',plan:'Assistance assigned',track:'Dispatch & delivery',confirm:'Follow-up outcome',required:'Please complete the required fields.',saved:'Saved successfully.',reportSubmitted:'Report submitted. Tracking ID: ',reviewSaved:'Verification review saved.',taskCreated:'Assistance task created.',updated:'Progress updated.',followSaved:'Follow-up recorded.',none:'None',unreviewed:'Awaiting verification',noVerified:'No verified reports are available for task creation.',sourceOther:'Other documented source',official:'Official notice / agency',local:'Authorised local representative',ngo:'Recognised organisation',field:'Field team / site visit',media:'Photo / video / document',caller:'Reporter follow-up',voice:'Voice input (where supported)',privacy:'Privacy & safety: Do not enter names, phone numbers, exact home addresses, or identifiable details about affected people. Report only aggregate estimates. Reported casualty/medical figures remain unverified until authorised confirmation.',openMap:'Open approximate map',fileLocal:'Selected files are only listed in this browser demo; they are not uploaded or shared.',noTasks:'No assistance tasks yet.',noFollow:'No verified cases awaiting follow-up.',fakeContact:'Fictional demo contact',priority:'Priority',high:'High',medium:'Medium',low:'Low',submitted:'Submitted',generalHelp:'General support',
-support',water:'Water',food:'Food',shelter:'Shelter',medical:'Medical referral',rescue:'Rescue referral',other:'Other',reporterHelp:'After submitting, use your tracking ID to show the status. A submitted report is not automatically verified.',verifierHelp:'A verifier records checks and sources; the software does not independently confirm an incident.',coordHelp:'Only verified reports can be converted into assistance tasks. Planned or dispatched does not mean delivered.',road:'Road access',power:'Power',sourceRequired:'Choose and document at least one source before marking a report verified.',checkRequired:'Complete the checklist before marking verified.',noPending:'No reports awaiting review.',taskPlanned:'Planned',taskAssigned:'Assigned',taskDispatched:'Dispatched',taskDelivered:'Delivered',taskPartial:'Partially delivered',taskUnable:'Unable to deliver',road:'Road access',power:'Power'},
-hi:{tagline:'समुदाय की ज़रूरत → सत्यापन → सहायता → फॉलो-अप',language:'भाषा',reset:'डेमो रीसेट करें',switchPortal:'डेमो पोर्टल खोलें:',reporter:'रिपोर्टर पोर्टल',verifier:'सत्यापनकर्ता पोर्टल',coordinator:'समन्वयक पोर्टल',demoWarning:'डेमो मोड — लॉगिन आवश्यक नहीं है। पोर्टल बदलना केवल प्रस्तुति के लिए है। नमूना संगठन, संपर्क और रिकॉर्ड काल्पनिक हैं। यह आपातकालीन सेवा नहीं है और वास्तविक सहायता नहीं भेजता।',reporterTitle:'समुदाय रिपोर्टर',reporterSub:'समुदाय की ज़रूरत दर्ज करें और उसकी स्थिति देखें।',submitReport:'रिपोर्ट दर्ज करें',reportType:'रिपोर्ट का प्रकार',general:'सामान्य सामुदायिक ज़रूरत',disaster:'आपदा घटना',category:'श्रेणी',urgency:'तात्कालिकता',area:'क्षेत्र / इलाका',group:'समुदाय / वार्ड (वैकल्पिक)',people:'प्रभावित लोगों की अनुमानित संख्या',description:'ज़रूरत का विवरण (व्यक्तिगत जानकारी न दें)',attach:'सबूत फ़ाइलें (फोटो/वीडियो)',location:'अनुमानित स्थान',getLocation:'एक बार वर्तमान स्थान लें',noLocation:'स्थान दर्ज नहीं है',demographics:'जनसंख्या का सामूहिक अनुमान (श्रेणियाँ एक-दूसरे से जुड़ सकती हैं)',children:'बच्चे',older:'बुज़ुर्ग',pregnant:'गर्भवती लोग',disabled:'दिव्यांग लोग',conditions:'बताई गई स्थिति का अनुमान (चिकित्सीय निदान नहीं)',deceased:'मृत बताए गए — अपुष्ट',urgent:'तत्काल चिकित्सा सहायता की ज़रूरत बताई गई',minor:'हल्की चोट / तत्काल ज़रूरत नहीं बताई गई',unknown:'जाँच नहीं हुई / अज्ञात',submit:'समीक्षा के लिए भेजें',myReports:'अपनी रिपोर्ट की स्थिति देखें',emptyReports:'अभी कोई रिपोर्ट दर्ज नहीं है।',status:'स्थिति',tracking:'ट्रैकिंग आईडी',reportDetails:'रिपोर्ट विवरण',reviewQueue:'सत्यापन कतार',reviewSub:'रिपोर्ट की समीक्षा करें और की गई जाँच दर्ज करें।',allReports:'सभी रिपोर्ट',checklist:'सत्यापन चेकलिस्ट',check1:'क्षेत्र और घटना का विवरण स्पष्ट है',check2:'तारीख/समय या रिपोर्टिंग अवधि देखी गई',check3:'डुप्लिकेट रिपोर्ट जाँची गई',check4:'सबूत/स्रोत की समीक्षा की गई',check5:'अनिश्चितता और सीमाएँ दर्ज की गईं',sourceType:'जाँचा गया स्रोत',sourceName:'स्रोत / संगठन का नाम',evidenceType:'देखा गया सबूत',evidenceNote:'यह सबूत किस बात का समर्थन करता है?',duplicate:'डुप्लिकेट जाँच का परिणाम',noDuplicate:'कोई संभावित डुप्लिकेट नहीं मिला',possibleDuplicate:'संभावित डुप्लिकेट — तुलना आवश्यक',duplicateOf:'संबंधित रिपोर्ट आईडी (यदि हो)',decision:'सत्यापन निर्णय',pending:'जाँच जारी',clarification:'अधिक जानकारी चाहिए',verifiedStatus:'मानव समीक्षा से सत्यापित',rejected:'अस्वीकृत',reviewNote:'सत्यापनकर्ता की टिप्पणी / कारण',clarifyQuestion:'माँगी गई अतिरिक्त जानकारी (गोपनीय विवरण नहीं)',saveReview:'सत्यापन समीक्षा सहेजें',coordinatorTitle:'सहायता समन्वयक',coordinatorSub:'सत्यापित ज़रूरत को निर्धारित और ट्रैक की जा सकने वाली सहायता में बदलें।',overview:'कार्य संचालन सारांश',verifiedCases:'सत्यापित रिपोर्ट',openTasks:'खुले सहायता कार्य',delivered:'डिलीवर चिह्नित',followupDue:'फॉलो-अप बाकी',areaDirectory:'क्षेत्र संगठन और टीम निर्देशिका',directorySub:'काल्पनिक डेमो संपर्क — वास्तविक उपयोग से पहले अधिकृत स्थानीय साझेदार जोड़ें।',createTask:'सहायता कार्य बनाएँ',selectReport:'सत्यापित रिपोर्ट',organisation:'नियुक्त संगठन',team:'टीम / इकाई',contact:'समन्वयक संपर्क बिंदु',phone:'संपर्क नंबर',assistanceType:'सहायता का प्रकार',quantity:'मात्रा / दायरा',resourceSource:'संसाधन का स्रोत',plannedDate:'नियोजित तारीख',destination:'गंतव्य / क्षेत्र',taskNote:'कार्य टिप्पणी',create:'कार्य बनाएँ',taskBoard:'सहायता ट्रैकिंग बोर्ड',taskStatus:'कार्य की स्थिति',planned:'नियोजित',assigned:'नियुक्त',dispatched:'भेजा गया',deliveredStatus:'डिलीवर हुआ',partial:'आंशिक रूप से डिलीवर',unable:'डिलीवर नहीं हो सका',updateTask:'कार्य अपडेट करें',dispatchRef:'डिस्पैच / हैंडओवर संदर्भ',deliveryProof:'डिलीवरी पुष्टि का स्रोत',deliveryNote:'डिलीवरी / समस्या का विवरण',saveUpdate:'प्रगति सहेजें',followups:'अलग फॉलो-अप और परिणाम पुष्टि',followupOutcome:'फॉलो-अप परिणाम',addressed:'ज़रूरत पूरी हुई (बताया गया)',partly:'आंशिक रूप से पूरी हुई',unresolved:'ज़रूरत अभी बाकी है',followupSource:'किसने पुष्टि की / स्रोत',followupNote:'परिणाम टिप्पणी (व्यक्तिगत जानकारी नहीं)',recordFollowup:'फॉलो-अप दर्ज करें',activity:'गतिविधि इतिहास',workflow:'वास्तविक प्रक्रिया',need:'ज़रूरत दर्ज',verify:'मानव सत्यापन',plan:'सहायता नियुक्त',track:'डिस्पैच और डिलीवरी',confirm:'फॉलो-अप परिणाम',required:'कृपया आवश्यक फ़ील्ड भरें।',saved:'सफलतापूर्वक सहेजा गया।',reportSubmitted:'रिपोर्ट दर्ज हुई। ट्रैकिंग आईडी: ',reviewSaved:'सत्यापन समीक्षा सहेजी गई।',taskCreated:'सहायता कार्य बनाया गया।',updated:'प्रगति अपडेट हुई।',followSaved:'फॉलो-अप दर्ज हुआ।',none:'कोई नहीं',unreviewed:'सत्यापन बाकी',noVerified:'कार्य बनाने के लिए कोई सत्यापित रिपोर्ट उपलब्ध नहीं है।',sourceOther:'अन्य दर्ज स्रोत',official:'आधिकारिक सूचना / एजेंसी',local:'अधिकृत स्थानीय प्रतिनिधि',ngo:'मान्यता प्राप्त संगठन',field:'फील्ड टीम / स्थल निरीक्षण',media:'फोटो / वीडियो / दस्तावेज़',caller:'रिपोर्टर से दोबारा पुष्टि',voice:'आवाज़ इनपुट (जहाँ उपलब्ध)',privacy:'गोपनीयता और सुरक्षा: प्रभावित लोगों के नाम, फोन, घर का सटीक पता या पहचान बताने वाली जानकारी न डालें। केवल सामूहिक अनुमान दें। मृत्यु/चिकित्सा आँकड़े अधिकृत पुष्टि तक अपुष्ट रहेंगे।',openMap:'अनुमानित नक्शा खोलें',fileLocal:'चुनी गई फ़ाइलें केवल इस ब्राउज़र डेमो में सूचीबद्ध हैं; अपलोड या साझा नहीं होतीं।',noTasks:'अभी कोई सहायता कार्य नहीं है।',noFollow:'फॉलो-अप के लिए कोई सत्यापित मामला बाकी नहीं है।',fakeContact:'काल्पनिक डेमो संपर्क',priority:'प्राथमिकता',high:'उच्च',medium:'मध्यम',low:'कम',submitted:'दर्ज',generalHelp:'सामान्य सहायता',water:'पानी',food:'भोजन',shelter:'आश्रय',medical:'चिकित्सा रेफरल',rescue:'बचाव रेफरल',other:'अन्य',reporterHelp:'रिपोर्ट दर्ज करने के बाद ट्रैकिंग आईडी से स्थिति देखें। दर्ज रिपोर्ट अपने-आप सत्यापित नहीं होती।',verifierHelp:'सत्यापनकर्ता जाँच और स्रोत दर्ज करता है; सॉफ़्टवेयर घटना की स्वतंत्र पुष्टि नहीं करता।',coordHelp:'केवल सत्यापित रिपोर्ट से सहायता कार्य बनाया जा सकता है। नियोजित या भेजा गया कार्य डिलीवरी का प्रमाण नहीं है।',road:'सड़क संपर्क',power:'बिजली',sourceRequired:'सत्यापित करने से पहले कम-से-कम एक स्रोत चुनें और दर्ज करें।',checkRequired:'सत्यापित करने से पहले चेकलिस्ट पूरी करें।',noPending:'समीक्षा के लिए कोई रिपोर्ट बाकी नहीं है।',taskPlanned:'नियोजित',taskAssigned:'नियुक्त',taskDispatched:'भेजा गया',taskDelivered:'डिलीवर हुआ',taskPartial:'आंशिक रूप से डिलीवर',taskUnable:'डिलीवर नहीं हो सका'},
-pa:{tagline:'ਭਾਈਚਾਰੇ ਦੀ ਲੋੜ → ਤਸਦੀਕ → ਮਦਦ → ਫਾਲੋ-ਅੱਪ',language:'ਭਾਸ਼ਾ',reset:'ਡੈਮੋ ਰੀਸੈੱਟ',switchPortal:'ਡੈਮੋ ਪੋਰਟਲ ਖੋਲ੍ਹੋ:',reporter:'ਰਿਪੋਰਟਰ ਪੋਰਟਲ',verifier:'ਤਸਦੀਕਕਰਤਾ ਪੋਰਟਲ',coordinator:'ਕੋਆਰਡੀਨੇਟਰ ਪੋਰਟਲ',demoWarning:'ਡੈਮੋ ਮੋਡ — ਲੌਗਇਨ ਦੀ ਲੋੜ ਨਹੀਂ। ਪੋਰਟਲ ਬਦਲਣਾ ਸਿਰਫ਼ ਪੇਸ਼ਕਾਰੀ ਲਈ ਹੈ। ਨਮੂਨਾ ਸੰਸਥਾਵਾਂ, ਸੰਪਰਕ ਅਤੇ ਰਿਕਾਰਡ ਕਾਲਪਨਿਕ ਹਨ। ਇਹ ਐਮਰਜੈਂਸੀ ਸੇਵਾ ਨਹੀਂ ਅਤੇ ਅਸਲ ਮਦਦ ਨਹੀਂ ਭੇਜਦਾ।',reporterTitle:'ਭਾਈਚਾਰਾ ਰਿਪੋਰਟਰ',reporterSub:'ਭਾਈਚਾਰੇ ਦੀ ਲੋੜ ਦਰਜ ਕਰੋ ਅਤੇ ਸਥਿਤੀ ਵੇਖੋ।',submitReport:'ਰਿਪੋਰਟ ਦਰਜ ਕਰੋ',reportType:'ਰਿਪੋਰਟ ਦੀ ਕਿਸਮ',general:'ਆਮ ਭਾਈਚਾਰਕ ਲੋੜ',disaster:'ਆਫ਼ਤ ਦੀ ਘਟਨਾ',category:'ਸ਼੍ਰੇਣੀ',urgency:'ਤੁਰੰਤਤਾ',area:'ਇਲਾਕਾ / ਸਥਾਨ',group:'ਭਾਈਚਾਰਾ / ਵਾਰਡ (ਵਿਕਲਪਿਕ)',people:'ਪ੍ਰਭਾਵਿਤ ਲੋਕਾਂ ਦੀ ਅੰਦਾਜ਼ਨ ਗਿਣਤੀ',description:'ਲੋੜ ਦਾ ਵੇਰਵਾ (ਨਿੱਜੀ ਜਾਣਕਾਰੀ ਨਾ ਦਿਓ)',attach:'ਸਬੂਤ ਫ਼ਾਈਲਾਂ (ਫੋਟੋ/ਵੀਡੀਓ)',location:'ਅੰਦਾਜ਼ਨ ਟਿਕਾਣਾ',getLocation:'ਇੱਕ ਵਾਰ ਮੌਜੂਦਾ ਟਿਕਾਣਾ ਲਵੋ',noLocation:'ਟਿਕਾਣਾ ਦਰਜ ਨਹੀਂ',demographics:'ਆਬਾਦੀ ਦੇ ਕੁੱਲ ਅੰਦਾਜ਼ੇ (ਸ਼੍ਰੇਣੀਆਂ ਆਪਸ ਵਿੱਚ ਮਿਲ ਸਕਦੀਆਂ ਹਨ)',children:'ਬੱਚੇ',older:'ਬਜ਼ੁਰਗ',pregnant:'ਗਰਭਵਤੀ ਲੋਕ',disabled:'ਅਪਾਹਜ ਲੋਕ',conditions:'ਦੱਸੀ ਗਈ ਹਾਲਤ ਦੇ ਅੰਦਾਜ਼ੇ (ਮੈਡੀਕਲ ਨਿਦਾਨ ਨਹੀਂ)',deceased:'ਮ੍ਰਿਤਕ ਦੱਸੇ ਗਏ — ਅਪੁਸ਼ਟ',urgent:'ਤੁਰੰਤ ਡਾਕਟਰੀ ਮਦਦ ਦੀ ਲੋੜ ਦੱਸੀ ਗਈ',minor:'ਹਲਕੀਆਂ ਸੱਟਾਂ / ਤੁਰੰਤ ਲੋੜ ਨਹੀਂ ਦੱਸੀ ਗਈ',unknown:'ਜਾਂਚ ਨਹੀਂ ਹੋਈ / ਅਣਜਾਣ',submit:'ਸਮੀਖਿਆ ਲਈ ਭੇਜੋ',myReports:'ਆਪਣੀਆਂ ਰਿਪੋਰਟਾਂ ਦੀ ਸਥਿਤੀ',emptyReports:'ਹਾਲੇ ਕੋਈ ਰਿਪੋਰਟ ਨਹੀਂ।',status:'ਸਥਿਤੀ',tracking:'ਟ੍ਰੈਕਿੰਗ ਆਈਡੀ',reportDetails:'ਰਿਪੋਰਟ ਵੇਰਵਾ',reviewQueue:'ਤਸਦੀਕ ਕਤਾਰ',reviewSub:'ਰਿਪੋਰਟ ਦੀ ਜਾਂਚ ਕਰੋ ਅਤੇ ਕੀਤੀਆਂ ਜਾਂਚਾਂ ਦਰਜ ਕਰੋ।',allReports:'ਸਾਰੀਆਂ ਰਿਪੋਰਟਾਂ',checklist:'ਤਸਦੀਕ ਚੈਕਲਿਸਟ',check1:'ਇਲਾਕੇ ਅਤੇ ਘਟਨਾ ਦਾ ਵੇਰਵਾ ਸਪਸ਼ਟ ਹੈ',check2:'ਤਾਰੀਖ/ਸਮਾਂ ਜਾਂ ਰਿਪੋਰਟਿੰਗ ਮਿਆਦ ਵੇਖੀ',check3:'ਡੁਪਲੀਕੇਟ ਰਿਪੋਰਟਾਂ ਦੀ ਜਾਂਚ ਕੀਤੀ',check4:'ਸਬੂਤ/ਸਰੋਤ ਦੀ ਸਮੀਖਿਆ ਕੀਤੀ',check5:'ਅਣਸ਼ਚਿਤਤਾ ਅਤੇ ਸੀਮਾਵਾਂ ਦਰਜ ਕੀਤੀਆਂ',sourceType:'ਜਾਂਚਿਆ ਸਰੋਤ',sourceName:'ਸਰੋਤ / ਸੰਸਥਾ ਦਾ ਨਾਮ',evidenceType:'ਵੇਖਿਆ ਸਬੂਤ',evidenceNote:'ਇਹ ਸਬੂਤ ਕਿਸ ਗੱਲ ਦਾ ਸਮਰਥਨ ਕਰਦਾ ਹੈ?',duplicate:'ਡੁਪਲੀਕੇਟ ਜਾਂਚ ਨਤੀਜਾ',noDuplicate:'ਕੋਈ ਸੰਭਾਵੀ ਡੁਪਲੀਕੇਟ ਨਹੀਂ',possibleDuplicate:'ਸੰਭਾਵੀ ਡੁਪਲੀਕੇਟ — ਤੁਲਨਾ ਲੋੜੀਂਦੀ',duplicateOf:'ਸੰਬੰਧਿਤ ਰਿਪੋਰਟ ਆਈਡੀ (ਜੇ ਹੋਵੇ)',decision:'ਤਸਦੀਕ ਫੈਸਲਾ',pending:'ਜਾਂਚ ਜਾਰੀ',clarification:'ਹੋਰ ਜਾਣਕਾਰੀ ਲੋੜੀਂਦੀ',verifiedStatus:'ਮਨੁੱਖੀ ਸਮੀਖਿਆ ਨਾਲ ਤਸਦੀਕ',rejected:'ਰੱਦ',reviewNote:'ਤਸਦੀਕਕਰਤਾ ਨੋਟ / ਕਾਰਨ',clarifyQuestion:'ਮੰਗੀ ਗਈ ਜਾਣਕਾਰੀ (ਸੰਵੇਦਨਸ਼ੀਲ ਵੇਰਵੇ ਨਹੀਂ)',saveReview:'ਤਸਦੀਕ ਸਮੀਖਿਆ ਸੰਭਾਲੋ',coordinatorTitle:'ਮਦਦ ਕੋਆਰਡੀਨੇਟਰ',coordinatorSub:'ਤਸਦੀਕ ਕੀਤੀਆਂ ਲੋੜਾਂ ਨੂੰ ਨਿਰਧਾਰਤ ਅਤੇ ਟ੍ਰੈਕ ਹੋਣ ਵਾਲੀ ਮਦਦ ਵਿੱਚ ਬਦਲੋ।',overview:'ਕੰਮ ਦਾ ਸੰਖੇਪ',verifiedCases:'ਤਸਦੀਕ ਰਿਪੋਰਟਾਂ',openTasks:'ਖੁੱਲ੍ਹੇ ਮਦਦ ਕੰਮ',delivered:'ਡਿਲੀਵਰ ਦਰਜ',followupDue:'ਫਾਲੋ-ਅੱਪ ਬਾਕੀ',areaDirectory:'ਇਲਾਕਾ ਸੰਸਥਾ ਅਤੇ ਟੀਮ ਡਾਇਰੈਕਟਰੀ',directorySub:'ਕਾਲਪਨਿਕ ਡੈਮੋ ਸੰਪਰਕ — ਅਸਲ ਵਰਤੋਂ ਤੋਂ ਪਹਿਲਾਂ ਅਧਿਕਾਰਤ ਸਥਾਨਕ ਭਾਈਵਾਲ ਜੋੜੋ।',createTask:'ਮਦਦ ਕੰਮ ਬਣਾਓ',selectReport:'ਤਸਦੀਕ ਰਿਪੋਰਟ',organisation:'ਨਿਰਧਾਰਤ ਸੰਸਥਾ',team:'ਟੀਮ / ਇਕਾਈ',contact:'ਕੋਆਰਡੀਨੇਟਰ ਸੰਪਰਕ',phone:'ਸੰਪਰਕ ਨੰਬਰ',assistanceType:'ਮਦਦ ਦੀ ਕਿਸਮ',quantity:'ਮਾਤਰਾ / ਦਾਇਰਾ',resourceSource:'ਸਰੋਤ ਦਾ ਸਰੋਤ',plannedDate:'ਯੋਜਿਤ ਮਿਤੀ',destination:'ਮੰਜ਼ਿਲ / ਇਲਾਕਾ',taskNote:'ਕੰਮ ਨੋਟ',create:'ਕੰਮ ਬਣਾਓ',taskBoard:'ਮਦਦ ਟ੍ਰੈਕਿੰਗ ਬੋਰਡ',taskStatus:'ਕੰਮ ਦੀ ਸਥਿਤੀ',planned:'ਯੋਜਿਤ',assigned:'ਨਿਰਧਾਰਤ',dispatched:'ਭੇਜਿਆ',deliveredStatus:'ਡਿਲੀਵਰ',partial:'ਅੰਸ਼ਕ ਡਿਲੀਵਰੀ',unable:'ਡਿਲੀਵਰ ਨਹੀਂ ਹੋ ਸਕਿਆ',updateTask:'ਕੰਮ ਅੱਪਡੇਟ',dispatchRef:'ਡਿਸਪੈਚ / ਹਵਾਲਗੀ ਹਵਾਲਾ',deliveryProof:'ਡਿਲੀਵਰੀ ਪੁਸ਼ਟੀ ਸਰੋਤ',deliveryNote:'ਡਿਲੀਵਰੀ / ਸਮੱਸਿਆ ਨੋਟ',saveUpdate:'ਤਰੱਕੀ ਸੰਭਾਲੋ',followups:'ਵੱਖਰਾ ਫਾਲੋ-ਅੱਪ ਅਤੇ ਨਤੀਜਾ ਪੁਸ਼ਟੀ',followupOutcome:'ਫਾਲੋ-ਅੱਪ ਨਤੀਜਾ',addressed:'ਲੋੜ ਪੂਰੀ ਹੋਈ (ਦੱਸੀ ਗਈ)',partly:'ਅੰਸ਼ਕ ਤੌਰ ਤੇ ਪੂਰੀ',unresolved:'ਲੋੜ ਹਾਲੇ ਬਾਕੀ',followupSource:'ਕਿਸ ਨੇ ਪੁਸ਼ਟੀ ਕੀਤੀ / ਸਰੋਤ',followupNote:'ਨਤੀਜਾ ਨੋਟ (ਨਿੱਜੀ ਜਾਣਕਾਰੀ ਨਹੀਂ)',recordFollowup:'ਫਾਲੋ-ਅੱਪ ਦਰਜ ਕਰੋ',activity:'ਗਤੀਵਿਧੀ ਇਤਿਹਾਸ',workflow:'ਅਸਲ ਪ੍ਰਕਿਰਿਆ',need:'ਲੋੜ ਦਰਜ',verify:'ਮਨੁੱਖੀ ਤਸਦੀਕ',plan:'ਮਦਦ ਨਿਰਧਾਰਤ',track:'ਡਿਸਪੈਚ ਅਤੇ ਡਿਲੀਵਰੀ',confirm:'ਫਾਲੋ-ਅੱਪ ਨਤੀਜਾ',required:'ਕਿਰਪਾ ਕਰਕੇ ਲੋੜੀਂਦੇ ਖਾਨੇ ਭਰੋ।',saved:'ਸਫਲਤਾਪੂਰਵਕ ਸੰਭਾਲਿਆ।',reportSubmitted:'ਰਿਪੋਰਟ ਦਰਜ ਹੋਈ। ਟ੍ਰੈਕਿੰਗ ਆਈਡੀ: ',reviewSaved:'ਤਸਦੀਕ ਸਮੀਖਿਆ ਸੰਭਾਲੀ ਗਈ।',taskCreated:'ਮਦਦ ਕੰਮ ਬਣਾਇਆ ਗਿਆ।',updated:'ਤਰੱਕੀ ਅੱਪਡੇਟ ਹੋਈ।',followSaved:'ਫਾਲੋ-ਅੱਪ ਦਰਜ ਹੋਇਆ।',none:'ਕੋਈ ਨਹੀਂ',unreviewed:'ਤਸਦੀਕ ਬਾਕੀ',noVerified:'ਕੰਮ ਬਣਾਉਣ ਲਈ ਤਸਦੀਕ ਰਿਪੋਰਟ ਨਹੀਂ।',sourceOther:'ਹੋਰ ਦਰਜ ਸਰੋਤ',official:'ਅਧਿਕਾਰਤ ਨੋਟਿਸ / ਏਜੰਸੀ',local:'ਅਧਿਕਾਰਤ ਸਥਾਨਕ ਨੁਮਾਇੰਦਾ',ngo:'ਮਾਨਤਾ ਪ੍ਰਾਪਤ ਸੰਸਥਾ',field:'ਫੀਲਡ ਟੀਮ / ਸਾਈਟ ਦੌਰਾ',media:'ਫੋਟੋ / ਵੀਡੀਓ / ਦਸਤਾਵੇਜ਼',caller:'ਰਿਪੋਰਟਰ ਨਾਲ ਮੁੜ ਸੰਪਰਕ',voice:'ਆਵਾਜ਼ ਇਨਪੁੱਟ (ਜੇ ਉਪਲਬਧ)',privacy:'ਪਰਦੇਦਾਰੀ ਅਤੇ ਸੁਰੱਖਿਆ: ਪ੍ਰਭਾਵਿਤ ਲੋਕਾਂ ਦੇ ਨਾਮ, ਫ਼ੋਨ, ਘਰ ਦਾ ਸਹੀ ਪਤਾ ਜਾਂ ਪਛਾਣ ਵਾਲੀ ਜਾਣਕਾਰੀ ਨਾ ਦਿਓ। ਸਿਰਫ਼ ਕੁੱਲ ਅੰਦਾਜ਼ੇ ਦਿਓ। ਮੌਤ/ਮੈਡੀਕਲ ਅੰਕੜੇ ਅਧਿਕਾਰਤ ਪੁਸ਼ਟੀ ਤੱਕ ਅਪੁਸ਼ਟ ਹਨ।',openMap:'ਅੰਦਾਜ਼ਨ ਨਕਸ਼ਾ ਖੋਲ੍ਹੋ',fileLocal:'ਚੁਣੀਆਂ ਫ਼ਾਈਲਾਂ ਸਿਰਫ਼ ਇਸ ਬ੍ਰਾਊਜ਼ਰ ਡੈਮੋ ਵਿੱਚ ਦਿਖਦੀਆਂ ਹਨ; ਅੱਪਲੋਡ ਜਾਂ ਸਾਂਝੀਆਂ ਨਹੀਂ ਹੁੰਦੀਆਂ।',noTasks:'ਹਾਲੇ ਕੋਈ ਮਦਦ ਕੰਮ ਨਹੀਂ।',noFollow:'ਫਾਲੋ-ਅੱਪ ਲਈ ਕੋਈ ਤਸਦੀਕ ਮਾਮਲਾ ਬਾਕੀ ਨਹੀਂ।',fakeContact:'ਕਾਲਪਨਿਕ ਡੈਮੋ ਸੰਪਰਕ',priority:'ਤਰਜੀਹ',high:'ਉੱਚ',medium:'ਦਰਮਿਆਨਾ',low:'ਘੱਟ',submitted:'ਦਰਜ',generalHelp:'ਆਮ ਮਦਦ',water:'ਪਾਣੀ',food:'ਭੋਜਨ',shelter:'ਆਸਰਾ',medical:'ਮੈਡੀਕਲ ਰੈਫਰਲ',rescue:'ਬਚਾਅ ਰੈਫਰਲ',other:'ਹੋਰ',reporterHelp:'ਰਿਪੋਰਟ ਤੋਂ ਬਾਅਦ ਟ੍ਰੈਕਿੰਗ ਆਈਡੀ ਨਾਲ ਸਥਿਤੀ ਵੇਖੋ। ਦਰਜ ਰਿਪੋਰਟ ਆਪਣੇ ਆਪ ਤਸਦੀਕ ਨਹੀਂ ਹੁੰਦੀ।',verifierHelp:'ਤਸਦੀਕਕਰਤਾ ਜਾਂਚ ਅਤੇ ਸਰੋਤ ਦਰਜ ਕਰਦਾ ਹੈ; ਸੌਫਟਵੇਅਰ ਘਟਨਾ ਦੀ ਆਪਣੇ ਆਪ ਪੁਸ਼ਟੀ ਨਹੀਂ ਕਰਦਾ।',coordHelp:'ਸਿਰਫ਼ ਤਸਦੀਕ ਰਿਪੋਰਟ ਤੋਂ ਮਦਦ ਕੰਮ ਬਣ ਸਕਦਾ ਹੈ। ਯੋਜਨਾ ਜਾਂ ਡਿਸਪੈਚ ਡਿਲੀਵਰੀ ਦਾ ਸਬੂਤ ਨਹੀਂ।',road:'ਸੜਕ ਪਹੁੰਚ',power:'ਬਿਜਲੀ',sourceRequired:'ਤਸਦੀਕ ਤੋਂ ਪਹਿਲਾਂ ਘੱਟੋ-ਘੱਟ ਇੱਕ ਸਰੋਤ ਚੁਣੋ ਅਤੇ ਦਰਜ ਕਰੋ।',checkRequired:'ਤਸਦੀਕ ਤੋਂ ਪਹਿਲਾਂ ਚੈਕਲਿਸਟ ਪੂਰੀ ਕਰੋ.',noPending:'ਸਮੀਖਿਆ ਲਈ ਕੋਈ ਰਿਪੋਰਟ ਬਾਕੀ ਨਹੀਂ।',taskPlanned:'ਯੋਜਿਤ',taskAssigned:'ਨਿਰਧਾਰਤ',taskDispatched:'ਭੇਜਿਆ',taskDelivered:'ਡਿਲੀਵਰ',taskPartial:'ਅੰਸ਼ਕ ਡਿਲੀਵਰੀ',taskUnable:'ਡਿਲੀਵਰ ਨਹੀਂ ਹੋ ਸਕਿਆ'}};
-let lang='en',role='reporter',loc=null,chosenFiles=[],db;
-const seed=()=>({reports:[{id:'PL-DEMO01',type:'Disaster incident',category:'water',urgency:'High',area:'Demo Ward A',group:'Demo community',people:42,description:'Fictional example: drinking-water access disrupted after heavy rain. Area-level estimate only.',demographics:{children:8,older:6,pregnant:2,disabled:3},conditions:{deceased:0,urgent:2,minor:4,unknown:36},status:'pending',createdAt:now(),review:{checks:[],sourceType:'',sourceName:'',evidenceType:'',evidenceNote:'',duplicate:'none',duplicateOf:'',decision:'pending',note:'',clarification:''},location:null,attachments:[]},{id:'PL-DEMO02',type:'General community need',category:'food',urgency:'Medium',area:'Demo Ward B',group:'Demo community',people:18,description:'Fictional example: community food-kit support request. Human review record is pre-filled for coordinator demonstration.',demographics:null,conditions:null,status:'verified',createdAt:now(),review:{checks:[0,1,2,3,4],sourceType:'local',sourceName:'Demo Ward B Community Liaison (fictional)',evidenceType:'official',evidenceNote:'Fictional sample evidence entry for demonstration only.',duplicate:'none',duplicateOf:'',decision:'verified',note:'Fictional pre-verified sample for demonstrating the coordinator portal.',clarification:''},location:null,attachments:[]}],tasks:[],followups:[],audit:[{at:now(),actor:'System',action:'Fictional demo data loaded',detail:'PL-DEMO01 is a fictional example.'}]});
-function load(){try{db=JSON.parse(localStorage.getItem('pl_v5'));if(!db||!Array.isArray(db.reports)||!Array.isArray(db.tasks))throw 0;db.followups=db.followups||[];db.audit=db.audit||[]}catch(e){db=seed();save()}}function save(){localStorage.setItem('pl_v5',JSON.stringify(db))}function log(actor,action,detail){db.audit.unshift({at:now(),actor,action,detail});save()}function t(k){return (dict[lang]&&dict[lang][k])||dict.en[k]||k}function toast(s){$('toast').textContent=s;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2600)}function date(s){return s?new Date(s).toLocaleString(): '—'}
-function tr(){document.documentElement.lang=lang;document.querySelectorAll('[data-i18n]').forEach(e=>{let k=e.dataset.i18n;e.textContent=t(k)});render()}
-function setRole(r){role=r;document.querySelectorAll('.role').forEach(b=>b.classList.toggle('active',b.dataset.role===r));$('reporterPortal').classList.toggle('hidden',r!=='reporter');$('verifierPortal').classList.toggle('hidden',r!=='verifier');$('coordinatorPortal').classList.toggle('hidden',r!=='coordinator');render()}
-document.querySelectorAll('.role').forEach(b=>b.addEventListener('click',()=>setRole(b.dataset.role)));$('lang').addEventListener('change',e=>{lang=e.target.value;tr()});$('reset').addEventListener('click',()=>{if(confirm('Reset this browser demo to fictional sample data?')){db=seed();save();render();toast(t('saved'))}});
-function reportForm(){return `<div class="welcome"><div><h1>${t('reporterTitle')}</h1><p>${t('reporterSub')}</p></div><span class="tag">${t('reporter')}</span></div><div class="note">${t('reporterHelp')}<br>${t('privacy')}</div><div class="card"><h2>${t('submitReport')}</h2><form id="newReport"><div class="row"><div class="field"><label>${t('reportType')}</label><select id="rtype"><option value="General community need">${t('general')}</option><option value="Disaster incident">${t('disaster')}</option></select></div><div class="field"><label>${t('category')}</label><select id="rcat">${[['water','water'],['food','food'],['shelter','shelter'],['medical','medical'],['road','road'],['power','power'],['other','other']].map(([k,v])=>`<option value="${v}">${t(k)}</option>`).join('')}</select></div><div class="field"><label>${t('urgency')}</label><select id="rurg"><option>High</option><option selected>Medium</option><option>Low</option></select></div><div class="field"><label>${t('area')} *</label><input id="rarea" required placeholder="e.g. Ward / village / locality"></div><div class="field"><label>${t('group')}</label><input id="rgroup"></div><div class="field"><label>${t('people')}</label><input id="rpeople" type="number" min="0" value="0"></div></div><div class="field"><label>${t('description')} *</label><textarea id="rdesc" required maxlength="1200"></textarea><button class="btn alt" type="button" id="voiceBtn">🎙 Voice to text</button><p class="tiny">Voice recognition depends on browser support; check the recognised text before submitting.</p></div><div id="disasterFields" class="hidden"><h3>${t('demographics')}</h3><div class="row">${[['children','Children'],['older','Older adults'],['pregnant','Pregnant people'],['disabled','People with disabilities']].map(([id,label])=>`<div class="field"><label>${t(id)}</label><input type="number" min="0" value="0" id="d_${id}"></div>`).join('')}</div><h3>${t('conditions')}</h3><div class="row">${[['deceased','deceased'],['urgent','urgent'],['minor','minor'],['unknown','unknown']].map(([id,k])=>`<div class="field"><label>${t(k)}</label><input type="number" min="0" value="0" id="c_${id}"></div>`).join('')}</div><p class="tiny">${t('privacy')}</p></div><hr class="divider"><div class="field"><label>${t('attach')}</label><input id="rfiles" type="file" accept="image/*,video/*,audio/*,.pdf" multiple><div id="fileList" class="tiny">${t('fileLocal')}</div></div><div class="card" style="background:#f8fafb"><h3>${t('location')}</h3><p id="locText" class="muted">${t('noLocation')}</p><button class="btn alt" type="button" id="getLoc">${t('getLocation')}</button><p class="tiny">Location is opt-in, captured once and rounded. No continuous tracking.</p></div><button class="btn" type="submit">${t('submit')}</button></form></div><div class="card"><h2>${t('myReports')}</h2><div id="myReportList" class="list"></div></div>`}
-function reporterRender(){ $('reporterPortal').innerHTML=reportForm();$('rtype').addEventListener('change',e=>$('disasterFields').classList.toggle('hidden',e.target.value!=='Disaster incident'));$('rfiles').addEventListener('change',e=>{chosenFiles=[...e.target.files].map(f=>({name:f.name,type:f.type,size:f.size}));$('fileList').textContent=chosenFiles.length?chosenFiles.map(f=>esc(f.name)).join(' · '):t('fileLocal')});$('getLoc').addEventListener('click',()=>{if(!navigator.geolocation){toast('Geolocation is not supported in this browser.');return}navigator.geolocation.getCurrentPosition(p=>{loc={lat:+p.coords.latitude.toFixed(2),lon:+p.coords.longitude.toFixed(2)};$('locText').textContent=loc.lat+', '+loc.lon+' (approximate)';},()=>toast('Location permission unavailable. You can submit without it.'),{enableHighAccuracy:false,timeout:8000})});$('voiceBtn').addEventListener('click',()=>{const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){toast('Voice recognition is not supported in this browser.');return}const rec=new SR();rec.lang=lang==='hi'?'hi-IN':lang==='pa'?'pa-IN':'en-IN';rec.interimResults=false;rec.onresult=e=>{$('rdesc').value+=($('rdesc').value?' ':'')+e.results[0][0].transcript};rec.onerror=()=>toast('Voice input unavailable. You can type the report.');rec.start()});$('newReport').addEventListener('submit',submitReport);$('myReportList').innerHTML=db.reports.length?db.reports.map(r=>`<div class="item"><div class="itemhead"><div><h3>${esc(r.id)} · ${esc(t(r.category))}</h3><p>${esc(r.area)} · ${date(r.createdAt)}</p></div><span class="tag ${statusClass(r.status)}">${esc(statusText(r.status))}</span></div><p>${esc(r.description)}</p><span class="tiny">${t('tracking')}: ${esc(r.id)}</span></div>`).join(''):`<p class="muted">${t('emptyReports')}</p>`}
-function submitReport(e){e.preventDefault();let people=+$('rpeople').value||0,type=$('rtype').value,dem=null,con=null;if(type==='Disaster incident'){dem={children:+$('d_children').value||0,older:+$('d_older').value||0,pregnant:+$('d_pregnant').value||0,disabled:+$('d_disabled').value||0};con={deceased:+$('c_deceased').value||0,urgent:+$('c_urgent').value||0,minor:+$('c_minor').value||0,unknown:+$('c_unknown').value||0};if(Object.values(dem).some(n=>n<0||n>people)){toast('Each population estimate must be between 0 and total affected.');return}if(Object.values(con).some(n=>n<0)||Object.values(con).reduce((a,b)=>a+b,0)>people){toast('Condition estimates cannot exceed total affected.');return}}let r={id:uid('PL'),type,category:$('rcat').value,urgency:$('rurg').value,area:$('rarea').value.trim(),group:$('rgroup').value.trim(),people,description:$('rdesc').value.trim(),demographics:dem,conditions:con,status:'pending',createdAt:now(),review:{checks:[],sourceType:'',sourceName:'',evidenceType:'',evidenceNote:'',duplicate:'none',duplicateOf:'',decision:'pending',note:'',clarification:''},location:loc,attachments:chosenFiles};if(!r.area||!r.description){toast(t('required'));return}db.reports.unshift(r);log('Reporter','Report submitted',r.id+' · '+r.area);save();loc=null;chosenFiles=[];render();toast(t('reportSubmitted')+r.id)}
-function statusClass(s){return s==='verified'?'verified':s==='rejected'?'rejected':s==='clarification'?'clarify':'pending'}
-function statusText(s){return s==='verified'?t('verifiedStatus'):s==='rejected'?t('rejected'):s==='clarification'?t('clarification'):t('pending')}
-function reportCard(r,mode){return `<div class="item"><div class="itemhead"><div><h3>${esc(r.id)} · ${esc(t(r.category))} · ${esc(r.area)}</h3><p>${t(r.type==='Disaster incident'?'disaster':'general')} · ${t(r.urgency==='High'?'high':r.urgency==='Low'?'low':'medium')} priority · ${date(r.createdAt)}</p></div><span class="tag ${statusClass(r.status)}">${esc(statusText(r.status))}</span></div><p>${esc(r.description)}</p><p>${t('people')}: ${r.people}</p>${mode==='verify'?`<button class="btn alt" onclick="openReview('${r.id}')">${t('reviewQueue')}</button>`:''}</div>`}
-function verifierRender(){let rs=db.reports.filter(r=>r.status!=='verified'&&r.status!=='rejected');$('verifierPortal').innerHTML=`<div class="welcome"><div><h1>${t('reviewQueue')}</h1><p>${t('reviewSub')}</p></div><span class="tag">${db.reports.length} ${t('allReports')}</span></div><div class="note">${t('verifierHelp')}</div><div class="card"><h2>${t('reviewQueue')} · ${rs.length}</h2><div class="list">${rs.length?rs.map(r=>reportCard(r,'verify')).join(''):`<p class="muted">${t('noPending')}</p>`}</div></div><div class="card"><h2>${t('allReports')}</h2><div class="list">${db.reports.map(r=>reportCard(r,'')).join('')}</div></div><div class="card"><h2>${t('activity')}</h2>${activityHTML()}</div>`}
-function openReview(id){let r=db.reports.find(x=>x.id===id);if(!r)return;let v=r.review||{};let checks=['check1','check2','check3','check4','check5'];let matches=db.reports.filter(x=>x.id!==r.id&&x.area.trim().toLowerCase()===r.area.trim().toLowerCase()&&x.category===r.category);let html=`<div class="card"><h2>${esc(r.id)} · ${esc(r.area)}</h2><p class="muted">${esc(r.description)}</p><p>${t('people')}: ${r.people} · ${t('urgency')}: ${esc(r.urgency)}</p>${r.demographics?`<p class="tiny">Children ${r.demographics.children}, older adults ${r.demographics.older}, pregnant ${r.demographics.pregnant}, disability ${r.demographics.disabled}. Demographic groups may overlap.</p>`:''}${r.conditions?`<p class="tiny">Reported deceased (unverified): ${r.conditions.deceased}; urgent need reported: ${r.conditions.urgent}; minor/no immediate need: ${r.conditions.minor}; unknown: ${r.conditions.unknown}. Not a medical diagnosis.</p>`:''}<p class="tiny">Attachments: ${(r.attachments||[]).map(a=>esc(a.name)).join(', ')||'None'} · ${r.location?`Approx. ${r.location.lat}, ${r.location.lon} · <a target="_blank" rel="noopener" href="https://www.openstreetmap.org/?mlat=${r.location.lat}&mlon=${r.location.lon}">${t('openMap')}</a>`:'No location'}</p></div><div class="card"><h3>Automatic duplicate suggestions</h3>${matches.length?matches.map(x=>`<p class="tiny">Possible match: ${esc(x.id)} · ${esc(x.area)} · ${esc(t(x.category))} · ${date(x.createdAt)}</p>`).join(''):'<p class="tiny">No exact area/category match found. The verifier must still check nearby or differently worded reports.</p>'}</div><form id="reviewForm" class="card"><h2>${t('checklist')}</h2><div class="checklist">${checks.map((k,i)=>`<label class="check"><input type="checkbox" name="checks" value="${i}" ${v.checks?.includes(i)?'checked':''}>${t(k)}</label>`).join('')}</div><div class="row"><div class="field"><label>${t('sourceType')}</label><select id="vsource"><option value="">Choose…</option>${['official','local','ngo','field','caller','sourceOther'].map(k=>`<option value="${k}" ${v.sourceType===k?'selected':''}>${t(k)}</option>`).join('')}</select></div><div class="field"><label>${t('sourceName')}</label><input id="vsourceName" value="${esc(v.sourceName||'')}"></div><div class="field"><label>${t('evidenceType')}</label><select id="vevidence"><option value="">Choose…</option>${['media','official','field','caller','sourceOther'].map(k=>`<option value="${k}" ${v.evidenceType===k?'selected':''}>${t(k)}</option>`).join('')}</select></div><div class="field"><label>${t('duplicate')}</label><select id="vduplicate"><option value="none" ${(v.duplicate==='none'&&!matches.length)?'selected':''}>${t('noDuplicate')}</option><option value="possible" ${(v.duplicate==='possible'||matches.length>0)?'selected':''}>${t('possibleDuplicate')}</option></select></div></div><div class="field"><label>${t('duplicateOf')}</label><input id="vduplicateOf" value="${esc(v.duplicateOf||'')}"></div><div class="field"><label>${t('evidenceNote')}</label><textarea id="vevidenceNote">${esc(v.evidenceNote||'')}</textarea></div><div class="field"><label>${t('decision')}</label><select id="vdecision"><option value="pending" ${v.decision==='pending'?'selected':''}>${t('pending')}</option><option value="clarification" ${v.decision==='clarification'?'selected':''}>${t('clarification')}</option><option value="verified" ${v.decision==='verified'?'selected':''}>${t('verifiedStatus')}</option><option value="rejected" ${v.decision==='rejected'?'selected':''}>${t('rejected')}</option></select></div><div class="field"><label>${t('clarifyQuestion')}</label><textarea id="vclarification">${esc(v.clarification||'')}</textarea></div><div class="field"><label>${t('reviewNote')}</label><textarea id="vnote">${esc(v.note||'')}</textarea></div><button class="btn" type="submit">${t('saveReview')}</button> <button class="btn alt" type="button" onclick="render()">Cancel</button></form>`;let w=window.openReviewArea=$('verifierPortal');w.innerHTML=`<div class="welcome"><div><h1>${t('reviewQueue')}</h1><p>${t('reviewSub')}</p></div><button class="btn alt" onclick="render()">← Back to queue</button></div>${html}`;$('reviewForm').addEventListener('submit',e=>{e.preventDefault();let checks=[...document.querySelectorAll('input[name="checks"]:checked')].map(x=>+x.value),decision=$('vdecision').value,source=$('vsource').value,sourceName=$('vsourceName').value.trim();if(decision==='verified'&&checks.length!==5){toast(t('checkRequired'));return}if(decision==='verified'&&(!source||!sourceName)){toast(t('sourceRequired'));return}r.review={checks,sourceType:source,sourceName,evidenceType:$('vevidence').value,evidenceNote:$('vevidenceNote').value.trim(),duplicate:$('vduplicate').value,duplicateOf:$('vduplicateOf').value.trim(),decision,note:$('vnote').value.trim(),clarification:$('vclarification').value.trim()};r.status=decision;log('Verifier','Verification decision',r.id+' → '+statusText(decision)+'; source: '+(sourceName||'not recorded'));save();render();toast(t('reviewSaved'))})}
-const directory=[{area:'Demo Ward A',org:'Himalayan Community Support (FICTIONAL)',team:'North Response Unit',contact:'Demo Coordinator A',phone:'+91-00000-00001'},{area:'Demo Ward B',org:'Mountain Relief Network (FICTIONAL)',team:'Community Logistics Unit',contact:'Demo Coordinator B',phone:'+91-00000-00002'},{area:'Other / unassigned',org:'District Coordination Desk (FICTIONAL)',team:'Area Coordination Cell',contact:'Demo Desk Officer',phone:'+91-00000-00003'}];
-function coordinatorRender(){let verified=db.reports.filter(r=>r.status==='verified'),open=db.tasks.filter(x=>!['Delivered','Partially delivered','Unable to deliver'].includes(x.status)).length,del=db.tasks.filter(x=>x.status==='Delivered').length,due=verified.filter(r=>!db.followups.some(f=>f.reportId===r.id)).length;$('coordinatorPortal').innerHTML=`<div class="welcome"><div><h1>${t('coordinatorTitle')}</h1><p>${t('coordinatorSub')}</p></div><span class="tag">${t('coordinator')}</span></div><div class="note">${t('coordHelp')}</div><div class="grid three"><div class="card"><div class="tiny">${t('verifiedCases')}</div><div class="stat">${verified.length}</div></div><div class="card"><div class="tiny">${t('openTasks')}</div><div class="stat">${open}</div></div><div class="card"><div class="tiny">${t('delivered')}</div><div class="stat">${del}</div></div><div class="card"><div class="tiny">${t('followupDue')}</div><div class="stat">${due}</div></div></div><div class="card"><h2>${t('areaDirectory')}</h2><p class="muted">${t('directorySub')}</p><div class="tablewrap"><table><thead><tr><th>${t('area')}</th><th>${t('organisation')}</th><th>${t('team')}</th><th>${t('contact')}</th><th>${t('phone')}</th></tr></thead><tbody>${directory.map(d=>`<tr><td>${d.area}</td><td>${d.org}</td><td>${d.team}</td><td>${d.contact}<br><span class="tiny">${t('fakeContact')}</span></td><td>${d.phone}</td></tr>`).join('')}</tbody></table></div></div><div class="card"><h2>${t('createTask')}</h2>${verified.length?`<form id="taskForm"><div class="row"><div class="field"><label>${t('selectReport')} *</label><select id="treport">${verified.map(r=>`<option value="${r.id}">${r.id} · ${r.area} · ${t(r.category)}</option>`).join('')}</select></div><div class="field"><label>${t('organisation')} *</label><select id="torg">${directory.map(d=>`<option value="${d.org}">${d.org}</option>`).join('')}</select></div><div class="field"><label>${t('team')} *</label><input id="tteam" value="North Response Unit" required></div><div class="field"><label>${t('contact')} *</label><input id="tcontact" value="Demo Coordinator A" required></div><div class="field"><label>${t('phone')} *</label><input id="tphone" value="+91-00000-00001" required></div><div class="field"><label>${t('assistanceType')}</label><select id="tkind">${['water','food','shelter','medical','rescue','generalHelp','other'].map(k=>`<option>${t(k)}</option>`).join('')}</select></div><div class="field"><label>${t('quantity')} *</label><input id="tquantity" required placeholder="e.g. 40 family water kits"></div><div class="field"><label>${t('resourceSource')}</label><input id="tresource" placeholder="e.g. partner stock / district store"></div><div class="field"><label>${t('plannedDate')}</label><input id="tdate" type="date"></div><div class="field"><label>${t('destination')}</label><input id="tdest" required></div></div><div class="field"><label>${t('taskNote')}</label><textarea id="tnote"></textarea></div><button class="btn" type="submit">${t('create')}</button></form>`:`<p class="muted">${t('noVerified')}</p>`}</div><div class="card"><h2>${t('taskBoard')}</h2><div class="list">${db.tasks.length?db.tasks.map(taskCard).join(''):`<p class="muted">${t('noTasks')}</p>`}</div></div><div class="card"><h2>${t('followups')}</h2><div class="list">${verified.map(r=>followCard(r)).join('')||`<p class="muted">${t('noFollow')}</p>`}</div></div><div class="card"><h2>${t('activity')}</h2>${activityHTML()}</div>`;if($('taskForm')){$('taskForm').addEventListener('submit',createTask);const fillTeam=()=>{let r=db.reports.find(x=>x.id===$('treport').value);let d=directory.find(x=>r&&r.area.toLowerCase().includes(x.area.toLowerCase().replace('demo ','').replace(' / unassigned',''))) || directory[2];$('torg').value=d.org;$('tteam').value=d.team;$('tcontact').value=d.contact;$('tphone').value=d.phone};$('treport').addEventListener('change',fillTeam);$('torg').addEventListener('change',()=>{let d=directory.find(x=>x.org===$('torg').value);if(d){$('tteam').value=d.team;$('tcontact').value=d.contact;$('tphone').value=d.phone}});fillTeam();}}
-function taskStatusText(s){return ({'Planned':'taskPlanned','Assigned':'taskAssigned','Dispatched':'taskDispatched','Delivered':'taskDelivered','Partially delivered':'taskPartial','Unable to deliver':'taskUnable'})[s]?t(({ 'Planned':'taskPlanned','Assigned':'taskAssigned','Dispatched':'taskDispatched','Delivered':'taskDelivered','Partially delivered':'taskPartial','Unable to deliver':'taskUnable'})[s]):s}
-function taskCard(a){return `<div class="item"><div class="itemhead"><div><h3>${esc(a.id)} · ${esc(a.kind)}</h3><p>${esc(a.reportId)} · ${esc(a.destination)} · ${esc(a.org)}</p></div><span class="tag ${a.status==='Delivered'?'done':a.status==='Dispatched'?'progress':'pending'}">${esc(taskStatusText(a.status))}</span></div><p>${esc(a.quantity)} · ${esc(a.team)} · ${esc(a.contact)} (${esc(a.phone)})</p><p>Resource: ${esc(a.resource||'Not recorded')} · Planned: ${esc(a.date||'—')}</p><div class="row"><div class="field"><label>${t('taskStatus')}</label><select id="s_${a.id}">${[['Planned','taskPlanned'],['Assigned','taskAssigned'],['Dispatched','taskDispatched'],['Delivered','taskDelivered'],['Partially delivered','taskPartial'],['Unable to deliver','taskUnable']].map(([x,k])=>`<option value="${x}" ${a.status===x?'selected':''}>${t(k)}</option>`).join('')}</select></div><div class="field"><label>${t('dispatchRef')}</label><input id="d_${a.id}" value="${esc(a.dispatchRef||'')}" placeholder="Reference / handover ID"></div><div class="field"><label>${t('deliveryProof')}</label><input id="p_${a.id}" value="${esc(a.proof||'')}" placeholder="Authorised confirmation source"></div><div class="field"><label>${t('deliveryNote')}</label><input id="n_${a.id}" value="${esc(a.deliveryNote||'')}"></div></div><button class="btn alt" onclick="updateTask('${a.id}')">${t('saveUpdate')}</button></div>`}
-function createTask(e){e.preventDefault();let r=db.reports.find(x=>x.id===$('treport').value);if(!r||r.status!=='verified'){toast('Only verified reports can be assigned.');return}let a={id:uid('AS'),reportId:r.id,org:$('torg').value,team:$('tteam').value.trim(),contact:$('tcontact').value.trim(),phone:$('tphone').value.trim(),kind:$('tkind').value,quantity:$('tquantity').value.trim(),resource:$('tresource').value.trim(),date:$('tdate').value,destination:$('tdest').value.trim(),note:$('tnote').value.trim(),status:'Planned',createdAt:now(),dispatchRef:'',proof:'',deliveryNote:''};if(!a.team||!a.contact||!a.phone||!a.quantity||!a.destination){toast(t('required'));return}db.tasks.unshift(a);log('Coordinator','Assistance task created',a.id+' linked to '+r.id);save();render();toast(t('taskCreated'))}
-function updateTask(id){let a=db.tasks.find(x=>x.id===id);if(!a)return;let status=$('s_'+id).value,proof=$('p_'+id).value.trim(),dispatch=$('d_'+id).value.trim();if(status==='Dispatched'&&!dispatch){toast('Enter the dispatch / handover reference before marking dispatched.');return}if(status==='Delivered'&&!proof){toast('Enter the delivery confirmation source before marking delivered.');return}if(status==='Delivered'&&!dispatch&&!a.dispatchRef){toast('Record the dispatch reference before marking delivered.');return}a.status=status;a.dispatchRef=dispatch;a.proof=proof;a.deliveryNote=$('n_'+id).value.trim();a.updatedAt=now();log('Coordinator','Assistance progress updated',a.id+' → '+status);save();render();toast(t('updated'))}
-function followCard(r){let f=db.followups.find(x=>x.reportId===r.id);return `<div class="item"><div class="itemhead"><div><h3>${esc(r.id)} · ${esc(r.area)}</h3><p>${esc(t(r.category))} · ${t('status')}: ${esc(statusText(r.status))}</p></div><span class="tag ${f?'done':'pending'}">${f?t(f.outcome):t('followupDue')}</span></div>${f?`<p>${esc(f.source)} · ${esc(f.note)}</p><p class="tiny">${date(f.at)}</p>`:`<form onsubmit="recordFollow(event,'${r.id}')"><div class="row"><div class="field"><label>${t('followupOutcome')}</label><select name="outcome"><option value="addressed">${t('addressed')}</option><option value="partly">${t('partly')}</option><option value="unresolved">${t('unresolved')}</option></select></div><div class="field"><label>${t('followupSource')}</label><input name="source" required placeholder="Authorised representative / organisation"></div></div><div class="field"><label>${t('followupNote')}</label><textarea name="note"></textarea></div><button class="btn alt" type="submit">${t('recordFollowup')}</button></form>`}</div>`}
-function recordFollow(e,id){e.preventDefault();let r=db.reports.find(x=>x.id===id),fd=new FormData(e.target);let f={reportId:id,outcome:fd.get('outcome'),source:String(fd.get('source')).trim(),note:String(fd.get('note')).trim(),at:now()};if(!f.source){toast(t('required'));return}db.followups.unshift(f);log('Coordinator','Follow-up recorded',id+' · '+f.outcome);save();render();toast(t('followSaved'))}
-function activityHTML(){return db.audit.slice(0,12).map(a=>`<div class="item"><b>${esc(a.action)}</b><p>${esc(a.detail)}</p><span class="tiny">${esc(a.actor)} · ${date(a.at)}</span></div>`).join('')}
-function render(){if(role==='reporter')reporterRender();if(role==='verifier')verifierRender();if(role==='coordinator')coordinatorRender()}
-load();tr();setRole('reporter');
-</script></body></html>
+const translations = {
+en: {
+ demoWarning:"DEMO PROTOTYPE — fictional records and contacts. Not an emergency service.",
+ reporter:"Reporter Portal", verifier:"Verifier Portal", coordinator:"Coordinator Portal",
+ submit:"Submit report", tracking:"Track report", reports:"Reports", queue:"Review queue",
+ dashboard:"Operations dashboard", language:"Language", reset:"Reset demo",
+ title:"Pahunch Ledger", subtitle:"From community reporting to verified assistance and follow-up",
+ incident:"Incident or community need", category:"Category", disaster:"Disaster",
+ general:"General community need", area:"Area / locality", ward:"Community / ward (optional)",
+ urgency:"Urgency", low:"Low", medium:"Medium", high:"High",
+ affected:"Estimated people affected", description:"Describe the need",
+ children:"Children", older:"Older adults", pregnant:"Pregnant people",
+ disability:"People with disabilities", deceased:"Reported deceased (unverified)",
+ urgentMedical:"Reported urgent medical needs", minor:"Reported minor injuries / no immediate need",
+ unknown:"Unknown / not assessed", location:"Approximate location snapshot (optional)",
+ getLocation:"Use my approximate location", files:"Evidence files (local preview only)",
+ voice:"Voice input", startVoice:"Start voice typing", stopVoice:"Stop voice typing",
+ send:"Submit report", id:"Report ID", status:"Status", submitted:"Submitted",
+ pending:"Pending human review", verified:"Verified by human review",
+ rejected:"Rejected", clarification:"Clarification requested", date:"Date and time",
+ source:"Verification source", sourceName:"Source name / reference",
+ evidence:"Evidence type", evidenceNotes:"What does the evidence support?",
+ checklist:"Review checklist", areaCheck:"Area and incident are clear",
+ dateCheck:"Date and time reviewed", duplicateCheck:"Possible duplicates checked",
+ evidenceCheck:"Evidence or source reviewed", uncertaintyCheck:"Limitations recorded",
+ decision:"Review decision", approve:"Mark verified", reject:"Reject report",
+ requestInfo:"Request clarification", reason:"Reason / notes",
+ duplicates:"Possible matching reports", related:"Related report ID",
+ task:"Assistance task", organisation:"Organisation", team:"Team / unit",
+ contact:"Coordinator contact point", phone:"Demo phone placeholder",
+ assistance:"Assistance type", quantity:"Quantity / scope", resource:"Resource source",
+ plannedDate:"Planned date", destination:"Destination / area", notes:"Notes",
+ createTask:"Create task", planned:"Planned", assigned:"Assigned",
+ dispatched:"Dispatched", delivered:"Delivered", partial:"Partially delivered",
+ unable:"Unable to deliver", dispatchRef:"Dispatch / handover reference",
+ deliverySource:"Delivery confirmation source", update:"Update task",
+ outcome:"Follow-up outcome", addressed:"Addressed (reported)",
+ partly:"Partly addressed", unresolved:"Unresolved",
+ followSource:"Follow-up source / contact", saveFollow:"Save follow-up",
+ history:"Activity history", export:"Export report data",
+ select:"Select", choose:"Choose", required:"Please complete required fields.",
+ success:"Saved successfully.", noReports:"No reports yet.",
+ fake:"FICTIONAL DEMO CONTACT — NOT REAL", all:"All",
+ disasterNote:"Condition estimates are mutually exclusive and must not exceed affected total. Demographic groups may overlap.",
+ privacy:"Do not enter names or sensitive personal details. Do not upload identifiable images of vulnerable people.",
+ notEmergency:"This prototype is not an emergency response or medical triage service."
+},
+hi: {
+ demoWarning:"डेमो प्रोटोटाइप — रिकॉर्ड और संपर्क काल्पनिक हैं। यह आपातकालीन सेवा नहीं है।",
+ reporter:"रिपोर्टर पोर्टल", verifier:"सत्यापन पोर्टल", coordinator:"समन्वयक पोर्टल",
+ submit:"रिपोर्ट भेजें", tracking:"रिपोर्ट की स्थिति", reports:"रिपोर्ट", queue:"समीक्षा सूची",
+ dashboard:"कार्य संचालन डैशबोर्ड", language:"भाषा", reset:"डेमो रीसेट करें",
+ title:"पहुँच लेजर", subtitle:"समुदाय की रिपोर्ट से सत्यापित सहायता और अनुवर्ती कार्रवाई तक",
+ incident:"घटना या सामुदायिक आवश्यकता", category:"श्रेणी", disaster:"आपदा",
+ general:"सामान्य सामुदायिक आवश्यकता", area:"क्षेत्र / स्थानीयता", ward:"समुदाय / वार्ड (वैकल्पिक)",
+ urgency:"प्राथमिकता", low:"कम", medium:"मध्यम", high:"अधिक",
+ affected:"प्रभावित लोगों की अनुमानित संख्या", description:"आवश्यकता का विवरण",
+ children:"बच्चे", older:"वृद्ध लोग", pregnant:"गर्भवती लोग",
+ disability:"दिव्यांग लोग", deceased:"मृत बताए गए लोग (असत्यापित)",
+ urgentMedical:"तत्काल चिकित्सा सहायता की आवश्यकता बताई गई",
+ minor:"मामूली चोट / तत्काल आवश्यकता नहीं बताई गई",
+ unknown:"अज्ञात / आकलन नहीं हुआ", location:"अनुमानित स्थान (वैकल्पिक)",
+ getLocation:"मेरा अनुमानित स्थान लें", files:"साक्ष्य फ़ाइलें (केवल स्थानीय पूर्वावलोकन)",
+ voice:"आवाज़ से लिखें", startVoice:"वॉइस टाइपिंग शुरू करें", stopVoice:"वॉइस टाइपिंग रोकें",
+ send:"रिपोर्ट जमा करें", id:"रिपोर्ट आईडी", status:"स्थिति", submitted:"जमा की गई",
+ pending:"मानवीय समीक्षा लंबित", verified:"मानवीय समीक्षा से सत्यापित",
+ rejected:"अस्वीकृत", clarification:"अतिरिक्त जानकारी माँगी गई", date:"दिनांक और समय",
+ source:"सत्यापन स्रोत", sourceName:"स्रोत का नाम / संदर्भ",
+ evidence:"साक्ष्य का प्रकार", evidenceNotes:"साक्ष्य किस बात का समर्थन करता है?",
+ checklist:"समीक्षा सूची", areaCheck:"क्षेत्र और घटना स्पष्ट हैं",
+ dateCheck:"दिनांक और समय की समीक्षा हुई", duplicateCheck:"संभावित दोहराव जाँचे गए",
+ evidenceCheck:"साक्ष्य या स्रोत की समीक्षा हुई", uncertaintyCheck:"सीमाएँ दर्ज की गईं",
+ decision:"समीक्षा निर्णय", approve:"सत्यापित करें", reject:"रिपोर्ट अस्वीकार करें",
+ requestInfo:"अतिरिक्त जानकारी माँगें", reason:"कारण / टिप्पणी",
+ duplicates:"संभावित मिलती-जुलती रिपोर्ट", related:"संबंधित रिपोर्ट आईडी",
+ task:"सहायता कार्य", organisation:"संस्था", team:"टीम / इकाई",
+ contact:"समन्वयक संपर्क", phone:"डेमो फ़ोन प्लेसहोल्डर",
+ assistance:"सहायता का प्रकार", quantity:"मात्रा / दायरा", resource:"संसाधन स्रोत",
+ plannedDate:"नियोजित दिनांक", destination:"गंतव्य / क्षेत्र", notes:"टिप्पणी",
+ createTask:"कार्य बनाएँ", planned:"नियोजित", assigned:"सौंपा गया",
+ dispatched:"भेजा गया", delivered:"पहुँचा दिया गया", partial:"आंशिक रूप से पहुँचाया गया",
+ unable:"पहुँचाना संभव नहीं", dispatchRef:"भेजने / हस्तांतरण का संदर्भ",
+ deliverySource:"डिलीवरी की पुष्टि का स्रोत", update:"कार्य अपडेट करें",
+ outcome:"अनुवर्ती परिणाम", addressed:"समाधान हुआ (बताया गया)",
+ partly:"आंशिक समाधान", unresolved:"समाधान लंबित",
+ followSource:"अनुवर्ती स्रोत / संपर्क", saveFollow:"अनुवर्ती जानकारी सहेजें",
+ history:"गतिविधि इतिहास", export:"रिपोर्ट डेटा निर्यात करें",
+ select:"चुनें", choose:"चुनें", required:"कृपया आवश्यक जानकारी भरें।",
+ success:"सफलतापूर्वक सहेजा गया।", noReports:"अभी कोई रिपोर्ट नहीं है।",
+ fake:"काल्पनिक डेमो संपर्क — वास्तविक नहीं",
+ all:"सभी",
+ disasterNote:"स्थिति के अनुमान अलग-अलग श्रेणियों में हों और प्रभावित लोगों की कुल संख्या से अधिक न हों। जनसांख्यिकीय समूह एक-दूसरे से overlap कर सकते हैं।",
+ privacy:"नाम या संवेदनशील निजी जानकारी न लिखें। कमजोर लोगों की पहचान दिखाने वाली तस्वीरें अपलोड न करें।",
+ notEmergency:"यह प्रोटोटाइप आपातकालीन सेवा या चिकित्सा प्राथमिकता तय करने का साधन नहीं है।"
+},
+pa: {
+ demoWarning:"ਡੈਮੋ ਪ੍ਰੋਟੋਟਾਈਪ — ਰਿਕਾਰਡ ਅਤੇ ਸੰਪਰਕ ਕਾਲਪਨਿਕ ਹਨ। ਇਹ ਐਮਰਜੈਂਸੀ ਸੇਵਾ ਨਹੀਂ ਹੈ।",
+ reporter:"ਰਿਪੋਰਟਰ ਪੋਰਟਲ", verifier:"ਤਸਦੀਕ ਪੋਰਟਲ", coordinator:"ਕੋਆਰਡੀਨੇਟਰ ਪੋਰਟਲ",
+ submit:"ਰਿਪੋਰਟ ਭੇਜੋ", tracking:"ਰਿਪੋਰਟ ਦੀ ਸਥਿਤੀ", reports:"ਰਿਪੋਰਟਾਂ", queue:"ਸਮੀਖਿਆ ਸੂਚੀ",
+ dashboard:"ਕਾਰਜ ਡੈਸ਼ਬੋਰਡ", language:"ਭਾਸ਼ਾ", reset:"ਡੈਮੋ ਰੀਸੈੱਟ ਕਰੋ",
+ title:"ਪਹੁੰਚ ਲੇਜਰ", subtitle:"ਕਮਿਊਨਿਟੀ ਰਿਪੋਰਟ ਤੋਂ ਤਸਦੀਕਸ਼ੁਦਾ ਸਹਾਇਤਾ ਅਤੇ ਫਾਲੋ-ਅੱਪ ਤੱਕ",
+ incident:"ਘਟਨਾ ਜਾਂ ਕਮਿਊਨਿਟੀ ਦੀ ਲੋੜ", category:"ਸ਼੍ਰੇਣੀ", disaster:"ਆਫ਼ਤ",
+ general:"ਆਮ ਕਮਿਊਨਿਟੀ ਲੋੜ", area:"ਇਲਾਕਾ / ਸਥਾਨ", ward:"ਕਮਿਊਨਿਟੀ / ਵਾਰਡ (ਵਿਕਲਪਿਕ)",
+ urgency:"ਤਰਜੀਹ", low:"ਘੱਟ", medium:"ਦਰਮਿਆਨੀ", high:"ਵੱਧ",
+ affected:"ਪ੍ਰਭਾਵਿਤ ਲੋਕਾਂ ਦੀ ਅੰਦਾਜ਼ਨ ਗਿਣਤੀ", description:"ਲੋੜ ਦਾ ਵੇਰਵਾ",
+ children:"ਬੱਚੇ", older:"ਬਜ਼ੁਰਗ", pregnant:"ਗਰਭਵਤੀ ਲੋਕ",
+ disability:"ਅਪਾਹਜ ਲੋਕ", deceased:"ਮ੍ਰਿਤਕ ਦੱਸੇ ਗਏ (ਅਣ-ਤਸਦੀਕਸ਼ੁਦਾ)",
+ urgentMedical:"ਤੁਰੰਤ ਡਾਕਟਰੀ ਸਹਾਇਤਾ ਦੀ ਲੋੜ ਦੱਸੀ ਗਈ",
+ minor:"ਮਾਮੂਲੀ ਸੱਟਾਂ / ਤੁਰੰਤ ਲੋੜ ਨਹੀਂ ਦੱਸੀ ਗਈ",
+ unknown:"ਅਣਜਾਣ / ਮੁਲਾਂਕਣ ਨਹੀਂ ਹੋਇਆ", location:"ਅੰਦਾਜ਼ਨ ਸਥਾਨ (ਵਿਕਲਪਿਕ)",
+ getLocation:"ਮੇਰਾ ਅੰਦਾਜ਼ਨ ਸਥਾਨ ਲਵੋ", files:"ਸਬੂਤ ਫ਼ਾਈਲਾਂ (ਸਿਰਫ਼ ਸਥਾਨਕ ਝਲਕ)",
+ voice:"ਆਵਾਜ਼ ਰਾਹੀਂ ਲਿਖੋ", startVoice:"ਵੌਇਸ ਟਾਈਪਿੰਗ ਸ਼ੁਰੂ ਕਰੋ", stopVoice:"ਵੌਇਸ ਟਾਈਪਿੰਗ ਰੋਕੋ",
+ send:"ਰਿਪੋਰਟ ਜਮ੍ਹਾਂ ਕਰੋ", id:"ਰਿਪੋਰਟ ਆਈਡੀ", status:"ਸਥਿਤੀ", submitted:"ਜਮ੍ਹਾਂ ਕੀਤੀ",
+ pending:"ਮਨੁੱਖੀ ਸਮੀਖਿਆ ਬਾਕੀ", verified:"ਮਨੁੱਖੀ ਸਮੀਖਿਆ ਰਾਹੀਂ ਤਸਦੀਕਸ਼ੁਦਾ",
+ rejected:"ਰੱਦ ਕੀਤੀ", clarification:"ਹੋਰ ਜਾਣਕਾਰੀ ਮੰਗੀ ਗਈ", date:"ਮਿਤੀ ਅਤੇ ਸਮਾਂ",
+ source:"ਤਸਦੀਕ ਸਰੋਤ", sourceName:"ਸਰੋਤ ਦਾ ਨਾਮ / ਹਵਾਲਾ",
+ evidence:"ਸਬੂਤ ਦੀ ਕਿਸਮ", evidenceNotes:"ਸਬੂਤ ਕਿਸ ਗੱਲ ਦੀ ਪੁਸ਼ਟੀ ਕਰਦਾ ਹੈ?",
+ checklist:"ਸਮੀਖਿਆ ਸੂਚੀ", areaCheck:"ਇਲਾਕਾ ਅਤੇ ਘਟਨਾ ਸਪਸ਼ਟ ਹਨ",
+ dateCheck:"ਮਿਤੀ ਅਤੇ ਸਮੇਂ ਦੀ ਸਮੀਖਿਆ ਹੋਈ", duplicateCheck:"ਦੁਹਰਾਈਆਂ ਰਿਪੋਰਟਾਂ ਜਾਂਚੀਆਂ",
+ evidenceCheck:"ਸਬੂਤ ਜਾਂ ਸਰੋਤ ਦੀ ਸਮੀਖਿਆ ਹੋਈ", uncertaintyCheck:"ਸੀਮਾਵਾਂ ਦਰਜ ਕੀਤੀਆਂ",
+ decision:"ਸਮੀਖਿਆ ਫ਼ੈਸਲਾ", approve:"ਤਸਦੀਕ ਕਰੋ", reject:"ਰਿਪੋਰਟ ਰੱਦ ਕਰੋ",
+ requestInfo:"ਹੋਰ ਜਾਣਕਾਰੀ ਮੰਗੋ", reason:"ਕਾਰਨ / ਨੋਟ",
+ duplicates:"ਸੰਭਾਵੀ ਮਿਲਦੀਆਂ ਰਿਪੋਰਟਾਂ", related:"ਸਬੰਧਤ ਰਿਪੋਰਟ ਆਈਡੀ",
+ task:"ਸਹਾਇਤਾ ਕਾਰਜ", organisation:"ਸੰਸਥਾ", team:"ਟੀਮ / ਇਕਾਈ",
+ contact:"ਕੋਆਰਡੀਨੇਟਰ ਸੰਪਰਕ", phone:"ਡੈਮੋ ਫ਼ੋਨ ਪਲੇਸਹੋਲਡਰ",
+ assistance:"ਸਹਾਇਤਾ ਦੀ ਕਿਸਮ", quantity:"ਮਾਤਰਾ / ਦਾਇਰਾ", resource:"ਸਰੋਤ",
+ plannedDate:"ਯੋਜਿਤ ਮਿਤੀ", destination:"ਮੰਜ਼ਿਲ / ਇਲਾਕਾ", notes:"ਨੋਟ",
+ createTask:"ਕਾਰਜ ਬਣਾਓ", planned:"ਯੋਜਿਤ", assigned:"ਸੌਂਪਿਆ",
+ dispatched:"ਭੇਜਿਆ ਗਿਆ", delivered:"ਪਹੁੰਚਾਇਆ ਗਿਆ", partial:"ਅੰਸ਼ਕ ਤੌਰ 'ਤੇ ਪਹੁੰਚਾਇਆ",
+ unable:"ਪਹੁੰਚਾਉਣਾ ਸੰਭਵ ਨਹੀਂ", dispatchRef:"ਭੇਜਣ / ਸੌਂਪਣ ਦਾ ਹਵਾਲਾ",
+ deliverySource:"ਡਿਲਿਵਰੀ ਪੁਸ਼ਟੀ ਸਰੋਤ", update:"ਕਾਰਜ ਅੱਪਡੇਟ ਕਰੋ",
+ outcome:"ਫਾਲੋ-ਅੱਪ ਨਤੀਜਾ", addressed:"ਹੱਲ ਹੋਇਆ (ਦੱਸਿਆ ਗਿਆ)",
+ partly:"ਅੰਸ਼ਕ ਹੱਲ", unresolved:"ਹੱਲ ਬਾਕੀ",
+ followSource:"ਫਾਲੋ-ਅੱਪ ਸਰੋਤ / ਸੰਪਰਕ", saveFollow:"ਫਾਲੋ-ਅੱਪ ਸੇਵ ਕਰੋ",
+ history:"ਗਤੀਵਿਧੀ ਇਤਿਹਾਸ", export:"ਰਿਪੋਰਟ ਡਾਟਾ ਨਿਰਯਾਤ ਕਰੋ",
+ select:"ਚੁਣੋ", choose:"ਚੁਣੋ", required:"ਕਿਰਪਾ ਕਰਕੇ ਲੋੜੀਂਦੀ ਜਾਣਕਾਰੀ ਭਰੋ।",
+ success:"ਸਫਲਤਾਪੂਰਵਕ ਸੇਵ ਹੋਇਆ।", noReports:"ਹਾਲੇ ਕੋਈ ਰਿਪੋਰਟ ਨਹੀਂ ਹੈ।",
+ fake:"ਕਾਲਪਨਿਕ ਡੈਮੋ ਸੰਪਰਕ — ਅਸਲੀ ਨਹੀਂ",
+ all:"ਸਾਰੇ",
+ disasterNote:"ਸਥਿਤੀ ਦੇ ਅੰਦਾਜ਼ੇ ਵੱਖਰੀਆਂ ਸ਼੍ਰੇਣੀਆਂ ਵਿੱਚ ਹੋਣ ਅਤੇ ਪ੍ਰਭਾਵਿਤ ਲੋਕਾਂ ਦੀ ਕੁੱਲ ਗਿਣਤੀ ਤੋਂ ਵੱਧ ਨਾ ਹੋਣ। ਜਨਸੰਖਿਆ ਸਮੂਹ ਆਪਸ ਵਿੱਚ overlap ਕਰ ਸਕਦੇ ਹਨ।",
+ privacy:"ਨਾਮ ਜਾਂ ਸੰਵੇਦਨਸ਼ੀਲ ਨਿੱਜੀ ਜਾਣਕਾਰੀ ਨਾ ਲਿਖੋ। ਕਮਜ਼ੋਰ ਲੋਕਾਂ ਦੀ ਪਛਾਣ ਦਿਖਾਉਂਦੀਆਂ ਤਸਵੀਰਾਂ ਅੱਪਲੋਡ ਨਾ ਕਰੋ।",
+ notEmergency:"ਇਹ ਪ੍ਰੋਟੋਟਾਈਪ ਐਮਰਜੈਂਸੀ ਸੇਵਾ ਜਾਂ ਡਾਕਟਰੀ ਟ੍ਰਾਇਏਜ ਸਾਧਨ ਨਹੀਂ ਹੈ।"
+}
+};
+
+let lang = "en";
+let currentRole = "reporter";
+let reports = JSON.parse(localStorage.getItem("pl_reports") || "[]");
+let tasks = JSON.parse(localStorage.getItem("pl_tasks") || "[]");
+let historyLog = JSON.parse(localStorage.getItem("pl_history") || "[]");
+
+const $ = id => document.getElementById(id);
+const t = key => translations[lang][key] || translations.en[key] || key;
+
+function saveData(){
+ localStorage.setItem("pl_reports", JSON.stringify(reports));
+ localStorage.setItem("pl_tasks", JSON.stringify(tasks));
+ localStorage.setItem("pl_history", JSON.stringify(historyLog));
+}
+
+function logActivity(message, reportId=""){
+ historyLog.unshift({time:new Date().toLocaleString(),message,reportId});
+ saveData();
+}
+
+function toast(message){
+ const el=$("toast");
+ if(el){el.textContent=message;el.classList.add("show");
+ setTimeout(()=>el.classList.remove("show"),2600);}
+}
+
+function makeId(){
+ return "PL-" + Date.now().toString(36).toUpperCase();
+}
+
+function escapeHTML(value){
+ return String(value ?? "").replace(/[&<>"']/g, c =>
+ ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function setLanguage(value){
+ lang=value;
+ document.documentElement.lang=value;
+ document.querySelectorAll("[data-i18n]").forEach(el=>{
+  el.textContent=t(el.dataset.i18n);
+ });
+ renderApp();
+}
+</script>
+
+<script>
+function renderReporter(){
+ const host=$("reporterPortal");
+ host.innerHTML=`
+ <h2>${t("reporter")}</h2>
+ <p>${t("privacy")}</p>
+ <p>${t("notEmergency")}</p>
+ <form id="reportForm">
+  <label>${t("category")}
+   <select id="category">
+    <option value="disaster">${t("disaster")}</option>
+    <option value="general">${t("general")}</option>
+   </select>
+  </label>
+  <label>${t("area")} *
+   <input id="area" required maxlength="100">
+  </label>
+  <label>${t("ward")}
+   <input id="ward" maxlength="100">
+  </label>
+  <label>${t("urgency")}
+   <select id="urgency">
+    <option value="low">${t("low")}</option>
+    <option value="medium">${t("medium")}</option>
+    <option value="high">${t("high")}</option>
+   </select>
+  </label>
+  <label>${t("affected")} *
+   <input id="affected" type="number" min="0" max="1000000" required>
+  </label>
+  <h3>${t("disasterNote")}</h3>
+  <div class="grid">
+   <label>${t("children")}<input id="children" type="number" min="0"></label>
+   <label>${t("older")}<input id="older" type="number" min="0"></label>
+   <label>${t("pregnant")}<input id="pregnant" type="number" min="0"></label>
+   <label>${t("disability")}<input id="disability" type="number" min="0"></label>
+  </div>
+  <h3>Reported condition estimates</h3>
+  <div class="grid">
+   <label>${t("deceased")}<input id="deceased" type="number" min="0"></label>
+   <label>${t("urgentMedical")}<input id="urgentMedical" type="number" min="0"></label>
+   <label>${t("minor")}<input id="minor" type="number" min="0"></label>
+   <label>${t("unknown")}<input id="unknown" type="number" min="0"></label>
+  </div>
+  <label>${t("description")} *
+   <textarea id="description" required maxlength="2000" rows="5"></textarea>
+  </label>
+  <button type="button" id="voiceBtn">${t("startVoice")}</button>
+  <label>${t("files")}
+   <input id="evidenceFiles" type="file" multiple accept="image/*,video/*,.pdf">
+  </label>
+  <p id="fileNames"></p>
+  <label>${t("location")}</label>
+  <button type="button" id="locationBtn">${t("getLocation")}</button>
+  <p id="locationText">Not shared</p>
+  <button type="submit">${t("send")}</button>
+ </form>
+ <section id="myReports">
+  <h3>${t("tracking")}</h3>
+  <div id="reportList"></div>
+ </section>`;
+
+ $("evidenceFiles").addEventListener("change",e=>{
+  $("fileNames").textContent=[...e.target.files]
+   .map(f=>f.name+" ("+Math.round(f.size/1024)+" KB)").join(", ");
+ });
+ $("locationBtn").onclick=getApproxLocation;
+ $("voiceBtn").onclick=toggleVoice;
+ $("reportForm").onsubmit=submitReport;
+ renderMyReports();
+}
+
+let locationSnapshot="";
+function getApproxLocation(){
+ if(!navigator.geolocation){toast("Location is not supported.");return;}
+ $("locationText").textContent="Requesting permission…";
+ navigator.geolocation.getCurrentPosition(pos=>{
+  const lat=Math.round(pos.coords.latitude*100)/100;
+  const lon=Math.round(pos.coords.longitude*100)/100;
+  locationSnapshot=lat+", "+lon;
+  $("locationText").textContent="Approximate coordinates: "+locationSnapshot;
+ },()=>{
+  $("locationText").textContent="Location permission not granted.";
+ },{enableHighAccuracy:false,timeout:10000,maximumAge:60000});
+}
+
+let recognition=null;
+function toggleVoice(){
+ const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!Speech){toast("Voice typing is not supported in this browser.");return;}
+ if(recognition){recognition.stop();recognition=null;return;}
+ recognition=new Speech();
+ recognition.lang=lang==="hi"?"hi-IN":lang==="pa"?"pa-IN":"en-IN";
+ recognition.interimResults=false;
+ recognition.onresult=e=>{
+  $("description").value+=" "+e.results[0][0].transcript;
+ };
+ recognition.onerror=()=>toast("Voice input unavailable.");
+ recognition.onend=()=>{recognition=null;};
+ recognition.start();
+}
+
+function submitReport(e){
+ e.preventDefault();
+ const n=id=>Number($(id).value||0);
+ const affected=n("affected");
+ const conditions=n("deceased")+n("urgentMedical")+n("minor")+n("unknown");
+ if(conditions>affected){
+  toast("Condition estimates cannot exceed affected people.");
+  return;
+ }
+ const report={
+  id:makeId(),category:$("category").value,
+  area:$("area").value.trim(),ward:$("ward").value.trim(),
+  urgency:$("urgency").value,affected,
+  demographics:{children:n("children"),older:n("older"),
+   pregnant:n("pregnant"),disability:n("disability")},
+  conditions:{deceased:n("deceased"),urgentMedical:n("urgentMedical"),
+   minor:n("minor"),unknown:n("unknown")},
+  description:$("description").value.trim(),
+  location:locationSnapshot,
+  files:[...$("evidenceFiles").files].map(f=>f.name),
+  status:"pending",created:new Date().toISOString(),
+  review:null,taskId:null
+ };
+ if(!report.area||!report.description){toast(t("required"));return;}
+ reports.unshift(report);
+ saveData();
+ logActivity("New report submitted",report.id);
+ $("reportForm").reset();
+ locationSnapshot="";
+ renderMyReports();
+ toast(t("success"));
+}
+
+function renderMyReports(){
+ const el=$("reportList");
+ if(!el)return;
+ el.innerHTML=reports.map(r=>`
+  <article class="item">
+   <strong>${escapeHTML(r.id)}</strong>
+   <p>${escapeHTML(r.area)} — ${escapeHTML(r.category)}</p>
+   <p>${escapeHTML(r.status)}</p>
+  </article>`).join("")||`<p>${t("noReports")}</p>`;
+}
+</script>
+
+<script>
+function renderVerifier(){
+ const host=$("verifierPortal");
+ host.innerHTML=`
+ <h2>${t("verifier")}</h2>
+ <p>Reports require human review. Submission or photographs alone do not establish verification.</p>
+ <div id="verificationQueue"></div>`;
+ renderVerificationQueue();
+}
+
+function renderVerificationQueue(){
+ const el=$("verificationQueue");
+ if(!el)return;
+ const queue=reports.filter(r=>r.status==="pending"||
+  r.status==="clarification");
+ el.innerHTML=queue.map(r=>`
+ <article class="item">
+  <h3>${escapeHTML(r.id)}</h3>
+  <p><b>${t("area")}:</b> ${escapeHTML(r.area)}</p>
+  <p><b>${t("category")}:</b> ${escapeHTML(r.category)}</p>
+  <p><b>${t("urgency")}:</b> ${escapeHTML(r.urgency)}</p>
+  <p><b>${t("affected")}:</b> ${r.affected}</p>
+  <p>${escapeHTML(r.description)}</p>
+  <p><b>${t("status")}:</b> ${escapeHTML(r.status)}</p>
+  <p><b>${t("related")}:</b> ${escapeHTML(findDuplicates(r).map(x=>x.id).join(", ")||"None suggested")}</p>
+  <form class="reviewForm" data-id="${r.id}">
+   <h4>${t("checklist")}</h4>
+   <label><input type="checkbox" name="areaCheck" required> ${t("areaCheck")}</label>
+   <label><input type="checkbox" name="dateCheck" required> ${t("dateCheck")}</label>
+   <label><input type="checkbox" name="duplicateCheck" required> ${t("duplicateCheck")}</label>
+   <label><input type="checkbox" name="evidenceCheck" required> ${t("evidenceCheck")}</label>
+   <label><input type="checkbox" name="uncertaintyCheck" required> ${t("uncertaintyCheck")}</label>
+   <label>${t("source")}
+    <select name="source" required>
+     <option value="">${t("choose")}</option>
+     <option>Official notice / agency</option>
+     <option>Authorised local representative</option>
+     <option>Recognised NGO</option>
+     <option>Field team / site visit</option>
+     <option>Reporter follow-up</option>
+     <option>Other documented source</option>
+    </select>
+   </label>
+   <label>${t("sourceName")}<input name="sourceName" required></label>
+   <label>${t("evidence")}
+    <select name="evidence" required>
+     <option value="">${t("choose")}</option>
+     <option>Official document</option>
+     <option>Field observation</option>
+     <option>Authorised confirmation</option>
+     <option>Reporter statement</option>
+     <option>Other</option>
+    </select>
+   </label>
+   <label>${t("evidenceNotes")}<textarea name="evidenceNotes" required></textarea></label>
+   <label>${t("related")}<input name="related"></label>
+   <label>${t("reason")}<textarea name="reason" required></textarea></label>
+   <button type="submit" name="decision" value="verified">${t("approve")}</button>
+   <button type="submit" name="decision" value="rejected">${t("reject")}</button>
+   <button type="submit" name="decision" value="clarification">${t("requestInfo")}</button>
+  </form>
+ </article>`).join("")||`<p>${t("noReports")}</p>`;
+
+ document.querySelectorAll(".reviewForm").forEach(form=>{
+  form.onsubmit=e=>{
+   e.preventDefault();
+   const data=new FormData(form);
+   const report=reports.find(r=>r.id===form.dataset.id);
+   if(!report)return;
+   const decision=e.submitter.value;
+   const checks=["areaCheck","dateCheck","duplicateCheck","evidenceCheck","uncertaintyCheck"];
+   if(decision==="verified"&&!checks.every(k=>data.get(k)==="on")){
+    toast("Complete every review check before verification.");return;
+   }
+   if(!data.get("sourceName")||!data.get("evidenceNotes")||!data.get("reason")){
+    toast(t("required"));return;
+   }
+   report.status=decision;
+   report.review={
+    decision,source:data.get("source"),sourceName:data.get("sourceName"),
+    evidence:data.get("evidence"),evidenceNotes:data.get("evidenceNotes"),
+    related:data.get("related"),reason:data.get("reason"),
+    checks:Object.fromEntries(checks.map(k=>[k,data.get(k)==="on"])),
+    reviewedAt:new Date().toISOString()
+   };
+   logActivity("Verifier decision: "+decision,report.id);
+   saveData();
+   renderVerificationQueue();
+   toast(t("success"));
+  };
+ });
+}
+
+function findDuplicates(report){
+ return reports.filter(r=>r.id!==report.id&&
+  r.area.toLowerCase()===report.area.toLowerCase()&&
+  r.category===report.category);
+}
+</script>
+
+<script>
+const organisations=[
+ {area:"Shimla",name:"Himalayan Community Support (DEMO)",team:"Relief Unit A",contact:"Demo Coordinator A",phone:"+91-00000-00001"},
+ {area:"Chandigarh",name:"Community Response Network (DEMO)",team:"Support Unit B",contact:"Demo Coordinator B",phone:"+91-00000-00002"},
+ {area:"Other",name:"Local Assistance Group (DEMO)",team:"General Unit",contact:"Demo Coordinator C",phone:"+91-00000-00003"}
+];
+
+function seedDemo(){
+ if(reports.some(r=>r.demo))return;
+ reports.unshift({
+  id:"PL-DEMO-001",demo:true,category:"general",
+  area:"Shimla",ward:"Demo Ward",
+  urgency:"medium",affected:12,
+  demographics:{children:3,older:2,pregnant:0,disability:1},
+  conditions:{deceased:0,urgentMedical:0,minor:0,unknown:12},
+  description:"FICTIONAL SAMPLE: A community centre reports a need for drinking water and basic supplies.",
+  location:"",files:[],status:"verified",
+  created:new Date().toISOString(),
+  review:{decision:"verified",source:"Recognised NGO",
+   sourceName:"Fictional demo source",evidence:"Official document",
+   evidenceNotes:"Fictional training example only.",
+   reason:"Pre-verified sample record for demonstrating the coordinator portal."},
+  taskId:null
+ });
+ saveData();
+}
+seedDemo();
+
+function organisationFor(area){
+ const match=organisations.find(o=>
+  area.toLowerCase().includes(o.area.toLowerCase()));
+ return match||organisations.find(o=>o.area==="Other");
+}
+
+function renderCoordinator(){
+ const host=$("coordinatorPortal");
+ const verified=reports.filter(r=>r.status==="verified");
+ const pending=reports.filter(r=>r.status==="pending"||r.status==="clarification");
+ host.innerHTML=`
+ <h2>${t("coordinator")}</h2>
+ <p>Only reports marked verified through human review can become assistance tasks.</p>
+ <div class="grid">
+  <div class="item"><strong>${verified.length}</strong><p>Verified reports</p></div>
+  <div class="item"><strong>${pending.length}</strong><p>Awaiting review</p></div>
+  <div class="item"><strong>${tasks.length}</strong><p>Assistance tasks</p></div>
+ </div>
+ <h3>Verified reports available</h3>
+ <div id="verifiedQueue"></div>
+ <h3>Organisation / team directory</h3>
+ <div id="organisationDirectory"></div>
+ <h3>Current assistance tasks</h3>
+ <div id="taskList"></div>
+ <h3>${t("history")}</h3>
+ <div id="activityHistory"></div>`;
+ renderCoordinatorLists();
+}
+
+function renderCoordinatorLists(){
+ const q=$("verifiedQueue");
+ if(!q)return;
+ const verified=reports.filter(r=>r.status==="verified");
+ q.innerHTML=verified.map(r=>{
+  const org=organisationFor(r.area);
+  return `<article class="item">
+   <strong>${escapeHTML(r.id)}</strong>
+   <p>${escapeHTML(r.area)} — ${escapeHTML(r.description)}</p>
+   <p>Suggested organisation: ${escapeHTML(org.name)}</p>
+   <button type="button" onclick="showTaskForm('${r.id}')">Plan assistance</button>
+  </article>`;
+ }).join("")||"<p>No verified reports available.</p>";
+
+ $("organisationDirectory").innerHTML=organisations.map(o=>`
+  <article class="item">
+   <strong>${escapeHTML(o.name)}</strong>
+   <p>${escapeHTML(o.area)} — ${escapeHTML(o.team)}</p>
+   <p>${escapeHTML(o.contact)} | ${escapeHTML(o.phone)}</p>
+   <small>${t("fake")}</small>
+  </article>`).join("");
+
+ $("taskList").innerHTML=tasks.map(task=>`
+  <article class="item">
+   <strong>${escapeHTML(task.id)}</strong>
+   <p>Report: ${escapeHTML(task.reportId)}</p>
+   <p>${escapeHTML(task.organisation)} — ${escapeHTML(task.assistance)}</p>
+   <p>Status: ${escapeHTML(task.status)}</p>
+   <button type="button" onclick="showTaskUpdate('${task.id}')">Update task</button>
+   <button type="button" onclick="showFollowUp('${task.id}')">Add follow-up</button>
+  </article>`).join("")||"<p>No tasks created yet.</p>";
+
+ $("activityHistory").innerHTML=historyLog.slice(0,20).map(h=>
+  `<p>${escapeHTML(h.time)} — ${escapeHTML(h.message)} ${escapeHTML(h.reportId)}</p>`
+ ).join("")||"<p>No activity recorded.</p>";
+}
+
+function showTaskForm(reportId){
+ const report=reports.find(r=>r.id===reportId);
+ if(!report||report.status!=="verified"){toast("Only verified reports can be assigned.");return;}
+ const org=organisationFor(report.area);
+ const host=$("coordinatorPortal");
+ host.insertAdjacentHTML("beforeend",`
+ <section class="item" id="newTask">
+  <h3>${t("task")} — ${escapeHTML(report.id)}</h3>
+  <form id="taskForm">
+   <label>${t("organisation")}<input name="organisation" required value="${escapeHTML(org.name)}"></label>
+   <label>${t("team")}<input name="team" required value="${escapeHTML(org.team)}"></label>
+   <label>${t("contact")}<input name="contact" required value="${escapeHTML(org.contact)}"></label>
+   <label>${t("phone")}<input name="phone" required value="${escapeHTML(org.phone)}"></label>
+   <label>${t("assistance")}<input name="assistance" required></label>
+   <label>${t("quantity")}<input name="quantity" required></label>
+   <label>${t("resource")}<input name="resource" required></label>
+   <label>${t("plannedDate")}<input name="plannedDate" type="date" required></label>
+   <label>${t("destination")}<input name="destination" required value="${escapeHTML(report.area)}"></label>
+   <label>${t("notes")}<textarea name="notes"></textarea></label>
+   <button type="submit">${t("createTask")}</button>
+  </form>
+ </section>`);
+ $("taskForm").onsubmit=e=>{
+  e.preventDefault();
+  const d=Object.fromEntries(new FormData(e.target));
+  const task={id:makeId(),reportId,...d,status:"planned",
+   dispatchRef:"",deliverySource:"",created:new Date().toISOString(),
+   outcome:"",followSource:""};
+  tasks.unshift(task);
+  report.taskId=task.id;
+  saveData();
+  logActivity("Assistance task created",report.id);
+  renderCoordinator();
+  toast(t("success"));
+ };
+}
+</script>
+
+<script>
+function showTaskUpdate(taskId){
+ const task=tasks.find(x=>x.id===taskId);
+ if(!task)return;
+ $("coordinatorPortal").insertAdjacentHTML("beforeend",`
+ <section class="item" id="taskUpdate">
+  <h3>Update ${escapeHTML(task.id)}</h3>
+  <form id="updateForm">
+   <label>${t("status")}
+    <select name="status">
+     <option value="planned">Planned</option>
+     <option value="assigned">Assigned</option>
+     <option value="dispatched">Dispatched</option>
+     <option value="delivered">Delivered</option>
+     <option value="partial">Partially delivered</option>
+     <option value="unable">Unable to deliver</option>
+    </select>
+   </label>
+   <label>${t("dispatchRef")}<input name="dispatchRef" value="${escapeHTML(task.dispatchRef)}"></label>
+   <label>${t("deliverySource")}<input name="deliverySource" value="${escapeHTML(task.deliverySource)}"></label>
+   <label>${t("notes")}<textarea name="notes">${escapeHTML(task.notes)}</textarea></label>
+   <button type="submit">${t("update")}</button>
+  </form>
+ </section>`);
+ $("updateForm").onsubmit=e=>{
+  e.preventDefault();
+  const d=Object.fromEntries(new FormData(e.target));
+  if(d.status==="dispatched"&&!d.dispatchRef.trim()){
+   toast("A dispatch or handover reference is required.");return;
+  }
+  if(d.status==="delivered"&&(!task.dispatchRef&&!d.dispatchRef.trim())){
+   toast("Record dispatch before confirming delivery.");return;
+  }
+  if(d.status==="delivered"&&!d.deliverySource.trim()){
+   toast("A delivery confirmation source is required.");return;
+  }
+  task.status=d.status;
+  task.dispatchRef=d.dispatchRef.trim();
+  task.deliverySource=d.deliverySource.trim();
+  task.notes=d.notes;
+  task.updated=new Date().toISOString();
+  saveData();
+  logActivity("Task status updated: "+d.status,task.reportId);
+  renderCoordinator();
+  toast(t("success"));
+ };
+}
+
+function showFollowUp(taskId){
+ const task=tasks.find(x=>x.id===taskId);
+ if(!task)return;
+ $("coordinatorPortal").insertAdjacentHTML("beforeend",`
+ <section class="item" id="followFormBox">
+  <h3>${t("outcome")} — ${escapeHTML(task.id)}</h3>
+  <form id="followForm">
+   <label>${t("outcome")}
+    <select name="outcome" required>
+     <option value="addressed">${t("addressed")}</option>
+     <option value="partly">${t("partly")}</option>
+     <option value="unresolved">${t("unresolved")}</option>
+    </select>
+   </label>
+   <label>${t("followSource")}<input name="followSource" required></label>
+   <label>${t("notes")}<textarea name="followNotes" required></textarea></label>
+   <button type="submit">${t("saveFollow")}</button>
+  </form>
+ </section>`);
+ $("followForm").onsubmit=e=>{
+  e.preventDefault();
+  const d=Object.fromEntries(new FormData(e.target));
+  task.outcome=d.outcome;
+  task.followSource=d.followSource;
+  task.followNotes=d.followNotes;
+  task.followedUpAt=new Date().toISOString();
+  saveData();
+  logActivity("Follow-up recorded: "+d.outcome,task.reportId);
+  renderCoordinator();
+  toast(t("success"));
+ };
+}
+</script>
+
+<script>
+function showRole(role){
+ currentRole=role;
+ document.querySelectorAll(".role").forEach(btn=>{
+  btn.classList.toggle("active",btn.dataset.role===role);
+ });
+ ["reporter","verifier","coordinator"].forEach(name=>{
+  const section=$(name+"Portal");
+  if(section)section.hidden=name!==role;
+ });
+ if(role==="reporter")renderReporter();
+ if(role==="verifier")renderVerifier();
+ if(role==="coordinator")renderCoordinator();
+}
+
+function renderApp(){
+ $("language").value=lang;
+ document.querySelectorAll("[data-i18n]").forEach(el=>{
+  el.textContent=t(el.dataset.i18n);
+ });
+ showRole(currentRole);
+}
+
+document.querySelectorAll(".role").forEach(btn=>{
+ btn.addEventListener("click",()=>showRole(btn.dataset.role));
+});
+
+$("language").addEventListener("change",e=>setLanguage(e.target.value));
+
+function exportReports(){
+ const data={
+  exportedAt:new Date().toISOString(),
+  reports,tasks,historyLog
+ };
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;
+ a.download="pahunch-ledger-demo-data.json";
+ a.click();
+ URL.revokeObjectURL(url);
+}
+
+function exportCSV(){
+ const headers=["ID","Area","Category","Urgency","Affected","Status","Description"];
+ const rows=reports.map(r=>[
+  r.id,r.area,r.category,r.urgency,r.affected,r.status,r.description
+ ]);
+ const csv=[headers,...rows].map(row=>
+  row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")
+ ).join("\n");
+ const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;a.download="pahunch-ledger-reports.csv";a.click();
+ URL.revokeObjectURL(url);
+}
+
+function addExportButtons(){
+ const footer=document.querySelector("footer");
+ if(!footer)return;
+ footer.innerHTML=`
+  <button type="button" id="exportJSON">Export JSON backup</button>
+  <button type="button" id="exportCSV">Export reports CSV</button>
+  <p>Demo data is stored only in this browser. It does not sync to other devices.</p>`;
+ $("exportJSON").onclick=exportReports;
+ $("exportCSV").onclick=exportCSV;
+}
+
+addExportButtons();
+</script>
+
+<script>
+$("resetDemo").addEventListener("click",()=>{
+ const ok=confirm("Reset all Pahunch Ledger demo records in this browser?");
+ if(!ok)return;
+ reports=[];
+ tasks=[];
+ historyLog=[];
+ localStorage.removeItem("pl_reports");
+ localStorage.removeItem("pl_tasks");
+ localStorage.removeItem("pl_history");
+ seedDemo();
+ logActivity("Demo data reset");
+ renderApp();
+ toast("Demo reset successfully.");
+});
+
+function initialise(){
+ // Restore saved demo data and provide one sample verified report.
+ if(!reports.some(r=>r.demo))seedDemo();
+
+ // Make sure all three portals are independently accessible.
+ document.querySelectorAll(".role").forEach(btn=>{
+  btn.setAttribute("type","button");
+ });
+
+ setLanguage($("language").value||"en");
+ addExportButtons();
+}
+
+initialise();
+</script>
+</body>
+</html>
