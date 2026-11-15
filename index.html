@@ -1191,7 +1191,6 @@ window.renderPahunchVerification=reviewPage;
 .pl-org:last-child{border-bottom:0}
 @media(max-width:650px){.pl-coord-grid{grid-template-columns:1fr}}
 </style>
-
 <script>
 (function(){
 "use strict";
@@ -1601,6 +1600,226 @@ if(typeof oldNavigate==="function"){
 }
 window.renderPahunchCoordinator=coordinatorPage;
 
+})();
+</script>
+
+<style>
+.pl-demo-notice{
+  margin:10px 0;
+  padding:9px 12px;
+  border:1px solid rgba(22,139,130,.3);
+  border-radius:9px;
+  background:rgba(22,139,130,.08);
+  color:var(--text,#243746);
+  font-size:12px;
+  line-height:1.5;
+}
+.pl-role-tag{
+  display:inline-block;
+  margin-left:7px;
+  padding:3px 8px;
+  border-radius:20px;
+  background:rgba(22,139,130,.13);
+  color:var(--teal,#168b82);
+  font-size:11px;
+  font-weight:700;
+}
+</style>
+<script>
+(function(){
+"use strict";
+
+const roleRules={
+  Reporter:["overview","community reports","submit a report"],
+  Verifier:["overview","community reports","verification desk","audit log"],
+  Coordinator:["overview","community reports","submit a report","verification desk","assistance tracking","follow-up tracker","analytics","area overview","audit log"]
+};
+
+let activeRole="Coordinator";
+let originalChangeRole=window.changeRole;
+let originalNavigate=window.navigate;
+
+function normalise(s){
+  return String(s||"").toLowerCase().replace(/[_-]/g," ").replace(/\s+/g," ").trim();
+}
+function currentSelect(){
+  return [...document.querySelectorAll("select")].find(el=>{
+    const options=[...el.options].map(o=>normalise(o.textContent+" "+o.value));
+    return options.some(x=>x.includes("coordinator"))&&
+           options.some(x=>x.includes("reporter"));
+  });
+}
+function pageKey(value){
+  const s=normalise(value);
+  if(s.includes("overview")||s==="dashboard")return "overview";
+  if(s.includes("community")||s.includes("reports"))return "community reports";
+  if(s.includes("submit"))return "submit a report";
+  if(s.includes("verification")||s.includes("verifier"))return "verification desk";
+  if(s.includes("assistance"))return "assistance tracking";
+  if(s.includes("follow"))return "follow-up tracker";
+  if(s.includes("analytics"))return "analytics";
+  if(s.includes("area"))return "area overview";
+  if(s.includes("audit"))return "audit log";
+  return s;
+}
+function permitted(page){
+  const allowed=roleRules[activeRole]||roleRules.Coordinator;
+  return allowed.includes(pageKey(page));
+}
+function findNavItems(){
+  return [...document.querySelectorAll(
+    "aside a,aside button,nav a,nav button,.sidebar a,.sidebar button,[class*='sidebar'] a,[class*='sidebar'] button"
+  )].filter(el=>el.offsetParent!==null);
+}
+function navPage(el){
+  const attr=el.getAttribute("onclick")||"";
+  const data=el.dataset.page||el.getAttribute("data-target")||"";
+  return pageKey(data+" "+attr+" "+el.textContent);
+}
+function updateNav(){
+  findNavItems().forEach(el=>{
+    const key=navPage(el);
+    if(!key)return;
+    const allowed=permitted(key);
+    el.style.display=allowed?"":"none";
+    el.setAttribute("aria-hidden",allowed?"false":"true");
+  });
+
+  // The quick New Report action belongs to the Reporter demo role.
+  document.querySelectorAll("button,a").forEach(el=>{
+    const t=normalise(el.textContent);
+    if(t==="new report"||t==="submit report"){
+      el.style.display=activeRole==="Reporter"?"":"none";
+    }
+  });
+
+  const banner=document.getElementById("plRoleNotice");
+  if(banner){
+    banner.innerHTML="<strong>"+activeRole+" demo portal</strong> — Role switching demonstrates different interfaces only. It does not provide secure authentication or protect stored browser data.";
+  }
+}
+function showPage(page){
+  const key=pageKey(page);
+  if(!permitted(key)){
+    alert("This page is not available in the "+activeRole+" demo portal.");
+    if(typeof originalNavigate==="function"){
+      originalNavigate.call(window,"overview");
+    }
+    return false;
+  }
+  return true;
+}
+function setRole(role){
+  const found=Object.keys(roleRules).find(r=>normalise(r)===normalise(role));
+  if(!found)return;
+  activeRole=found;
+  window.plDemoRole=activeRole;
+
+  const select=currentSelect();
+  if(select){
+    const option=[...select.options].find(o=>
+      normalise(o.value)===normalise(found)||
+      normalise(o.textContent)===normalise(found)
+    );
+    if(option)select.value=option.value;
+  }
+
+  updateNav();
+
+  // Keep the original site's role-related display behaviour where possible.
+  if(typeof originalChangeRole==="function"){
+    try{originalChangeRole.call(window);}catch(e){
+      try{originalChangeRole.call(window,found);}catch(ignore){}
+    }
+  }
+  updateNav();
+}
+function addNotice(){
+  if(document.getElementById("plRoleNotice"))return;
+  const banner=document.createElement("div");
+  banner.id="plRoleNotice";
+  banner.className="pl-demo-notice";
+  banner.innerHTML="<strong>"+activeRole+" demo portal</strong> — Role switching demonstrates different interfaces only. It does not provide secure authentication or protect stored browser data.";
+
+  const topbar=document.querySelector(".topbar,header,.top-bar");
+  if(topbar)topbar.insertAdjacentElement("afterend",banner);
+  else{
+    const main=document.querySelector("main,.main-content,#main");
+    if(main)main.insertBefore(banner,main.firstChild);
+  }
+}
+function bindRoleSelector(){
+  const select=currentSelect();
+  if(!select||select.dataset.plRoleBound)return;
+  select.dataset.plRoleBound="1";
+  select.addEventListener("change",()=>{
+    setRole(select.value);
+  });
+}
+function bindNavGuard(){
+  document.addEventListener("click",event=>{
+    const item=event.target.closest("aside a,aside button,nav a,nav button,.sidebar a,.sidebar button,[class*='sidebar'] a,[class*='sidebar'] button");
+    if(!item)return;
+    const key=navPage(item);
+    if(key&&!permitted(key)){
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      alert("This page is not available in the "+activeRole+" demo portal.");
+    }
+  },true);
+}
+
+/* Guard page navigation as well as hiding navigation links. */
+if(typeof originalNavigate==="function"){
+  window.navigate=function(page,...args){
+    if(!showPage(page))return;
+    return originalNavigate.call(this,page,...args);
+  };
+}
+
+/* Replace the role handler without removing the original site's display updates. */
+window.changeRole=function(role){
+  const select=currentSelect();
+  setRole(role||(select?select.value:"Coordinator"));
+};
+
+/* Prevent non-coordinator roles from invoking coordinator-only actions. */
+function protectFunction(name,allowedRoles){
+  const old=window[name];
+  if(typeof old!=="function")return;
+  window[name]=function(...args){
+    if(!allowedRoles.includes(activeRole)){
+      alert("This action is not available in the "+activeRole+" demo portal.");
+      return;
+    }
+    return old.apply(this,args);
+  };
+}
+protectFunction("openAssistanceForm",["Coordinator"]);
+protectFunction("updateAssistance",["Coordinator"]);
+protectFunction("confirmFollowup",["Coordinator"]);
+protectFunction("linkDuplicate",["Verifier","Coordinator"]);
+protectFunction("reviewCase",["Verifier","Coordinator"]);
+
+function initialise(){
+  addNotice();
+  bindRoleSelector();
+  bindNavGuard();
+  updateNav();
+
+  const select=currentSelect();
+  if(select){
+    const initial=select.value||select.options[select.selectedIndex]?.textContent;
+    if(initial)setRole(initial);
+  }else{
+    setRole("Coordinator");
+  }
+}
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",initialise);
+}else{
+  initialise();
+}
 })();
 </script>
 </body>
