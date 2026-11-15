@@ -69,6 +69,67 @@ td .sub{display:block;color:var(--muted);font-size:11px;margin-top:4px}
 footer{padding:18px 26px;text-align:center;color:var(--muted);font-size:10px;line-height:1.6}
 @media(max-width:950px){.sidebar{width:205px}.main{margin-left:205px;width:calc(100% - 205px)}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.sidebar{position:relative;width:100%;height:auto;inset:auto;padding:12px}.app{display:block}.brand{padding:0 6px 10px}.sidebar .nav-label,.sidebar-note{display:none}.nav{display:flex;overflow-x:auto;padding-top:10px}.nav button{white-space:nowrap;padding:9px 11px}.main{margin:0;width:100%}.topbar{height:auto;min-height:65px;padding:12px 15px;align-items:flex-start;flex-direction:column}.content{padding:16px}.grid{gap:9px}.metric{padding:13px}.metric strong{font-size:22px}.two-col{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.page-head h2{font-size:19px}}
+/* Mobile screen overflow protection */
+html,body{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+}
+.app,.main,.content,.page,.panel{
+  min-width:0;
+  max-width:100%;
+}
+.main,.content{
+  overflow-x:hidden;
+}
+.panel{
+  overflow:hidden;
+}
+.field{
+  min-width:0;
+  max-width:100%;
+  overflow-wrap:anywhere;
+}
+.field input,.field select,.field textarea{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+}
+.table-wrap{
+  display:block;
+  width:100%;
+  max-width:100%;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;
+}
+@media(max-width:700px){
+  .app{display:block;width:100%;overflow-x:clip}
+  .sidebar{width:100%;max-width:100%}
+  .main{margin:0;width:100%;max-width:100%}
+  .topbar{
+    width:100%;
+    max-width:100%;
+    overflow:hidden;
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .top-actions{
+    width:100%;
+    max-width:100%;
+    flex-wrap:wrap;
+  }
+  .top-actions>*{max-width:100%;min-width:0}
+  .content{padding:14px;width:100%}
+  .panel{padding:14px}
+  .form-grid{grid-template-columns:1fr}
+  .two-col{grid-template-columns:1fr}
+  .page-head,.role-banner{
+    max-width:100%;
+    overflow-wrap:anywhere;
+  }
+  .actions>*{max-width:100%;white-space:normal}
+}
 </style>
 </head>
 <body>
@@ -137,7 +198,24 @@ footer{padding:18px 26px;text-align:center;color:var(--muted);font-size:10px;lin
       <div class="field"><label for="incidentDate">Incident date / approximate time</label><input id="incidentDate" type="datetime-local"></div>
       <div class="field"><label for="affected">Estimated people affected</label><input id="affected" type="number" min="0" max="100000" value="0"></div>
       <div class="field"><label for="evidenceType">Evidence/source type</label><select id="evidenceType"><option>Submitter observation</option><option>Photo or video available</option><option>Community communication</option><option>Official notice referenced</option><option>Other / not available</option></select></div>
-      <div class="field full"><label for="description">What has happened / what help is needed? *</label><textarea id="description" required maxlength="1500" placeholder="Describe the situation without including personal identifiers."></textarea></div>
+      <div class="field full">
+  <label for="description">What has happened / what help is needed? *</label>
+  <textarea id="description" required maxlength="1500" placeholder="Describe the situation without including personal identifiers."></textarea>
+
+  <div class="actions">
+    <button class="secondary" type="button" id="micButton">🎙️ Speak to fill description</button>
+    <span class="help" id="micStatus">Tap the microphone and speak. Check the text before submitting.</span>
+  </div>
+</div>
+
+<div class="field full">
+  <label>Approximate current location (optional)</label>
+  <div class="actions">
+    <button class="secondary" type="button" id="locationButton">📍 Use my approximate location</button>
+    <button class="secondary" type="button" id="clearLocationButton">Clear location</button>
+  </div>
+  <span class="help" id="locationStatus">Location is requested only when you tap the button. No continuous tracking.</span>
+</div>
     </div>
     <div id="disasterFields">
       <h3 style="margin:22px 0 8px">Aggregate estimates (optional)</h3>
@@ -235,7 +313,113 @@ function log(action,detail,actor){
  data.audit.unshift({id:uid("LOG"),action,detail,actor:actor||currentRole,at:now()});
  data.audit=data.audit.slice(0,300);save();
 }
-let currentRole="coordinator",currentPage="overview",selectedReview=null,selectedTask=null;
+let locationSnapshot=null;
+let speechRecognition=null;
+let isListening=false;
+
+function captureApproximateLocation(){
+  if(!navigator.geolocation){
+    $("locationStatus").textContent="Location is not supported by this browser.";
+    return;
+  }
+
+  $("locationButton").disabled=true;
+  $("locationStatus").textContent="Waiting for location permission...";
+
+  navigator.geolocation.getCurrentPosition(position=>{
+    locationSnapshot={
+      lat:Math.round(position.coords.latitude*100)/100,
+      lon:Math.round(position.coords.longitude*100)/100,
+      capturedAt:now()
+    };
+
+    $("locationStatus").textContent=
+      "Approximate location captured: "+
+      locationSnapshot.lat.toFixed(2)+", "+
+      locationSnapshot.lon.toFixed(2)+
+      ". It will be attached to your report.";
+
+    $("locationButton").disabled=false;
+  },error=>{
+    $("locationStatus").textContent=
+      error.code===1
+      ? "Location permission denied. You can enter the area manually."
+      : "Location unavailable. Please enter the area manually.";
+
+    $("locationButton").disabled=false;
+  },{
+    enableHighAccuracy:false,
+    timeout:12000,
+    maximumAge:60000
+  });
+}
+
+function clearApproximateLocation(){
+  locationSnapshot=null;
+  $("locationStatus").textContent="Location cleared.";
+}
+
+function toggleSpeechInput(){
+  const SpeechAPI=
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if(!SpeechAPI){
+    $("micStatus").textContent=
+      "Speech recognition is not supported. Please type instead.";
+    return;
+  }
+
+  if(isListening && speechRecognition){
+    speechRecognition.stop();
+    return;
+  }
+
+  speechRecognition=new SpeechAPI();
+  speechRecognition.continuous=false;
+  speechRecognition.interimResults=false;
+
+  const lang=$("languageSelect").value;
+  speechRecognition.lang=
+    lang==="hi" ? "hi-IN" :
+    lang==="pa" ? "pa-IN" : "en-IN";
+
+  speechRecognition.onstart=()=>{
+    isListening=true;
+    $("micButton").textContent="■ Stop listening";
+    $("micStatus").textContent="Listening... speak clearly.";
+  };
+
+  speechRecognition.onresult=event=>{
+    const transcript=event.results[0][0].transcript;
+    const box=$("description");
+
+    box.value=(box.value.trim()
+      ? box.value.trim()+" "
+      : "")+transcript;
+
+    box.focus();
+    $("micStatus").textContent=
+      "Speech added. Please review it before submitting.";
+  };
+
+  speechRecognition.onerror=()=>{
+    $("micStatus").textContent=
+      "Microphone unavailable or permission denied. You can type instead.";
+  };
+
+  speechRecognition.onend=()=>{
+    isListening=false;
+    $("micButton").textContent="🎙️ Speak to fill description";
+  };
+
+  try{
+    speechRecognition.start();
+  }catch(error){
+    isListening=false;
+    $("micStatus").textContent="Could not start microphone. Try again.";
+  }
+}
 const pageNames={overview:"Overview",reports:"Community reports",submit:"Submit a report",verification:"Verification desk",assistance:"Assistance tracking",followups:"Follow-up tracker",analytics:"Analytics",directory:"Area & team directory",audit:"Activity history"};
 const rolePages={
  reporter:["overview","reports","submit"],
