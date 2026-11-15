@@ -864,5 +864,309 @@ $("reportForm").addEventListener("submit",()=>{
  window.plApproxLocation=null;
 },false);
 </script>
+
+<style>
+.pl-review-wrap{display:grid;gap:14px;margin-top:16px}
+.pl-review-card{background:var(--panel,#fff);border:1px solid var(--border,#dce5e9);border-radius:14px;padding:16px}
+.pl-review-card h3{margin:0 0 12px;color:var(--navy,#102b3f)}
+.pl-review-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pl-review-grid label{display:grid;gap:6px;font-size:13px;font-weight:600}
+.pl-review-grid input,.pl-review-grid select,.pl-review-grid textarea{width:100%;padding:10px;border:1px solid var(--border,#dce5e9);border-radius:8px;background:var(--surface,#fff);color:inherit;font:inherit}
+.pl-review-grid textarea{min-height:75px;resize:vertical}
+.pl-checks{display:grid;gap:9px;margin:12px 0}
+.pl-checks label{display:flex;gap:9px;align-items:flex-start;font-size:13px;font-weight:400}
+.pl-review-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.pl-review-actions button{border:0;border-radius:8px;padding:10px 14px;background:var(--teal,#168b82);color:white;font-weight:600;cursor:pointer}
+.pl-review-actions button.secondary{background:#64748b}
+.pl-review-actions button.danger{background:#a94444}
+.pl-review-note{font-size:12px;color:var(--muted,#64748b);margin-top:8px}
+.pl-duplicate{padding:10px;border-radius:9px;background:rgba(22,139,130,.08);margin:7px 0;font-size:13px}
+.pl-history-item{border-left:3px solid var(--teal,#168b82);padding:8px 12px;margin:9px 0;background:rgba(22,139,130,.05);border-radius:0 8px 8px 0;font-size:13px}
+@media(max-width:650px){.pl-review-grid{grid-template-columns:1fr}}
+</style>
+
+<script>
+(function(){
+"use strict";
+
+const $ = id => document.getElementById(id);
+const getStore = () => {
+  try {
+    const raw = localStorage.getItem("pahunch_ledger_v3");
+    return raw ? JSON.parse(raw) : null;
+  } catch(e){ return null; }
+};
+const saveStore = d => {
+  try { localStorage.setItem("pahunch_ledger_v3",JSON.stringify(d)); }
+  catch(e){ console.warn("Pahunch Ledger save failed",e); }
+};
+const getData = () => window.data || getStore() || {};
+const reports = () => {
+  const d=getData();
+  return Array.isArray(d.reports)?d.reports:[];
+};
+const escapeHTML = s => String(s??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+
+function ensureReviewData(){
+  const d=getData();
+  if(!Array.isArray(d.verifications)) d.verifications=[];
+  if(!Array.isArray(d.reports)) d.reports=[];
+  return d;
+}
+
+function getReportId(r){
+  return r.id || r.reportId || r.trackingId || "Unassigned ID";
+}
+function getArea(r){
+  return String(r.area || r.location || r.ward || "").trim().toLowerCase();
+}
+function getCategory(r){
+  return String(r.category || r.type || "").trim().toLowerCase();
+}
+function duplicateSuggestions(report){
+  return reports().filter(r=>{
+    if(r===report) return false;
+    const sameArea=getArea(r) && getArea(r)===getArea(report);
+    const sameCategory=getCategory(r) && getCategory(r)===getCategory(report);
+    return sameArea && sameCategory;
+  });
+}
+
+function reviewPage(){
+  const host=$("verification");
+  if(!host) return;
+
+  const d=ensureReviewData();
+  const queue=reports().filter(r=>
+    !["Verified","Rejected"].includes(String(r.status||""))
+  );
+
+  host.innerHTML=`
+    <div class="pl-review-wrap">
+      <div class="pl-review-card">
+        <h3>Human Verification Desk</h3>
+        <p class="pl-review-note">Reports are not automatically verified. A decision must be recorded by a human reviewer after checking available sources and limitations.</p>
+        <div class="pl-review-grid">
+          <label>Select report
+            <select id="plReviewReport">
+              <option value="">Choose a report</option>
+              ${queue.map(r=>`<option value="${escapeHTML(getReportId(r))}">${escapeHTML(getReportId(r))} — ${escapeHTML(r.category||r.type||"Community report")} (${escapeHTML(r.status||"Pending")})</option>`).join("")}
+            </select>
+          </label>
+          <label>Source type
+            <select id="plSourceType">
+              <option value="">Select source</option>
+              <option>Official notice or agency</option>
+              <option>Authorised local representative</option>
+              <option>Recognised NGO</option>
+              <option>Field team / site visit</option>
+              <option>Reporter follow-up</option>
+              <option>Other documented source</option>
+            </select>
+          </label>
+          <label>Source name / reference
+            <input id="plSourceName" placeholder="Name or reference of source">
+          </label>
+          <label>Evidence reviewed
+            <select id="plEvidenceType">
+              <option value="">Select evidence type</option>
+              <option>Official document / notice</option>
+              <option>Field observation</option>
+              <option>Authorised representative confirmation</option>
+              <option>Photograph or video</option>
+              <option>Reporter clarification</option>
+              <option>Other documented evidence</option>
+              <option>No supporting evidence available yet</option>
+            </select>
+          </label>
+          <label>What does the evidence support?
+            <textarea id="plEvidenceNote" placeholder="Record only what the evidence actually supports"></textarea>
+          </label>
+          <label>Uncertainty / limitations
+            <textarea id="plLimitations" placeholder="Mention missing details, unconfirmed estimates or limitations"></textarea>
+          </label>
+        </div>
+
+        <h3 style="margin-top:18px">Review checklist</h3>
+        <div class="pl-checks">
+          <label><input type="checkbox" id="plCheckArea"> Area and incident details reviewed</label>
+          <label><input type="checkbox" id="plCheckDate"> Report date/time reviewed</label>
+          <label><input type="checkbox" id="plCheckDuplicate"> Similar or duplicate reports checked</label>
+          <label><input type="checkbox" id="plCheckEvidence"> Available evidence/source reviewed</label>
+          <label><input type="checkbox" id="plCheckLimits"> Uncertainty and limitations recorded</label>
+        </div>
+
+        <div class="pl-review-grid">
+          <label>Decision
+            <select id="plDecision">
+              <option value="Pending">Pending — more review needed</option>
+              <option value="Verified">Verified — supported by human review</option>
+              <option value="Rejected">Rejected — with reason</option>
+              <option value="Clarification requested">Clarification requested</option>
+            </select>
+          </label>
+          <label>Reviewer note / reason
+            <textarea id="plReviewerNote" placeholder="Explain the decision and next step"></textarea>
+          </label>
+        </div>
+        <div class="pl-review-actions">
+          <button type="button" id="plSaveReview">Save review decision</button>
+          <button type="button" class="secondary" id="plClearReview">Clear form</button>
+        </div>
+        <p class="pl-review-note">A photograph or a single report does not independently confirm every claim. Reported casualty estimates remain unverified until supported by an appropriate authorised source.</p>
+      </div>
+
+      <div class="pl-review-card">
+        <h3>Possible duplicate reports</h3>
+        <div id="plDuplicateList"><p class="pl-review-note">Choose a report to view possible matches.</p></div>
+      </div>
+
+      <div class="pl-review-card">
+        <h3>Verification history</h3>
+        <div id="plReviewHistory"></div>
+      </div>
+    </div>
+  `;
+
+  $("plReviewReport").addEventListener("change",showDuplicates);
+  $("plSaveReview").addEventListener("click",saveReview);
+  $("plClearReview").addEventListener("click",()=>reviewPage());
+  renderReviewHistory();
+}
+
+function showDuplicates(){
+  const id=$("plReviewReport").value;
+  const report=reports().find(r=>String(getReportId(r))===id);
+  const target=$("plDuplicateList");
+  if(!report){target.innerHTML='<p class="pl-review-note">Choose a report to view possible matches.</p>';return;}
+  const matches=duplicateSuggestions(report);
+  target.innerHTML=matches.length?matches.map(r=>`
+    <div class="pl-duplicate">
+      <strong>${escapeHTML(getReportId(r))}</strong><br>
+      ${escapeHTML(r.category||r.type||"Community report")} · ${escapeHTML(r.area||r.location||"Area not specified")}<br>
+      Status: ${escapeHTML(r.status||"Pending")}
+    </div>
+  `).join(""):'<p class="pl-review-note">No obvious area/category matches found. Manual comparison is still required.</p>';
+}
+
+function saveReview(){
+  const id=$("plReviewReport").value;
+  const report=reports().find(r=>String(getReportId(r))===id);
+  if(!report){alert("Please select a report first.");return;}
+
+  const decision=$("plDecision").value;
+  const sourceType=$("plSourceType").value;
+  const sourceName=$("plSourceName").value.trim();
+  const evidenceType=$("plEvidenceType").value;
+  const evidenceNote=$("plEvidenceNote").value.trim();
+  const limitations=$("plLimitations").value.trim();
+  const reviewerNote=$("plReviewerNote").value.trim();
+
+  const checklist={
+    area: $("plCheckArea").checked,
+    date: $("plCheckDate").checked,
+    duplicates: $("plCheckDuplicate").checked,
+    evidence: $("plCheckEvidence").checked,
+    limitations: $("plCheckLimits").checked
+  };
+
+  if(decision==="Verified"){
+    if(!Object.values(checklist).every(Boolean)){
+      alert("Complete all five checklist items before marking a report Verified.");
+      return;
+    }
+    if(!sourceType||!sourceName||!evidenceType||!evidenceNote){
+      alert("A verified decision requires a documented source and an explanation of what the evidence supports.");
+      return;
+    }
+    if(evidenceType==="No supporting evidence available yet"){
+      alert("A report without supporting evidence cannot be marked Verified.");
+      return;
+    }
+  }
+  if(["Rejected","Clarification requested"].includes(decision)&&!reviewerNote){
+    alert("Please record a reason or clarification request.");
+    return;
+  }
+
+  const d=ensureReviewData();
+  const entry={
+    reportId:id,
+    decision,
+    sourceType,
+    sourceName,
+    evidenceType,
+    evidenceNote,
+    limitations,
+    checklist,
+    reviewerNote,
+    reviewedAt:new Date().toISOString(),
+    reviewer:"Demo reviewer"
+  };
+  d.verifications.push(entry);
+  report.status=decision;
+  report.verificationNote=reviewerNote;
+  report.lastReviewedAt=entry.reviewedAt;
+
+  if(Array.isArray(d.audit)){
+    d.audit.push({
+      action:"Verification review",
+      reportId:id,
+      details:decision,
+      timestamp:entry.reviewedAt
+    });
+  } else if(Array.isArray(d.auditLog)){
+    d.auditLog.push({
+      action:"Verification review",
+      reportId:id,
+      details:decision,
+      timestamp:entry.reviewedAt
+    });
+  }
+
+  saveStore(d);
+  if(typeof window.save==="function"){
+    try{window.save();}catch(e){}
+  }
+  alert("Review decision saved.");
+  reviewPage();
+  if(typeof window.renderAll==="function"){
+    try{window.renderAll();}catch(e){}
+  }
+}
+
+function renderReviewHistory(){
+  const target=$("plReviewHistory");
+  const d=ensureReviewData();
+  const history=d.verifications.slice().reverse();
+  target.innerHTML=history.length?history.map(v=>`
+    <div class="pl-history-item">
+      <strong>${escapeHTML(v.reportId)} — ${escapeHTML(v.decision)}</strong><br>
+      <span>${escapeHTML(v.sourceType||"Source not recorded")} · ${escapeHTML(v.sourceName||"")}</span><br>
+      <span>${escapeHTML(v.reviewerNote||v.evidenceNote||"No additional note")}</span><br>
+      <small>${escapeHTML(new Date(v.reviewedAt).toLocaleString())}</small>
+    </div>
+  `).join(""):'<p class="pl-review-note">No verification decisions recorded yet.</p>';
+}
+
+/* Use the new review interface when the Verification Desk is opened. */
+const oldNavigate=window.navigate;
+if(typeof oldNavigate==="function"){
+  window.navigate=function(page,...args){
+    const result=oldNavigate.call(this,page,...args);
+    if(page==="verification"||page==="Verification desk"){
+      setTimeout(reviewPage,0);
+    }
+    return result;
+  };
+}
+
+/* Make the new interface available to the existing navigation. */
+window.renderPahunchVerification=reviewPage;
+
+})();
+</script>
 </body>
 </html>
