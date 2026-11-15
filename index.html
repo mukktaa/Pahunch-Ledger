@@ -2056,16 +2056,41 @@ function createSelector(){
   }
 }
 
+
 function init(){
   createSelector();
   translatePage();
 
-  // Re-translate fixed interface text when a page is re-rendered.
-  const observer=new MutationObserver(()=>{
-    if(!document.getElementById("plLanguageSelect"))createSelector();
+  // Watch only for newly added page elements.
+  let translating = false;
+
+  const observer = new MutationObserver((mutations)=>{
+    if(translating) return;
+
+    const hasNewElements = mutations.some(mutation =>
+      [...mutation.addedNodes].some(node =>
+        node.nodeType === 1 &&
+        node.id !== "plLanguageSelect" &&
+        !node.closest?.("#plLanguageSelect")
+      )
+    );
+
+    if(!hasNewElements) return;
+
+    translating = true;
+
+    if(!document.getElementById("plLanguageSelect")){
+      createSelector();
+    }
+
     translatePage();
+    translating = false;
   });
-  observer.observe(document.body,{childList:true,subtree:true});
+
+  observer.observe(document.body,{
+    childList:true,
+    subtree:true
+  });
 }
 
 window.plSetLanguage=function(lang){
