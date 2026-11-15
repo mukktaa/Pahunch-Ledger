@@ -1168,5 +1168,440 @@ window.renderPahunchVerification=reviewPage;
 
 })();
 </script>
+
+<style>
+.pl-coord-wrap{display:grid;gap:14px;margin-top:16px}
+.pl-coord-card{background:var(--panel,#fff);border:1px solid var(--border,#dce5e9);border-radius:14px;padding:16px}
+.pl-coord-card h3{margin:0 0 12px;color:var(--navy,#102b3f)}
+.pl-coord-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pl-coord-grid label{display:grid;gap:6px;font-size:13px;font-weight:600}
+.pl-coord-grid input,.pl-coord-grid select,.pl-coord-grid textarea{width:100%;padding:10px;border:1px solid var(--border,#dce5e9);border-radius:8px;background:var(--surface,#fff);color:inherit;font:inherit}
+.pl-coord-grid textarea{min-height:70px;resize:vertical}
+.pl-coord-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.pl-coord-actions button{border:0;border-radius:8px;padding:10px 13px;background:var(--teal,#168b82);color:white;font-weight:600;cursor:pointer}
+.pl-coord-actions button.secondary{background:#64748b}
+.pl-coord-actions button.warning{background:#a66b24}
+.pl-coord-muted{font-size:12px;color:var(--muted,#64748b);margin-top:8px}
+.pl-task{border:1px solid var(--border,#dce5e9);border-radius:11px;padding:13px;margin:10px 0}
+.pl-task-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pl-task-status{font-size:12px;font-weight:700;padding:5px 9px;border-radius:20px;background:rgba(22,139,130,.12);color:var(--teal,#168b82)}
+.pl-task-meta{font-size:13px;line-height:1.7;margin-top:9px}
+.pl-task small{color:var(--muted,#64748b)}
+.pl-org{padding:10px 0;border-bottom:1px solid var(--border,#dce5e9);font-size:13px}
+.pl-org:last-child{border-bottom:0}
+@media(max-width:650px){.pl-coord-grid{grid-template-columns:1fr}}
+</style>
+
+<script>
+(function(){
+"use strict";
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+
+function coordData(){
+  let d=window.data;
+  if(!d){
+    try{d=JSON.parse(localStorage.getItem("pahunch_ledger_v3")||"{}");}
+    catch(e){d={};}
+    window.data=d;
+  }
+  if(!Array.isArray(d.reports))d.reports=[];
+  if(!Array.isArray(d.assistance))d.assistance=[];
+  if(!Array.isArray(d.followups))d.followups=[];
+  if(!Array.isArray(d.audit))d.audit=[];
+  if(!Array.isArray(d.organisations)){
+    d.organisations=[
+      {area:"Shimla",name:"Himalayan Community Support Unit",team:"Local Coordination Team",contact:"Demo Coordinator A",phone:"00000 00001"},
+      {area:"Chandigarh",name:"Community Relief Coordination Desk",team:"Area Support Team",contact:"Demo Coordinator B",phone:"00000 00002"},
+      {area:"Default",name:"Regional Community Support Desk",team:"General Coordination Team",contact:"Demo Coordinator C",phone:"00000 00003"}
+    ];
+  }
+  return d;
+}
+function persist(d){
+  try{localStorage.setItem("pahunch_ledger_v3",JSON.stringify(d));}
+  catch(e){alert("Could not save. Browser storage may be full.");}
+  if(typeof window.save==="function"){
+    try{window.save();}catch(e){}
+  }
+}
+function reportId(r){return r.id||r.reportId||r.trackingId||"Unassigned ID";}
+function areaOf(r){return String(r.area||r.location||r.ward||"").trim();}
+function verifiedReports(){
+  return coordData().reports.filter(r=>String(r.status||"").toLowerCase()==="verified");
+}
+function suggestOrg(area){
+  const d=coordData();
+  const a=String(area||"").toLowerCase();
+  return d.organisations.find(o=>o.area&&a.includes(String(o.area).toLowerCase()))
+    ||d.organisations.find(o=>String(o.area).toLowerCase()==="default")
+    ||d.organisations[0];
+}
+function logActivity(action,details){
+  const d=coordData();
+  d.audit.push({
+    action,
+    details,
+    timestamp:new Date().toISOString()
+  });
+  persist(d);
+}
+function assistanceHost(){
+  return $("assistance")||$("assistance-tracking")||$("assistanceTracking");
+}
+
+function coordinatorPage(){
+  const host=assistanceHost();
+  if(!host)return;
+  const d=coordData();
+  const tasks=d.assistance;
+  const delivered=tasks.filter(t=>t.status==="Delivered").length;
+  const active=tasks.filter(t=>!["Delivered","Unable to deliver"].includes(t.status)).length;
+
+  host.innerHTML=`
+    <div class="pl-coord-wrap">
+      <div class="pl-coord-card">
+        <h3>Coordinator Operations Desk</h3>
+        <p class="pl-coord-muted">Create assistance tasks only for reports marked Verified by a human reviewer. All contacts below are fictional demonstration placeholders.</p>
+        <div class="pl-coord-grid">
+          <div><strong>${tasks.length}</strong><br><small>Total assistance tasks</small></div>
+          <div><strong>${active}</strong><br><small>Active tasks</small></div>
+          <div><strong>${delivered}</strong><br><small>Marked delivered</small></div>
+          <div><strong>${verifiedReports().length}</strong><br><small>Verified reports available</small></div>
+        </div>
+      </div>
+
+      <div class="pl-coord-card">
+        <h3>Create assistance task</h3>
+        <div class="pl-coord-grid">
+          <label>Verified report
+            <select id="plTaskReport">
+              <option value="">Select verified report</option>
+              ${verifiedReports().map(r=>`<option value="${esc(reportId(r))}">${esc(reportId(r))} — ${esc(r.category||r.type||"Community need")} · ${esc(areaOf(r))}</option>`).join("")}
+            </select>
+          </label>
+          <label>Suggested organisation / partner
+            <select id="plTaskOrg">
+              ${d.organisations.map((o,i)=>`<option value="${i}">${esc(o.name)} — ${esc(o.area)}</option>`).join("")}
+            </select>
+          </label>
+          <label>Team / unit
+            <input id="plTaskTeam" placeholder="Team or unit name">
+          </label>
+          <label>Coordinator contact point
+            <input id="plTaskContact" placeholder="Coordinator name or role">
+          </label>
+          <label>Contact number (demo only)
+            <input id="plTaskPhone" placeholder="Fictional placeholder number">
+          </label>
+          <label>Assistance type
+            <select id="plTaskType">
+              <option value="">Select assistance</option>
+              <option>Food and essential supplies</option>
+              <option>Drinking water</option>
+              <option>Shelter and temporary accommodation</option>
+              <option>Clothing and hygiene supplies</option>
+              <option>Transport support</option>
+              <option>Information and referral</option>
+              <option>Other community support</option>
+            </select>
+          </label>
+          <label>Quantity / scope
+            <input id="plTaskQuantity" placeholder="Example: 20 supply kits">
+          </label>
+          <label>Resource source
+            <input id="plTaskResource" placeholder="Donor, stock, partner or planned source">
+          </label>
+          <label>Planned date
+            <input id="plTaskDate" type="date">
+          </label>
+          <label>Destination / area
+            <input id="plTaskDestination" placeholder="General area only">
+          </label>
+          <label>Initial task status
+            <select id="plTaskInitialStatus">
+              <option>Planned</option>
+              <option>Assigned</option>
+            </select>
+          </label>
+          <label>Coordination notes
+            <textarea id="plTaskNotes" placeholder="Scope, constraints and coordination details"></textarea>
+          </label>
+        </div>
+        <div class="pl-coord-actions">
+          <button type="button" id="plCreateTask">Create assistance task</button>
+        </div>
+        <p class="pl-coord-muted">The suggested organisation is a demo recommendation based on the report area. It does not mean the organisation has accepted or delivered assistance.</p>
+      </div>
+
+      <div class="pl-coord-card">
+        <h3>Assistance task register</h3>
+        <div id="plTaskList"></div>
+      </div>
+
+      <div class="pl-coord-card">
+        <h3>Separate follow-up and outcome confirmation</h3>
+        <div class="pl-coord-grid">
+          <label>Report ID
+            <select id="plFollowReport">
+              <option value="">Select report</option>
+              ${d.reports.map(r=>`<option value="${esc(reportId(r))}">${esc(reportId(r))} — ${esc(r.status||"Pending")}</option>`).join("")}
+            </select>
+          </label>
+          <label>Outcome
+            <select id="plFollowOutcome">
+              <option value="">Select outcome</option>
+              <option>Addressed — reported</option>
+              <option>Partly addressed</option>
+              <option>Unresolved</option>
+            </select>
+          </label>
+          <label>Confirmation source / contact
+            <input id="plFollowSource" placeholder="Source or role; avoid personal sensitive details">
+          </label>
+          <label>Follow-up notes
+            <textarea id="plFollowNotes" placeholder="Record what was reported and any remaining need"></textarea>
+          </label>
+        </div>
+        <div class="pl-coord-actions">
+          <button type="button" id="plSaveFollow">Save follow-up outcome</button>
+        </div>
+        <div id="plFollowHistory"></div>
+      </div>
+
+      <div class="pl-coord-card">
+        <h3>Area organisation directory</h3>
+        <p class="pl-coord-muted">Fictional sample directory — not real organisations or contact details.</p>
+        ${d.organisations.map(o=>`
+          <div class="pl-org">
+            <strong>${esc(o.name)}</strong> · ${esc(o.area)}<br>
+            ${esc(o.team)} · ${esc(o.contact)} · ${esc(o.phone)}
+            <br><small>Placeholder entry for prototype demonstration only</small>
+          </div>`).join("")}
+      </div>
+    </div>
+  `;
+
+  $("plTaskReport").addEventListener("change",()=>{
+    const r=d.reports.find(x=>String(reportId(x))===$("plTaskReport").value);
+    if(!r)return;
+    const org=suggestOrg(areaOf(r));
+    if(org){
+      const idx=d.organisations.indexOf(org);
+      $("plTaskOrg").value=String(idx);
+      fillOrgFields();
+    }
+    $("plTaskDestination").value=areaOf(r);
+  });
+  $("plTaskOrg").addEventListener("change",fillOrgFields);
+  $("plCreateTask").addEventListener("click",createTask);
+  $("plSaveFollow").addEventListener("click",saveFollowup);
+  renderTasks();
+  renderFollowups();
+
+  function fillOrgFields(){
+    const org=d.organisations[Number($("plTaskOrg").value)];
+    if(!org)return;
+    $("plTaskTeam").value=org.team||"";
+    $("plTaskContact").value=org.contact||"";
+    $("plTaskPhone").value=org.phone||"";
+  }
+  if(d.organisations.length)fillOrgFields();
+}
+
+function createTask(){
+  const d=coordData();
+  const id=$("plTaskReport").value;
+  const report=d.reports.find(r=>String(reportId(r))===id);
+  if(!report||String(report.status).toLowerCase()!=="verified"){
+    alert("Only reports marked Verified can be linked to a new assistance task.");
+    return;
+  }
+  const org=d.organisations[Number($("plTaskOrg").value)];
+  const type=$("plTaskType").value;
+  const quantity=$("plTaskQuantity").value.trim();
+  const destination=$("plTaskDestination").value.trim();
+  if(!type||!quantity||!destination){
+    alert("Please complete assistance type, quantity/scope and destination.");
+    return;
+  }
+  const task={
+    taskId:"TASK-"+Date.now().toString().slice(-8),
+    reportId:id,
+    organisation:org?org.name:"Not assigned",
+    team:$("plTaskTeam").value.trim(),
+    coordinator:$("plTaskContact").value.trim(),
+    phone:$("plTaskPhone").value.trim(),
+    type,
+    quantity,
+    resourceSource:$("plTaskResource").value.trim(),
+    plannedDate:$("plTaskDate").value,
+    destination,
+    notes:$("plTaskNotes").value.trim(),
+    status:$("plTaskInitialStatus").value,
+    createdAt:new Date().toISOString(),
+    dispatchReference:"",
+    deliverySource:"",
+    outcome:""
+  };
+  d.assistance.push(task);
+  d.audit.push({
+    action:"Assistance task created",
+    details:task.taskId+" linked to "+id,
+    timestamp:task.createdAt
+  });
+  persist(d);
+  alert("Assistance task created in this browser's demo data.");
+  coordinatorPage();
+}
+
+function renderTasks(){
+  const target=$("plTaskList");
+  const d=coordData();
+  if(!target)return;
+  target.innerHTML=d.assistance.length?d.assistance.slice().reverse().map(t=>`
+    <div class="pl-task">
+      <div class="pl-task-head">
+        <strong>${esc(t.taskId||"Task")}</strong>
+        <span class="pl-task-status">${esc(t.status||"Planned")}</span>
+      </div>
+      <div class="pl-task-meta">
+        Report: <strong>${esc(t.reportId)}</strong><br>
+        ${esc(t.type)} · ${esc(t.quantity)}<br>
+        Organisation: ${esc(t.organisation||"Not assigned")}<br>
+        Team: ${esc(t.team||"Not recorded")}<br>
+        Destination: ${esc(t.destination||"Not recorded")}<br>
+        Planned date: ${esc(t.plannedDate||"Not set")}<br>
+        Resource source: ${esc(t.resourceSource||"Not recorded")}<br>
+        ${t.dispatchReference?"Dispatch reference: "+esc(t.dispatchReference)+"<br>":""}
+        ${t.deliverySource?"Delivery source: "+esc(t.deliverySource)+"<br>":""}
+        <small>Created ${esc(new Date(t.createdAt).toLocaleString())}</small>
+      </div>
+      <div class="pl-coord-actions">
+        <button type="button" class="pl-task-update" data-id="${esc(t.taskId)}">Update task stage</button>
+      </div>
+    </div>
+  `).join(""):'<p class="pl-coord-muted">No assistance tasks created yet.</p>';
+
+  target.querySelectorAll(".pl-task-update").forEach(btn=>{
+    btn.addEventListener("click",()=>updateTaskStage(btn.dataset.id));
+  });
+}
+
+function updateTaskStage(taskId){
+  const d=coordData();
+  const t=d.assistance.find(x=>x.taskId===taskId);
+  if(!t)return;
+  const options=["Planned","Assigned","Dispatched","Delivered","Partially delivered","Unable to deliver"];
+  const next=prompt("Enter new task stage:\n"+options.join(" / "),t.status||"Planned");
+  if(next===null)return;
+  if(!options.includes(next)){
+    alert("Choose one of the listed task stages.");
+    return;
+  }
+  if(next==="Dispatched"){
+    const ref=prompt("Enter dispatch / handover reference:");
+    if(!ref||!ref.trim()){
+      alert("A dispatch reference is required.");
+      return;
+    }
+    t.dispatchReference=ref.trim();
+  }
+  if(next==="Delivered"){
+    if(!t.dispatchReference){
+      alert("Record a dispatch reference before marking a task Delivered.");
+      return;
+    }
+    const source=prompt("Enter delivery confirmation source or reference:");
+    if(!source||!source.trim()){
+      alert("A delivery confirmation source is required.");
+      return;
+    }
+    t.deliverySource=source.trim();
+  }
+  if(next==="Partially delivered"||next==="Unable to deliver"){
+    const note=prompt("Record what happened and any remaining need:");
+    if(!note||!note.trim()){
+      alert("Please record a brief explanation.");
+      return;
+    }
+    t.deliverySource=note.trim();
+  }
+  const previous=t.status;
+  t.status=next;
+  t.updatedAt=new Date().toISOString();
+  d.audit.push({
+    action:"Assistance task updated",
+    details:taskId+": "+previous+" → "+next,
+    timestamp:t.updatedAt
+  });
+  persist(d);
+  coordinatorPage();
+}
+
+function saveFollowup(){
+  const d=coordData();
+  const id=$("plFollowReport").value;
+  const outcome=$("plFollowOutcome").value;
+  const source=$("plFollowSource").value.trim();
+  const notes=$("plFollowNotes").value.trim();
+  if(!id||!outcome||!source||!notes){
+    alert("Please complete the report, outcome, source and notes.");
+    return;
+  }
+  const entry={
+    reportId:id,
+    outcome,
+    source,
+    notes,
+    recordedAt:new Date().toISOString()
+  };
+  d.followups.push(entry);
+  d.audit.push({
+    action:"Follow-up outcome recorded",
+    details:id+": "+outcome,
+    timestamp:entry.recordedAt
+  });
+  persist(d);
+  alert("Follow-up outcome saved separately from delivery status.");
+  coordinatorPage();
+}
+
+function renderFollowups(){
+  const target=$("plFollowHistory");
+  if(!target)return;
+  const items=coordData().followups.slice().reverse();
+  target.innerHTML=items.length?`
+    <h3 style="margin-top:16px">Recorded outcomes</h3>
+    ${items.map(f=>`
+      <div class="pl-task">
+        <strong>${esc(f.reportId)} — ${esc(f.outcome)}</strong>
+        <div class="pl-task-meta">
+          Source: ${esc(f.source)}<br>
+          Notes: ${esc(f.notes)}<br>
+          <small>${esc(new Date(f.recordedAt).toLocaleString())}</small>
+        </div>
+      </div>
+    `).join("")}
+  `:'<p class="pl-coord-muted">No follow-up outcomes recorded yet.</p>';
+}
+
+const oldNavigate=window.navigate;
+if(typeof oldNavigate==="function"){
+  window.navigate=function(page,...args){
+    const result=oldNavigate.call(this,page,...args);
+    if(["assistance","assistance-tracking","assistance tracking"].includes(String(page).toLowerCase())){
+      setTimeout(coordinatorPage,0);
+    }
+    return result;
+  };
+}
+window.renderPahunchCoordinator=coordinatorPage;
+
+})();
+</script>
 </body>
 </html>
